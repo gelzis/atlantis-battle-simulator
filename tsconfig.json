@@ -8,13 +8,16 @@
     "moduleResolution": "node",
     "outDir": "dist",
     "allowJs": true,
+    "skipLibCheck": true,
     "sourceMap": true,
     "inlineSources": true,
-    "baseUrl": ".",
-    "noEmit": true,
+    "baseUrl": "./",
     "jsx": "preserve"
   },
   "include": [
     "src"
+  ],
+  "exclude": [
+    "./node_modules"
   ]
 }

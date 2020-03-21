@@ -13,12 +13,8 @@ module.exports = {
         '@babel/preset-typescript',
     ],
     plugins: [
-        // '@babel/plugin-proposal-object-rest-spread',
-        // ['@babel/plugin-proposal-decorators', {legacy: true}],
-        // ['@babel/plugin-proposal-class-properties', {loose: true}],
-        // '@babel/plugin-proposal-export-default-from',
-        // '@babel/plugin-syntax-dynamic-import',
-        // '@babel/plugin-syntax-import-meta',
-        // ['babel-plugin-styled-components'],
+        '@babel/plugin-proposal-object-rest-spread',
+        ['@babel/plugin-proposal-class-properties', {loose: true}],
+        ['babel-plugin-styled-components'],
     ],
 };
