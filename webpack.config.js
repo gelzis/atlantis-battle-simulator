@@ -30,14 +30,16 @@ module.exports = {
         new CleanWebpackPlugin(),
         {
             apply: (compiler) => {
-                // compiler.hooks.emit.tap('file-reference-plugin', compilation => {
-                //     const stats = compilation.getStats().toJson();
-                //
-                //     for (const entry in stats.entrypoints) {
-                //         const {assets} = stats.entrypoints[entry];
-                //         fs.writeFileSync(`src/public/dist/${entry}.js`, `export * from '/dist/${assets[0]}';\n`);
-                //     }
-                // });
+                compiler.hooks.emit.tap('file-reference-plugin', compilation => {
+                    const stats = compilation.getStats().toJson();
+                    if (!fs.existsSync('src/public/dist/')) {
+                        fs.mkdirSync('src/public/dist/');
+                    }
+                    for (const entry in stats.entrypoints) {
+                        const {assets} = stats.entrypoints[entry];
+                        fs.writeFileSync(`src/public/dist/${entry}.js`, `export * from '/dist/${assets[0]}';\n`);
+                    }
+                });
             },
         },
     ],
