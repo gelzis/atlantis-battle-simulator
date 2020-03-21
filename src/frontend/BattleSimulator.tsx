@@ -4,7 +4,7 @@ export class BattleSimulator extends PureComponent<{}, {}> {
     render(): JSX.Element {
         return (
             <div>
-                <h1>Hello World!</h1>
+                <h1>Hello World11 !</h1>
             </div>
         );
     }
