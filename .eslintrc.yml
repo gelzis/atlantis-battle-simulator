@@ -3,6 +3,7 @@ env:
   node: true
 extends:
   - plugin:@typescript-eslint/recommended
+  - plugin:@typescript-eslint/eslint-recommended
   - standard
 globals:
   Atomics: readonly
@@ -13,6 +14,7 @@ parserOptions:
   tsconfigRootDir: ./
 plugins:
   - '@typescript-eslint'
+  - 'eslint-plugin-react'
 rules:
   '@typescript-eslint/member-delimiter-style': [error, {
     multiline: {

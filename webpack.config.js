@@ -8,7 +8,6 @@ module.exports = {
         filename: 'index.js'
     },
 
-    // adding .ts and .tsx to resolve.extensions will help babel look for .ts and .tsx files to transpile
     resolve: {
         extensions: ['.ts', '.tsx', '.js']
     },
@@ -19,7 +18,10 @@ module.exports = {
                 test: /\.(ts|js)x?$/,
                 exclude: /node_modules/,
                 use: {
-                    loader: 'babel-loader'
+                    loader: 'babel-loader',
+                    {
+                        loader: 'ts-loader'
+                    },
                 },
             }
         ]

@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react';
 
 export class BattleSimulator extends PureComponent<{}, {}> {
-    render() {
+    render(): JSX.Element {
         return (
             <div>
                 <h1>Hello World!</h1>
