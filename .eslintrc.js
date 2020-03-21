@@ -1,8 +1,4 @@
 module.exports = {
-    "globals": {
-        "SharedArrayBuffer": "readonly",
-        "Atomics": "readonly"
-    },
     "extends": [
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/eslint-recommended",
@@ -46,24 +42,6 @@ module.exports = {
         "semi": [
             "error",
             "always"
-        ],
-        "import/order": [
-            "error",
-            {
-                "newlines-between": "always",
-                "groups": [
-                    [
-                        "builtin",
-                        "external"
-                    ],
-                    [
-                        "internal",
-                        "parent",
-                        "sibling",
-                        "index"
-                    ]
-                ]
-            }
         ],
         "@typescript-eslint/member-delimiter-style": [
             "error",

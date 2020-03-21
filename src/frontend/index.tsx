@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BattleSimulator} from './BattleSimulator';
 import {createGlobalStyle} from 'styled-components';
+
+import {BattleSimulator} from './BattleSimulator';
 
 const GlobalStyle = createGlobalStyle`
     /* Box sizing rules */
