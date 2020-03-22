@@ -19,6 +19,7 @@ jobs:
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        name: myDocker/repository
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+        name: gelzis/atlantis-battle-simulator/master
+        username: gelzis
+        password: ${{ secrets.GITHUB_TOKEN }}
+        registry: docker.pkg.github.com
