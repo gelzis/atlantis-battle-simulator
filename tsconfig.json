@@ -11,6 +11,8 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "inlineSources": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
     "baseUrl": "./",
     "jsx": "preserve"
   },

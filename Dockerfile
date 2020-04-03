@@ -1,4 +1,4 @@
-FROM node:10-alpine
+FROM node:12
 WORKDIR /usr/src/app
 
 COPY package.json package-lock.json ./
