@@ -79,4 +79,9 @@ export const GlobalStyle = createGlobalStyle`
         scroll-behavior: auto !important;
       }
     }
+    
+    body {
+      padding-bottom: 100px;
+      position: relative;
+    }
 `;
