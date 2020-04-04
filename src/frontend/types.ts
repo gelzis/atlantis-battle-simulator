@@ -20,6 +20,8 @@ export const EDIT_UNIT = 'EDIT_UNIT';
 export const DUPLICATE_UNIT = 'DUPLICATE_UNIT';
 export const DELETE_UNIT = 'DELETE_UNIT';
 
+export const SET_LOADING_STATUS = 'SET_LOADING_STATUS';
+
 export type Side = 'attackers' | 'defenders';
 
 export type Skill = {
@@ -54,12 +56,45 @@ export type AppState = {
         [key: string]: Unit
     }
     unit: Unit
+    loading: boolean
+}
+
+type flags = 'behind';
+
+type ExportSkill = {
+    abbr: string
+    level: number
+}
+
+type ExportItem = {
+    abbr: string
+    amount: number
+}
+
+export type ExportUnit = {
+    name: string
+    skills: ExportSkill[]
+    items: ExportItem[]
+    combatSpell?: string
+    flags?: flags[]
+}
+
+export type ExportJson = {
+    attackers: ExportUnit[]
+    defenders: ExportUnit[]
 }
 
 export type SaveUnit = {
     type: typeof SAVE_UNIT
     payload: {
         side?: Side
+    }
+}
+
+export type SetLoadingStatus = {
+    type: typeof SET_LOADING_STATUS
+    payload: {
+        status: boolean
     }
 }
 
@@ -170,4 +205,4 @@ type AddUnit = {
 
 export type ActionTypes = SaveUnit | AddItemAction | AddSkillAction | ChangeItemAbbr | ChangeItemAmount |
     ChangeSkillAbbr | ChangeSkillLevel | SetBehind | ResetForm | SetUnitsName | EditUnit | DeleteUnit | DuplicateUnit |
-    SetCombatSpell | AddUnit | ResetState
+    SetCombatSpell | AddUnit | ResetState | SetLoadingStatus

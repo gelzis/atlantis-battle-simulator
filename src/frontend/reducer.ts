@@ -18,6 +18,7 @@ import {
     RESET_FORM,
     SAVE_UNIT,
     SET_COMBAT_SPELL,
+    SET_LOADING_STATUS,
     SET_UNITS_NAME,
     Unit,
 } from './types';
@@ -35,12 +36,15 @@ const initialState: AppState = {
     attackers: {},
     defenders: {},
     unit: defaultUnit,
+    loading: false,
 };
 
 export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState, action: ActionTypes): AppState | void => {
-    console.log(JSON.stringify(state.unit));
     switch (action.type) {
         case SAVE_UNIT: {
+            state.unit.skills = state.unit.skills.filter((skill) => !!skill.abbr);
+            state.unit.items = state.unit.items.filter((item) => !!item.abbr);
+
             if (state.unit.id) {
                 if (state.attackers[state.unit.id]) {
                     state.attackers[state.unit.id] = state.unit;
@@ -146,6 +150,11 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
             break;
         }
 
+        case 'SET_BEHIND': {
+            state.unit.behind = action.payload.enabled;
+            break;
+        }
+
         case SET_COMBAT_SPELL: {
             state.unit.combatSpell = action.payload.abbr;
             break;
@@ -171,6 +180,11 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
 
         case RESET_FORM: {
             state.unit = defaultUnit;
+            break;
+        }
+
+        case SET_LOADING_STATUS: {
+            state.loading = action.payload.status;
             break;
         }
     }

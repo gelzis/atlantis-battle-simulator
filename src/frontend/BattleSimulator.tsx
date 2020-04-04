@@ -1,3 +1,4 @@
+/* global fetch */
 import React, {ChangeEvent, PureComponent} from 'react';
 import {connect} from 'react-redux';
 import styled from 'styled-components';
@@ -7,7 +8,9 @@ import {
     IconButton,
     Toolbar,
     Grid,
-    Button, Tooltip,
+    Button,
+    Tooltip,
+    CircularProgress,
 } from '@material-ui/core';
 import {StylesProvider} from '@material-ui/core/styles';
 import LaunchIcon from '@material-ui/icons/Launch';
@@ -18,7 +21,18 @@ import {StyledAppBar, StyledPaper, theme} from './StyledComponents';
 import {MainForm} from './MainForm';
 import {UnitList} from './UnitList';
 // import {defaultUnit} from './reducer';
-import {AppState, EDIT_UNIT, DELETE_UNIT, DUPLICATE_UNIT, Unit, Side, ADD_UNIT, RESET_STATE} from './types';
+import {
+    AppState,
+    EDIT_UNIT,
+    DELETE_UNIT,
+    DUPLICATE_UNIT,
+    Unit,
+    Side,
+    ADD_UNIT,
+    RESET_STATE,
+    ExportJson,
+    ExportUnit, SET_LOADING_STATUS,
+} from './types';
 import {Dispatch} from 'redux';
 // import {json} from 'express';
 // import {v4 as uuidv4} from 'uuid';
@@ -28,21 +42,31 @@ const RunBattleContainer = styled.div`
   margin-top: ${theme.spacing(2)}px
 `;
 
-type StateProps = Pick<AppState, 'attackers' | 'defenders' | 'unit'>
+const LoadingSpinner = styled(CircularProgress)`
+    
+`;
+
+type StateProps = Pick<AppState, 'attackers' | 'defenders' | 'unit' | 'loading'>
 type DispatchProps = {
     editUnit: (id: string) => void
     duplicateUnit: (id: string) => void
     deleteUnit: (id: string) => void
     addUnit: (side: Side, unit: Unit) => void
     resetState: () => void
+    setLoadingStatus: (status: boolean) => void
 }
 type BattleSimulatorProps = StateProps & DispatchProps;
+
+type BattleSimulatorClassState = {
+    battleText: string
+}
 
 const mapStateToProps = (state: AppState): StateProps => {
     return {
         attackers: state.attackers,
         defenders: state.defenders,
         unit: state.unit,
+        loading: state.loading,
     };
 };
 
@@ -85,11 +109,105 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
             type: RESET_STATE,
         });
     },
+
+    setLoadingStatus(status): void {
+        dispatch({
+            type: SET_LOADING_STATUS,
+            payload: {
+                status,
+            },
+        });
+    },
 });
 
-export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps> {
-    runBattle = () => {
-        console.log('run battle');
+export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, BattleSimulatorClassState> {
+    constructor(props: BattleSimulatorProps) {
+        super(props);
+
+        this.state = {
+            battleText: '',
+        };
+    }
+
+    runBattle = async(): Promise<void> => {
+        this.setState({
+            battleText: '',
+        });
+
+        const exportJson: ExportJson = {
+            attackers: [],
+            defenders: [],
+        };
+
+        const addUnitToJson = (side: Side, unit: Unit): void => {
+            const exportUnit: ExportUnit = {
+                name: unit.name,
+                skills: [],
+                items: [],
+            };
+
+            if (unit.behind) {
+                exportUnit.flags = ['behind'];
+            }
+
+            if (unit.combatSpell) {
+                exportUnit.combatSpell = unit.combatSpell;
+            }
+
+            for (const skill of unit.skills) {
+                exportUnit.skills.push({
+                    abbr: skill.abbr,
+                    level: skill.level,
+                });
+            }
+
+            for (const item of unit.items) {
+                exportUnit.items.push({
+                    abbr: item.abbr,
+                    amount: item.amount,
+                });
+            }
+
+            if (side === 'attackers') {
+                exportJson.attackers.push(exportUnit);
+            } else {
+                exportJson.defenders.push(exportUnit);
+            }
+        };
+
+        for (const id in this.props.attackers) {
+            const unit = this.props.attackers[id];
+            addUnitToJson('attackers', unit);
+        }
+
+        for (const id in this.props.defenders) {
+            const unit = this.props.defenders[id];
+            addUnitToJson('defenders', unit);
+        }
+
+        this.props.setLoadingStatus(true);
+
+        const response = await fetch('/battle', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                battle: exportJson,
+            }),
+        });
+
+        this.props.setLoadingStatus(false);
+
+        if (!response.ok) {
+            // TODO show error!
+            return;
+        }
+
+        this.setState({
+            battleText: await response.text(),
+        });
     };
 
     // downloadAsJson = () => {
@@ -145,7 +263,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps> {
     };
 
     render(): JSX.Element {
-        const {attackers, defenders, editUnit, duplicateUnit, deleteUnit} = this.props;
+        const {attackers, defenders, editUnit, duplicateUnit, deleteUnit, loading} = this.props;
 
         return (
             <StylesProvider injectFirst>
@@ -169,7 +287,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps> {
                     </StyledAppBar>
                     <MainForm/>
                     <Grid container spacing={3}>
-                        <Grid item xs={6}>
+                        <Grid item xs={12} sm={6}>
                             <StyledPaper square elevation={3}>
                                 <Typography variant="h5" component="h3">
                                     Attacker units
@@ -182,7 +300,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps> {
                                 />
                             </StyledPaper>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={12} sm={6}>
                             <StyledPaper square elevation={3}>
                                 <Typography variant="h5" component="h3">
                                     Defender units
@@ -202,12 +320,19 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps> {
                             color="primary"
                             size="large"
                             variant="contained"
-                            startIcon={<LaunchIcon />}
+                            startIcon={!loading && <LaunchIcon />}
                             onClick={this.runBattle}
                         >
-                            Run battle
+                            {loading && <LoadingSpinner color="inherit" size={24}/>}
+                            {!loading && 'Run battle'}
                         </Button>
                     </RunBattleContainer>
+
+                    {this.state.battleText &&
+                        <StyledPaper css={`margin-top: ${theme.spacing(2)}px `} elevation={3}>
+                            <pre>{this.state.battleText}</pre>
+                        </StyledPaper>
+                    }
                 </Container>
             </StylesProvider>
         );

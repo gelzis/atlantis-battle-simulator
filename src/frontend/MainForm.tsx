@@ -227,7 +227,6 @@ class MainFormClass extends PureComponent<FormProps, null> {
     };
 
     OnCombatSpellSet = (event: ChangeEvent<HTMLInputElement>): void => {
-        console.log(event.target.value);
         this.props.setCombatSpell(event.target.value);
     };
 
@@ -245,7 +244,7 @@ class MainFormClass extends PureComponent<FormProps, null> {
                     {unit.items.map((item) => {
                         return (
                             <Grid key={item.id} container spacing={2}>
-                                <Grid item xs={4}>
+                                <Grid item md={4} xs={6}>
                                     <InputLabel shrink>
                                         Item
                                     </InputLabel>
@@ -254,7 +253,7 @@ class MainFormClass extends PureComponent<FormProps, null> {
                                         options={ItemListSorted}
                                         onChange={this.OnChangeItemAbbr.bind(this, item.id)}
                                         getOptionLabel={(option: JsonItem): string => `${option.name} [${option.abbr}]`}
-                                        getOptionSelected={(a, b) => a.abbr === b.abbr}
+                                        getOptionSelected={(a, b): boolean => a.abbr === b.abbr}
                                         value={item.name ? {name: item.name, abbr: item.abbr} : null}
                                         size={'small'}
                                         renderInput={(params): ReactNode =>
@@ -267,7 +266,7 @@ class MainFormClass extends PureComponent<FormProps, null> {
                                         }
                                     />
                                 </Grid>
-                                <Grid item xs={4}>
+                                <Grid item md={4} xs={6}>
                                     <InputLabel shrink>
                                         Amount
                                     </InputLabel>
@@ -291,7 +290,7 @@ class MainFormClass extends PureComponent<FormProps, null> {
                     {unit.skills.map((item) => {
                         return (
                             <Grid key={item.id} container spacing={2}>
-                                <Grid item xs={4}>
+                                <Grid item md={4} xs={6}>
                                     <InputLabel shrink>
                                         Skill
                                     </InputLabel>
@@ -299,7 +298,7 @@ class MainFormClass extends PureComponent<FormProps, null> {
                                         options={SkillListSorted}
                                         onChange={this.OnChangeSkillAbbr.bind(this, item.id)}
                                         getOptionLabel={(option: JsonSkill): string => `${option.name} [${option.abbr}]`}
-                                        getOptionSelected={(a, b) => a.abbr === b.abbr}
+                                        getOptionSelected={(a, b): boolean => a.abbr === b.abbr}
                                         value={item.name ? {name: item.name, abbr: item.abbr} : null}
                                         renderInput={(params): ReactNode =>
                                             <TextField
@@ -311,7 +310,7 @@ class MainFormClass extends PureComponent<FormProps, null> {
                                         }
                                     />
                                 </Grid>
-                                <Grid item xs={4}>
+                                <Grid item md={4} xs={6}>
                                     <InputLabel shrink>
                                         Level
                                     </InputLabel>
