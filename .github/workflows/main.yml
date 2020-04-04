@@ -16,10 +16,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Publish to Registry
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: gelzis/atlantis-battle-simulator/master
-        username: gelzis
-        password: ${{ secrets.GITHUB_TOKEN }}
-        registry: docker.pkg.github.com
+    - name: Set variables
+      id: vars
+      run: |
+        echo ::set-output name=docker_image::docker.pkg.github.com/${{ github.repository }}/master:$(git rev-parse --short=7 ${{ github.sha }})
+    - name: Build docker image
+      run: |
+        docker build . --file Dockerfile --tag ${{ steps.vars.outputs.docker_image }}
+    - name: Login to registry
+      run: |
+        echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com --username ${{ github.actor }} --password-stdin
+    - name: Push docker image
+      run: |
+        docker push ${{ steps.vars.outputs.docker_image }}
