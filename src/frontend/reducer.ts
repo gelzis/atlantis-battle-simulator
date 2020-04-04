@@ -18,6 +18,7 @@ import {
     RESET_FORM,
     SAVE_UNIT,
     SET_COMBAT_SPELL,
+    SET_ERROR,
     SET_LOADING_STATUS,
     SET_UNITS_NAME,
     Unit,
@@ -37,6 +38,10 @@ const initialState: AppState = {
     defenders: {},
     unit: defaultUnit,
     loading: false,
+    error: {
+        open: false,
+        text: '',
+    },
 };
 
 export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState, action: ActionTypes): AppState | void => {
@@ -185,6 +190,14 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
 
         case SET_LOADING_STATUS: {
             state.loading = action.payload.status;
+            break;
+        }
+
+        case SET_ERROR: {
+            state.error = {
+                open: action.payload.open,
+                text: action.payload.text,
+            };
             break;
         }
     }

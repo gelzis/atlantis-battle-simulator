@@ -11,7 +11,9 @@ import {
     Button,
     Tooltip,
     CircularProgress,
+    Snackbar,
 } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 import {StylesProvider} from '@material-ui/core/styles';
 import LaunchIcon from '@material-ui/icons/Launch';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
@@ -31,7 +33,7 @@ import {
     ADD_UNIT,
     RESET_STATE,
     ExportJson,
-    ExportUnit, SET_LOADING_STATUS,
+    ExportUnit, SET_LOADING_STATUS, SET_ERROR,
 } from './types';
 import {Dispatch} from 'redux';
 // import {json} from 'express';
@@ -46,7 +48,7 @@ const LoadingSpinner = styled(CircularProgress)`
     
 `;
 
-type StateProps = Pick<AppState, 'attackers' | 'defenders' | 'unit' | 'loading'>
+type StateProps = Pick<AppState, 'attackers' | 'defenders' | 'unit' | 'loading' | 'error'>
 type DispatchProps = {
     editUnit: (id: string) => void
     duplicateUnit: (id: string) => void
@@ -54,6 +56,7 @@ type DispatchProps = {
     addUnit: (side: Side, unit: Unit) => void
     resetState: () => void
     setLoadingStatus: (status: boolean) => void
+    setError: (open: boolean, text?: string) => void
 }
 type BattleSimulatorProps = StateProps & DispatchProps;
 
@@ -67,6 +70,7 @@ const mapStateToProps = (state: AppState): StateProps => {
         defenders: state.defenders,
         unit: state.unit,
         loading: state.loading,
+        error: state.error,
     };
 };
 
@@ -109,12 +113,21 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
             type: RESET_STATE,
         });
     },
-
     setLoadingStatus(status): void {
         dispatch({
             type: SET_LOADING_STATUS,
             payload: {
                 status,
+            },
+        });
+    },
+
+    setError(open, text): void {
+        dispatch({
+            type: SET_ERROR,
+            payload: {
+                open,
+                text,
             },
         });
     },
@@ -201,7 +214,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
         this.props.setLoadingStatus(false);
 
         if (!response.ok) {
-            // TODO show error!
+            this.props.setError(true, 'Failed to launch battle, check your input units!');
             return;
         }
 
@@ -262,8 +275,12 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
         // };
     };
 
+    closeError = () => {
+        this.props.setError(false);
+    }
+
     render(): JSX.Element {
-        const {attackers, defenders, editUnit, duplicateUnit, deleteUnit, loading} = this.props;
+        const {attackers, defenders, editUnit, duplicateUnit, deleteUnit, loading, error} = this.props;
 
         return (
             <StylesProvider injectFirst>
@@ -334,6 +351,11 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                         </StyledPaper>
                     }
                 </Container>
+                <Snackbar open={error.open} autoHideDuration={6000} onClose={this.closeError}>
+                    <MuiAlert elevation={6} variant="filled" onClose={this.closeError} severity="error">
+                        {error.text}
+                    </MuiAlert>
+                </Snackbar>
             </StylesProvider>
         );
     }

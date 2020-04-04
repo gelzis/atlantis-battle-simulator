@@ -22,6 +22,8 @@ export const DELETE_UNIT = 'DELETE_UNIT';
 
 export const SET_LOADING_STATUS = 'SET_LOADING_STATUS';
 
+export const SET_ERROR = 'SET_ERROR';
+
 export type Side = 'attackers' | 'defenders';
 
 export type Skill = {
@@ -57,6 +59,10 @@ export type AppState = {
     }
     unit: Unit
     loading: boolean
+    error: {
+        open: boolean
+        text: string
+    }
 }
 
 type flags = 'behind';
@@ -203,6 +209,14 @@ type AddUnit = {
     }
 }
 
+type SetError = {
+    type: typeof SET_ERROR
+    payload: {
+        open: boolean
+        text: string
+    }
+}
+
 export type ActionTypes = SaveUnit | AddItemAction | AddSkillAction | ChangeItemAbbr | ChangeItemAmount |
     ChangeSkillAbbr | ChangeSkillLevel | SetBehind | ResetForm | SetUnitsName | EditUnit | DeleteUnit | DuplicateUnit |
-    SetCombatSpell | AddUnit | ResetState | SetLoadingStatus
+    SetCombatSpell | AddUnit | ResetState | SetLoadingStatus | SetError
