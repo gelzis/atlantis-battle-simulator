@@ -1,0 +1,23 @@
+{
+  "attackers": [
+    {
+      "name": "mage",
+      "items": [
+        {"abbr": "LEAD", "amount": 1},
+        {"abbr": "DRAG", "amount": 4}
+      ],
+      "skills": [
+        {"abbr": "FIRE", "level": 5}
+      ],
+      "flags": ["behind"],
+      "combatSpell": "FIRE"
+    }
+  ],
+  "defenders": [
+    {
+      "items": [
+        {"abbr": "BALR", "amount": 1}
+      ]
+    }
+  ]
+}
