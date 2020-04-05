@@ -16,6 +16,7 @@ import {
     DUPLICATE_UNIT,
     EDIT_UNIT,
     RESET_FORM,
+    RESET_SIDE,
     SAVE_UNIT,
     SET_COMBAT_SPELL,
     SET_ERROR,
@@ -185,6 +186,15 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
 
         case RESET_FORM: {
             state.unit = defaultUnit;
+            break;
+        }
+
+        case RESET_SIDE: {
+            if (action.payload.side === 'attackers') {
+                state.attackers = {};
+            } else {
+                state.defenders = {};
+            }
             break;
         }
 

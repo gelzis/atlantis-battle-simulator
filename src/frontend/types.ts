@@ -5,6 +5,7 @@ export const ADD_ITEM = 'ADD_ITEM';
 
 export const RESET_FORM = 'RESET_FORM';
 export const RESET_STATE = 'RESET_STATE';
+export const RESET_SIDE = 'RESET_SIDE';
 
 export const CHANGE_ITEM_ABBR = 'CHANGE_ITEM_ABBR';
 export const CHANGE_ITEM_AMOUNT = 'CHANGE_ITEM_AMOUNT';
@@ -166,6 +167,13 @@ type ResetState = {
     payload: {}
 }
 
+type ResetSide = {
+    type: typeof RESET_SIDE
+    payload: {
+        side: Side
+    }
+}
+
 type SetUnitsName = {
     type: typeof SET_UNITS_NAME
     payload: {
@@ -219,4 +227,4 @@ type SetError = {
 
 export type ActionTypes = SaveUnit | AddItemAction | AddSkillAction | ChangeItemAbbr | ChangeItemAmount |
     ChangeSkillAbbr | ChangeSkillLevel | SetBehind | ResetForm | SetUnitsName | EditUnit | DeleteUnit | DuplicateUnit |
-    SetCombatSpell | AddUnit | ResetState | SetLoadingStatus | SetError
+    SetCombatSpell | AddUnit | ResetState | SetLoadingStatus | SetError | ResetSide

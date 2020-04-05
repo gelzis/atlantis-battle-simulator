@@ -36,6 +36,7 @@ export const StyledAppBar = styled(AppBar)`
 export const StyledPaper = styled(Paper)`
   padding: 10px;
   margin-bottom: ${theme.spacing(2)}px;
+  position: relative;
 `;
 
 export const StyledHeading = styled(Typography)`

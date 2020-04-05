@@ -34,9 +34,13 @@ import {
     ADD_UNIT,
     RESET_STATE,
     ExportJson,
-    ExportUnit, SET_LOADING_STATUS, SET_ERROR,
+    ExportUnit,
+    SET_LOADING_STATUS,
+    SET_ERROR,
+    RESET_SIDE,
 } from './types';
 import {Dispatch} from 'redux';
+import DeleteIcon from '@material-ui/icons/Delete';
 // import {json} from 'express';
 // import {v4 as uuidv4} from 'uuid';
 
@@ -45,8 +49,10 @@ const RunBattleContainer = styled.div`
   margin-top: ${theme.spacing(2)}px
 `;
 
-const LoadingSpinner = styled(CircularProgress)`
-    
+const SideClearIcon = styled(DeleteIcon)`
+    position: absolute;
+    top: 10px;
+    right: 10px;
 `;
 
 const Footer = styled(Typography)`
@@ -65,6 +71,7 @@ type DispatchProps = {
     deleteUnit: (id: string) => void
     addUnit: (side: Side, unit: Unit) => void
     resetState: () => void
+    resetSide: (side: Side) => void
     setLoadingStatus: (status: boolean) => void
     setError: (open: boolean, text?: string) => void
 }
@@ -121,6 +128,15 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
     resetState(): void {
         dispatch({
             type: RESET_STATE,
+        });
+    },
+
+    resetSide(side): void {
+        dispatch({
+            type: RESET_SIDE,
+            payload: {
+                side,
+            },
         });
     },
     setLoadingStatus(status): void {
@@ -319,6 +335,13 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                 <Typography variant="h5" component="h3">
                                     Attacker units
                                 </Typography>
+                                <Tooltip title="Clear all units on this side">
+                                    <SideClearIcon
+                                        css={'cursor: pointer'}
+                                        onClick={this.props.resetSide.bind(null, 'attackers')}
+                                        fontSize={'small'}
+                                    />
+                                </Tooltip>
                                 <UnitList
                                     units={Object.values(attackers)}
                                     onEdit={editUnit}
@@ -332,6 +355,13 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                 <Typography variant="h5" component="h3">
                                     Defender units
                                 </Typography>
+                                <Tooltip title="Clear all units on this side">
+                                    <SideClearIcon
+                                        css={'cursor: pointer'}
+                                        onClick={this.props.resetSide.bind(null, 'defenders')}
+                                        fontSize={'small'}
+                                    />
+                                </Tooltip>
                                 <UnitList
                                     units={Object.values(defenders)}
                                     onEdit={editUnit}
@@ -350,7 +380,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                             startIcon={!loading && <LaunchIcon />}
                             onClick={this.runBattle}
                         >
-                            {loading && <LoadingSpinner color="inherit" size={24}/>}
+                            {loading && <CircularProgress color="inherit" size={24}/>}
                             {!loading && 'Run battle'}
                         </Button>
                     </RunBattleContainer>
