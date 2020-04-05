@@ -348,7 +348,7 @@ class MainFormClass extends PureComponent<FormProps, null> {
                         </Grid>
                     }
                 </div>
-                <FormControlLabel onChange={this.OnChangeBehind} control={<Switch />} label="Behind" />
+                <FormControlLabel onChange={this.OnChangeBehind} control={<Switch checked={unit.behind} />} label="Behind" />
                 <div>
                     <Grid container spacing={1}>
                         <Grid item xs={4}>
