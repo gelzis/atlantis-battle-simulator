@@ -57,10 +57,6 @@ const SideClearIcon = styled(DeleteIcon)`
 
 const Footer = styled(Typography)`
     text-align: center;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
     padding: ${theme.spacing(2)}px 0;
 `;
 
@@ -310,7 +306,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
 
         return (
             <StylesProvider injectFirst>
-                <Container>
+                <Container css="flex-grow: 1;">
                     <StyledAppBar position="static">
                         <Toolbar>
                             <Typography variant="h6">

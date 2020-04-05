@@ -80,8 +80,9 @@ export const GlobalStyle = createGlobalStyle`
       }
     }
     
-    body {
-      padding-bottom: 100px;
-      position: relative;
+    #app {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
     }
 `;
