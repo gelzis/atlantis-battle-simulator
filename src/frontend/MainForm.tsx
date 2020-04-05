@@ -341,7 +341,7 @@ class MainFormClass extends PureComponent<FormProps, null> {
                                     onChange={this.OnCombatSpellSet}
                                 >
                                     {combatSpells.map((item) => (
-                                        <MenuItem value={item.abbr}>{`${item.name} [${item.abbr}]`}</MenuItem>
+                                        <MenuItem key={item.abbr} value={item.abbr}>{`${item.name} [${item.abbr}]`}</MenuItem>
                                     ))}
                                 </Select>
                             </Grid>

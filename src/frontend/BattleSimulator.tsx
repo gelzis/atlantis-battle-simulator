@@ -386,8 +386,10 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                     </RunBattleContainer>
 
                     {this.state.battleText &&
-                        <StyledPaper css={`margin-top: ${theme.spacing(2)}px `} elevation={3}>
-                            <pre>{this.state.battleText}</pre>
+                        <StyledPaper css={`margin-top: ${theme.spacing(2)}px; white-space: pre-wrap;`} elevation={3}>
+                            <Typography variant="body2">
+                                {this.state.battleText}
+                            </Typography>
                         </StyledPaper>
                     }
                 </Container>

@@ -29,6 +29,7 @@ export const UnitList: FC<UnitItemProps> = ({units, onDuplicate, onEdit, onDelet
                         <TableCell>Name</TableCell>
                         <TableCell align="left">Items</TableCell>
                         <TableCell align="left">Skills</TableCell>
+                        <TableCell align="left">Behind</TableCell>
                         <TableCell align="right">Actions</TableCell>
                     </TableRow>
                 </TableHead>
@@ -47,6 +48,9 @@ export const UnitList: FC<UnitItemProps> = ({units, onDuplicate, onEdit, onDelet
                                 {unit.skills.map((skill) => {
                                     return <div key={skill.id}>{`${skill.abbr} ${skill.level}`}</div>;
                                 })}
+                            </TableCell>
+                            <TableCell align="left">
+                                {unit.behind ? 'yes' : 'no'}
                             </TableCell>
                             <TableCell align="right">
                                 <Tooltip title="Edit">
