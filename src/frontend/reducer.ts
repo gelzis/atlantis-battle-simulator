@@ -51,6 +51,10 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
             state.unit.skills = state.unit.skills.filter((skill) => !!skill.abbr);
             state.unit.items = state.unit.items.filter((item) => !!item.abbr);
 
+            if (!state.unit.items.length) {
+                break;
+            }
+
             if (state.unit.id) {
                 if (state.attackers[state.unit.id]) {
                     state.attackers[state.unit.id] = state.unit;
