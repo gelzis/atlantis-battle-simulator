@@ -299,7 +299,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
 
     closeError = (): void => {
         this.props.setError(false);
-    }
+    };
 
     render(): JSX.Element {
         const {attackers, defenders, editUnit, duplicateUnit, deleteUnit, loading, error} = this.props;
