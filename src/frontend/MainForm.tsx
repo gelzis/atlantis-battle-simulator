@@ -194,7 +194,7 @@ class MainFormClass extends PureComponent<FormProps, null> {
     };
 
     OnChangeItemAmount = (itemId: string, event: React.ChangeEvent<HTMLInputElement>): void => {
-        const amount = parseInt(event.target.value.replace(/\D+/g, ''), 10);
+        const amount = parseInt(event.target.value.replace(/\D+/g, ''), 10) || 0;
         this.props.changeItemAmount(itemId, amount);
     };
 
