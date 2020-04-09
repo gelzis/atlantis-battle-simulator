@@ -46,7 +46,7 @@ export const UnitList: FC<UnitItemProps> = ({units, onDuplicate, onEdit, onDelet
                             </TableCell>
                             <TableCell align="left">
                                 {unit.skills.map((skill) => {
-                                    return <div key={skill.id}>{`${skill.abbr} ${skill.level}`}</div>;
+                                    return <div key={skill.id}>{`${skill.abbr} ${skill.level} ${skill.abbr === unit.combatSpell ? '(C)' : ''}`}</div>;
                                 })}
                             </TableCell>
                             <TableCell align="left">

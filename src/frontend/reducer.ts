@@ -143,6 +143,10 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
             skill.abbr = action.payload.abbr;
             skill.name = action.payload.name;
             skill.combatSpell = action.payload.combatSpell;
+
+            if (skill.combatSpell && !state.unit.combatSpell) {
+                state.unit.combatSpell = skill.abbr;
+            }
             break;
         }
 
