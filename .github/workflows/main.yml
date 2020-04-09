@@ -12,6 +12,7 @@ jobs:
       id: vars
       run: |
         echo ::set-output name=docker_image::docker.pkg.github.com/${{ github.repository }}/master:$(git rev-parse --short=7 ${{ github.sha }})
+        echo ::set-output name=commit_message::$(git log --format=%B -n 1)
     - name: Build docker image
       run: |
         docker build . --file Dockerfile --tag ${{ steps.vars.outputs.docker_image }}
@@ -30,5 +31,5 @@ jobs:
         curl -s --fail
         -X POST
         -H 'Content-Type: application/json'
-        -d '{"content":"Deployed ${{ github.repository }} image ${{ steps.vars.outputs.docker_image }}"}'
+        -d '{"content":"```Deployed. Repo: ${{ github.repository }} Image: ${{ steps.vars.outputs.docker_image }} Last Commit: ${{steps.vars.outputs.commit_message}}```"}'
         ${{ secrets.webhookUrl }}
