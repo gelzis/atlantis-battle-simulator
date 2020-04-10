@@ -31,5 +31,5 @@ jobs:
         curl -s --fail
         -X POST
         -H 'Content-Type: application/json'
-        -d '{"content":"```Deployed. Repo: ${{ github.repository }} Image: ${{ steps.vars.outputs.docker_image }} Last Commit: ${{steps.vars.outputs.commit_message}}```"}'
+        -d '{"content":"```Deployed.\nRepo: ${{ github.repository }}\nImage: ${{ steps.vars.outputs.docker_image }}\nLast Commit: ${{steps.vars.outputs.commit_message}}```"}'
         ${{ secrets.webhookUrl }}
