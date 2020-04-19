@@ -24,4 +24,4 @@ jobs:
         docker push ${{ steps.vars.outputs.docker_image }}
     - name: Deploy
       run: >
-        curl -s --fail -X POST -H 'Content-Type: application/json' -H 'Authorization: Basic ${{ secrets.deployToken }}' -d '{"repository":"${{ github.repository }}","dockerImage":"${{ steps.vars.outputs.docker_image }}","branch":"${{ github.ref }}"}' https://galleon.pekle.lv/deploy
+        curl -s --fail -X POST -H 'Content-Type: application/json' -H 'Authorization: Basic ${{ secrets.deployToken }}' -d '{"repository":"${{ github.repository }}","dockerImage":"${{ steps.vars.outputs.docker_image }}","branch":"${{ github.ref }}","commitMessage":"${{ steps.vars.outputs.commit_message }}"}' https://galleon.pekle.lv/deploy
