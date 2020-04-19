@@ -25,11 +25,3 @@ jobs:
     - name: Deploy
       run: >
         curl -s --fail -X POST -H 'Content-Type: application/json' -H 'Authorization: Basic ${{ secrets.deployToken }}' -d '{"repository":"${{ github.repository }}","dockerImage":"${{ steps.vars.outputs.docker_image }}","branch":"${{ github.ref }}"}' https://galleon.pekle.lv/deploy
-    - name: Notify deploy
-      continue-on-error: true
-      run: >
-        curl -s --fail
-        -X POST
-        -H 'Content-Type: application/json'
-        -d '{"content":"```Deployed.\nRepo: ${{ github.repository }}\nImage: ${{ steps.vars.outputs.docker_image }}\nLast Commit: ${{steps.vars.outputs.commit_message}}```"}'
-        ${{ secrets.webhookUrl }}
