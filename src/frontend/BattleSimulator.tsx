@@ -243,6 +243,8 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
         this.setState({
             battleText: await response.text(),
         });
+
+        window.ga && window.ga('send', 'event', 'battle', 'success');
     };
 
     // downloadAsJson = () => {
