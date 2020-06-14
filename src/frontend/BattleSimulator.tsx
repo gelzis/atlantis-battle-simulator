@@ -1,4 +1,4 @@
-/* global fetch */
+/* global fetch, FileReader */
 import React, {ChangeEvent, PureComponent} from 'react';
 import {connect} from 'react-redux';
 import styled from 'styled-components';
@@ -19,11 +19,15 @@ import LaunchIcon from '@material-ui/icons/Launch';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import GitHubIcon from '@material-ui/icons/GitHub';
+import {Dispatch} from 'redux';
+import DeleteIcon from '@material-ui/icons/Delete';
+import {v4 as uuidv4} from 'uuid';
 
 import {StyledAppBar, StyledPaper, theme} from './StyledComponents';
 import {MainForm} from './MainForm';
 import {UnitList} from './UnitList';
-// import {defaultUnit} from './reducer';
+import {defaultUnit} from './reducer';
+import {download} from './utils';
 import {
     AppState,
     EDIT_UNIT,
@@ -35,14 +39,15 @@ import {
     RESET_STATE,
     ExportJson,
     ExportUnit,
+    ExportItem,
+    ExportSkill,
     SET_LOADING_STATUS,
     SET_ERROR,
     RESET_SIDE,
+    Skill,
+    Item,
 } from './types';
-import {Dispatch} from 'redux';
-import DeleteIcon from '@material-ui/icons/Delete';
-// import {json} from 'express';
-// import {v4 as uuidv4} from 'uuid';
+import {getItemByAbbr, getSkillByAbbr} from './resources';
 
 const RunBattleContainer = styled.div`
   text-align: center; 
@@ -164,11 +169,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
         };
     }
 
-    runBattle = async(): Promise<void> => {
-        this.setState({
-            battleText: '',
-        });
-
+    convertCurrentStateToJson = (): ExportJson => {
         const exportJson: ExportJson = {
             attackers: [],
             defenders: [],
@@ -220,6 +221,73 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             addUnitToJson('defenders', unit);
         }
 
+        return exportJson;
+    }
+
+    convertJsonToCurrentState = (inputJson: ExportJson): void => {
+        this.props.resetState();
+
+        const addUnitToState = (side: Side, jsonUnit: ExportUnit): void => {
+            const unit: Unit = {...defaultUnit};
+            unit.id = uuidv4();
+            if (jsonUnit.name) {
+                unit.name = jsonUnit.name;
+            }
+
+            if (jsonUnit.combatSpell) {
+                unit.name = jsonUnit.combatSpell;
+            }
+
+            if (jsonUnit.flags && jsonUnit.flags.includes('behind')) {
+                unit.behind = true;
+            }
+
+            if (Array.isArray(jsonUnit.skills)) {
+                unit.skills = jsonUnit.skills.map((skill: ExportSkill): Skill => {
+                    return {
+                        abbr: skill.abbr,
+                        level: skill.level,
+                        id: uuidv4(),
+                        combatSpell: jsonUnit.combatSpell === skill.abbr,
+                        name: getSkillByAbbr(skill.abbr).name,
+                    };
+                });
+            }
+
+            if (Array.isArray(jsonUnit.items)) {
+                unit.items = jsonUnit.items.map((skill: ExportItem): Item => {
+                    return {
+                        abbr: skill.abbr,
+                        amount: skill.amount,
+                        id: uuidv4(),
+                        name: getItemByAbbr(skill.abbr).name,
+                    };
+                });
+            }
+
+            this.props.addUnit(side, unit);
+        };
+
+        if (inputJson.attackers.length) {
+            inputJson.attackers.map((jsonUnit: ExportUnit) => {
+                addUnitToState('attackers', jsonUnit);
+            });
+        }
+
+        if (inputJson.defenders.length) {
+            inputJson.defenders.map((jsonUnit: ExportUnit) => {
+                addUnitToState('defenders', jsonUnit);
+            });
+        }
+    }
+
+    runBattle = async(): Promise<void> => {
+        this.setState({
+            battleText: '',
+        });
+
+        const exportJson = this.convertCurrentStateToJson();
+
         this.props.setLoadingStatus(true);
 
         const response = await fetch('/battle', {
@@ -247,56 +315,36 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
         window.ga && window.ga('send', 'event', 'battle', 'success');
     };
 
-    // downloadAsJson = () => {
-    //     console.log('run battle');
-    // };
+    downloadAsJson = (): void => {
+        const exportJson = this.convertCurrentStateToJson();
+
+        download(JSON.stringify(exportJson), 'battle.json');
+    };
 
     uploadJson = (event: ChangeEvent<HTMLInputElement>): void => {
         if (!event.target.files.length) {
-            // return;
+            return;
         }
-        //
-        // const reader = new FileReader();
-        // reader.readAsText(event.target.files[0]);
-        // reader.onload = (e) => {
-        //     let inputJson;
-        //     try {
-        //         inputJson = JSON.parse(String(e.target.result));
-        //     } catch (e) {
-        //         console.log('failed parsing', e);
-        //         //TODO show error
-        //         return;
-        //     }
-        //
-        //     if (!inputJson.attackers || !inputJson.defenders) {
-        //         //TODO show error
-        //         return;
-        //     }
-        //
-        //     console.log(e.target.result);
-        //
-        //     if (inputJson.attackers) {
-        //         inputJson.attackers.map((jsonUnit: any) => {
-        //             const unit: Unit = {...defaultUnit};
-        //             unit.id = uuidv4();
-        //             if (jsonUnit.name) {
-        //                 unit.name = jsonUnit.name;
-        //             }
-        //
-        //             if (jsonUnit.combatspell) {
-        //                 unit.name = jsonUnit.combatspell;
-        //             }
-        //
-        //             if (jsonUnit.skills && jsonUnit.skills.length) {
-        //                 unit.skills = jsonUnit.skills.map((skill) => {
-        //
-        //                 });
-        //             }
-        //
-        //             this.props.addUnit('attackers', unit);
-        //         });
-        //     }
-        // };
+
+        const reader = new FileReader();
+        reader.readAsText(event.target.files[0]);
+        reader.onload = (e): void => {
+            let inputJson;
+            try {
+                inputJson = JSON.parse(String(e.target.result));
+            } catch (e) {
+                console.log('failed parsing', e);
+                this.props.setError(true, 'Failed to parse the json, check json formatting!');
+                return;
+            }
+
+            if (!Array.isArray(inputJson.attackers) || !Array.isArray(inputJson.defenders)) {
+                this.props.setError(true, 'Invalid json format, missing attackers or defenders array!');
+                return;
+            }
+
+            this.convertJsonToCurrentState(inputJson);
+        };
     };
 
     closeError = (): void => {
@@ -316,13 +364,13 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                             </Typography>
                             <div style={{flexGrow: 1}}/>
                             <input onChange={this.uploadJson} accept="application/JSON" style={{display: 'none'}} id="icon-button-file" type="file" />
-                            <label style={{display: 'none'}} htmlFor="icon-button-file">
+                            <label htmlFor="icon-button-file">
                                 <IconButton edge="end" color="inherit" component="span">
                                     <Tooltip title="Upload battle as a JSON file"><CloudUploadIcon /></Tooltip>
                                 </IconButton>
                             </label>
-                            <IconButton css="display: none;" edge="end" color="inherit">
-                                <Tooltip title="Download battle as a JSON file"><CloudDownloadIcon /></Tooltip>
+                            <IconButton edge="end" color="inherit">
+                                <Tooltip title="Download battle as a JSON file"><CloudDownloadIcon onClick={this.downloadAsJson}/></Tooltip>
                             </IconButton>
                         </Toolbar>
                     </StyledAppBar>

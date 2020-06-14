@@ -17,7 +17,9 @@ import {
     EDIT_UNIT,
     RESET_FORM,
     RESET_SIDE,
+    RESET_STATE,
     SAVE_UNIT,
+    SET_BEHIND,
     SET_COMBAT_SPELL,
     SET_ERROR,
     SET_LOADING_STATUS,
@@ -164,7 +166,7 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
             break;
         }
 
-        case 'SET_BEHIND': {
+        case SET_BEHIND: {
             state.unit.behind = action.payload.enabled;
             break;
         }
@@ -204,6 +206,10 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
                 state.defenders = {};
             }
             break;
+        }
+
+        case RESET_STATE: {
+            return initialState;
         }
 
         case SET_LOADING_STATUS: {

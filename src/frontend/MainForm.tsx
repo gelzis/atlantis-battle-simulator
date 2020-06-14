@@ -22,8 +22,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import SaveIcon from '@material-ui/icons/Save';
 
 import {StyledHeading, StyledPaper, theme} from './StyledComponents';
-import SkillList from '../engine/skills.json';
-import ItemList from '../engine/items.json';
+import {SkillListSorted, ItemListSorted} from './resources';
 import {
     ADD_ITEM,
     ADD_SKILL,
@@ -55,22 +54,6 @@ type JsonItem = {
     abbr: string
     name: string
 }
-
-const SkillListSorted = SkillList.sort((a, b) => {
-    if (a.name > b.name) {
-        return 1;
-    } else {
-        return -1;
-    }
-});
-
-const ItemListSorted = ItemList.sort((a, b) => {
-    if (a.name.toLowerCase() > b.name.toLowerCase()) {
-        return 1;
-    } else {
-        return -1;
-    }
-});
 
 type StateProps = {
     unit: Unit

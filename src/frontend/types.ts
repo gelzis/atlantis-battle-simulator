@@ -42,6 +42,17 @@ export type Item = {
     amount: number
 }
 
+export type SkillResource = {
+    abbr: string
+    name: string
+    combatSpell?: boolean
+}
+
+export type ItemResource = {
+    abbr: string
+    name: string
+}
+
 export type Unit = {
     id: string
     name: string
@@ -68,12 +79,12 @@ export type AppState = {
 
 type flags = 'behind';
 
-type ExportSkill = {
+export type ExportSkill = {
     abbr: string
     level: number
 }
 
-type ExportItem = {
+export type ExportItem = {
     abbr: string
     amount: number
 }
