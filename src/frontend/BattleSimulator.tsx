@@ -312,7 +312,10 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             battleText: await response.text(),
         });
 
-        window.ga && window.ga('send', 'event', 'battle', 'success');
+        window.gtag && window.gtag('event', 'success', {
+            // eslint-disable-next-line @typescript-eslint/camelcase
+            event_category: 'battle',
+        });
     };
 
     downloadAsJson = (): void => {
