@@ -235,7 +235,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             }
 
             if (jsonUnit.combatSpell) {
-                unit.name = jsonUnit.combatSpell;
+                unit.combatSpell = jsonUnit.combatSpell;
             }
 
             if (jsonUnit.flags && jsonUnit.flags.includes('behind')) {
