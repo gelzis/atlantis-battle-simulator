@@ -63,6 +63,7 @@ type DispatchProps = {
     saveUnit: (side?: Side) => void
     addSkill: () => void
     addItem: () => void
+
     changeItemAbbr: (id: string, abbr: string, name: string) => void
     changeItemAmount: (id: string, amount: number) => void
 

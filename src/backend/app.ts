@@ -9,7 +9,13 @@ const app = express();
 const port = process.env.PORT || 4020;
 app.use(bodyParser.json());
 
-app.use('/dist/main.js', express.static(path.join(__dirname, '../../src/public/dist/main.js'), {cacheControl: false, etag: false}));
+app.use('/dist/main.js', express.static(path.join(__dirname, '../../src/public/dist/main.js'), {
+    cacheControl: false,
+    etag: false,
+    setHeaders: (res) => {
+        res.setHeader('Cache-Control', 'no-store');
+    },
+}));
 app.use('/', express.static(path.join(__dirname, '../../src/public')));
 
 app.post('/battle', async(req, res) => {
