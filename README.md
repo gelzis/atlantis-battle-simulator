@@ -1,6 +1,6 @@
 # Atlantis battle simulator
 
-This repository contains application of the the battle simulator written in typescript.
+This repository contains application of the battle simulator written in typescript.
 
 ## How does it work?
 
