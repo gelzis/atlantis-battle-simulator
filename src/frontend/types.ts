@@ -23,6 +23,9 @@ export const DELETE_UNIT = 'DELETE_UNIT';
 
 export const SET_LOADING_STATUS = 'SET_LOADING_STATUS';
 
+export const SET_ATTACKERS_STRUCTURE = 'SET_ATTACKERS_STRUCTURE';
+export const SET_DEFENDERS_STRUCTURE = 'SET_DEFENDERS_STRUCTURE';
+
 export const SET_ERROR = 'SET_ERROR';
 
 export type Side = 'attackers' | 'defenders';
@@ -69,6 +72,8 @@ export type AppState = {
     defenders: {
         [key: string]: Unit
     }
+    attackerStructure: string
+    defenderStructure: string
     unit: Unit
     loading: boolean
     error: {
@@ -97,9 +102,19 @@ export type ExportUnit = {
     flags?: flags[]
 }
 
+export type Structure = {
+    type: string
+}
+
 export type ExportJson = {
-    attackers: ExportUnit[]
-    defenders: ExportUnit[]
+    attackers: {
+        units: ExportUnit[]
+        structure?: Structure
+    }
+    defenders: {
+        units: ExportUnit[]
+        structure?: Structure
+    }
 }
 
 export type SaveUnit = {
@@ -236,6 +251,20 @@ type SetError = {
     }
 }
 
+type SetAttackersStructure = {
+    type: typeof SET_ATTACKERS_STRUCTURE
+    payload: {
+        name: string
+    }
+}
+
+type SetDefendersStructure = {
+    type: typeof SET_DEFENDERS_STRUCTURE
+    payload: {
+        name: string
+    }
+}
+
 export type ActionTypes = SaveUnit | AddItemAction | AddSkillAction | ChangeItemAbbr | ChangeItemAmount |
     ChangeSkillAbbr | ChangeSkillLevel | SetBehind | ResetForm | SetUnitsName | EditUnit | DeleteUnit | DuplicateUnit |
-    SetCombatSpell | AddUnit | ResetState | SetLoadingStatus | SetError | ResetSide
+    SetCombatSpell | AddUnit | ResetState | SetLoadingStatus | SetError | ResetSide | SetAttackersStructure | SetDefendersStructure

@@ -1,5 +1,6 @@
 import SkillList from '../engine/skills.json';
 import ItemList from '../engine/items.json';
+import ObjectList from '../engine/objects.json';
 import {ItemResource, SkillResource} from './types';
 
 export const SkillListSorted = SkillList.sort((a, b) => {
@@ -17,6 +18,8 @@ export const ItemListSorted = ItemList.sort((a, b) => {
         return -1;
     }
 });
+
+export const ObjectListSorted = ObjectList.sort();
 
 export function getSkillByAbbr(abbr: string): SkillResource | undefined {
     return SkillList.find((item) => item.abbr === abbr);

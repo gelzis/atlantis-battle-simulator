@@ -18,9 +18,9 @@ import {
     RESET_FORM,
     RESET_SIDE,
     RESET_STATE,
-    SAVE_UNIT,
+    SAVE_UNIT, SET_ATTACKERS_STRUCTURE,
     SET_BEHIND,
-    SET_COMBAT_SPELL,
+    SET_COMBAT_SPELL, SET_DEFENDERS_STRUCTURE,
     SET_ERROR,
     SET_LOADING_STATUS,
     SET_UNITS_NAME,
@@ -39,6 +39,8 @@ export const defaultUnit: Unit = {
 const initialState: AppState = {
     attackers: {},
     defenders: {},
+    attackerStructure: null,
+    defenderStructure: null,
     unit: defaultUnit,
     loading: false,
     error: {
@@ -222,6 +224,16 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
                 open: action.payload.open,
                 text: action.payload.text,
             };
+            break;
+        }
+
+        case SET_ATTACKERS_STRUCTURE: {
+            state.attackerStructure = action.payload.name;
+            break;
+        }
+
+        case SET_DEFENDERS_STRUCTURE: {
+            state.defenderStructure = action.payload.name;
             break;
         }
     }

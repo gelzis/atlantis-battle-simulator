@@ -1,5 +1,5 @@
 /* global fetch, FileReader */
-import React, {ChangeEvent, PureComponent} from 'react';
+import React, {ChangeEvent, PureComponent, ReactNode} from 'react';
 import {connect} from 'react-redux';
 import styled from 'styled-components';
 import {
@@ -12,6 +12,8 @@ import {
     Tooltip,
     CircularProgress,
     Snackbar,
+    InputLabel,
+    TextField,
 } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import {StylesProvider} from '@material-ui/core/styles';
@@ -23,7 +25,7 @@ import {Dispatch} from 'redux';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {v4 as uuidv4} from 'uuid';
 
-import {StyledAppBar, StyledPaper, theme} from './StyledComponents';
+import {StyledAppBar, StyledPaper, theme, StyledSideHeading} from './StyledComponents';
 import {MainForm} from './MainForm';
 import {UnitList} from './UnitList';
 import {defaultUnit} from './reducer';
@@ -46,8 +48,11 @@ import {
     RESET_SIDE,
     Skill,
     Item,
+    SET_ATTACKERS_STRUCTURE,
+    SET_DEFENDERS_STRUCTURE,
 } from './types';
-import {getItemByAbbr, getSkillByAbbr} from './resources';
+import {getItemByAbbr, getSkillByAbbr, ObjectListSorted} from './resources';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const RunBattleContainer = styled.div`
   text-align: center; 
@@ -65,7 +70,7 @@ const Footer = styled(Typography)`
     padding: ${theme.spacing(2)}px 0;
 `;
 
-type StateProps = Pick<AppState, 'attackers' | 'defenders' | 'unit' | 'loading' | 'error'>
+type StateProps = Pick<AppState, 'attackers' | 'defenders' | 'unit' | 'loading' | 'error' | 'attackerStructure' | 'defenderStructure'>
 type DispatchProps = {
     editUnit: (id: string) => void
     duplicateUnit: (id: string) => void
@@ -75,6 +80,8 @@ type DispatchProps = {
     resetSide: (side: Side) => void
     setLoadingStatus: (status: boolean) => void
     setError: (open: boolean, text?: string) => void
+    setAttackersStructure: (name: string) => void
+    setDefendersStructure: (name: string) => void
 }
 type BattleSimulatorProps = StateProps & DispatchProps;
 
@@ -86,6 +93,8 @@ const mapStateToProps = (state: AppState): StateProps => {
     return {
         attackers: state.attackers,
         defenders: state.defenders,
+        attackerStructure: state.attackerStructure,
+        defenderStructure: state.defenderStructure,
         unit: state.unit,
         loading: state.loading,
         error: state.error,
@@ -158,6 +167,24 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
             },
         });
     },
+
+    setAttackersStructure(name): void {
+        dispatch({
+            type: SET_ATTACKERS_STRUCTURE,
+            payload: {
+                name,
+            },
+        });
+    },
+
+    setDefendersStructure(name): void {
+        dispatch({
+            type: SET_DEFENDERS_STRUCTURE,
+            payload: {
+                name,
+            },
+        });
+    },
 });
 
 export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, BattleSimulatorClassState> {
@@ -171,8 +198,12 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
 
     convertCurrentStateToJson = (): ExportJson => {
         const exportJson: ExportJson = {
-            attackers: [],
-            defenders: [],
+            attackers: {
+                units: [],
+            },
+            defenders: {
+                units: [],
+            },
         };
 
         const addUnitToJson = (side: Side, unit: Unit): void => {
@@ -205,9 +236,9 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             }
 
             if (side === 'attackers') {
-                exportJson.attackers.push(exportUnit);
+                exportJson.attackers.units.push(exportUnit);
             } else {
-                exportJson.defenders.push(exportUnit);
+                exportJson.defenders.units.push(exportUnit);
             }
         };
 
@@ -219,6 +250,18 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
         for (const id in this.props.defenders) {
             const unit = this.props.defenders[id];
             addUnitToJson('defenders', unit);
+        }
+
+        if (this.props.attackerStructure) {
+            exportJson.attackers.structure = {
+                type: this.props.attackerStructure,
+            };
+        }
+
+        if (this.props.defenderStructure) {
+            exportJson.defenders.structure = {
+                type: this.props.defenderStructure,
+            };
         }
 
         return exportJson;
@@ -268,14 +311,14 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             this.props.addUnit(side, unit);
         };
 
-        if (inputJson.attackers.length) {
-            inputJson.attackers.map((jsonUnit: ExportUnit) => {
+        if (inputJson.attackers.units.length) {
+            inputJson.attackers.units.map((jsonUnit: ExportUnit) => {
                 addUnitToState('attackers', jsonUnit);
             });
         }
 
-        if (inputJson.defenders.length) {
-            inputJson.defenders.map((jsonUnit: ExportUnit) => {
+        if (inputJson.defenders.units.length) {
+            inputJson.defenders.units.map((jsonUnit: ExportUnit) => {
                 addUnitToState('defenders', jsonUnit);
             });
         }
@@ -350,12 +393,20 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
         };
     };
 
+    OnChangeAttackerStructure = (event: ChangeEvent, value: string): void => {
+        this.props.setAttackersStructure(value);
+    };
+
+    OnChangeDefenderStructure = (event: ChangeEvent, value: string): void => {
+        this.props.setDefendersStructure(value);
+    };
+
     closeError = (): void => {
         this.props.setError(false);
     };
 
     render(): JSX.Element {
-        const {attackers, defenders, editUnit, duplicateUnit, deleteUnit, loading, error} = this.props;
+        const {attackers, defenders, attackerStructure, defenderStructure, editUnit, duplicateUnit, deleteUnit, loading, error} = this.props;
 
         return (
             <StylesProvider injectFirst>
@@ -381,9 +432,9 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                     <Grid container spacing={3}>
                         <Grid item xs={12} sm={6}>
                             <StyledPaper square elevation={3}>
-                                <Typography variant="h5" component="h3">
+                                <StyledSideHeading gutterBottom={true} variant="h5">
                                     Attacker units
-                                </Typography>
+                                </StyledSideHeading>
                                 <Tooltip title="Clear all units on this side">
                                     <SideClearIcon
                                         css={'cursor: pointer'}
@@ -391,6 +442,23 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                         fontSize={'small'}
                                     />
                                 </Tooltip>
+                                <InputLabel shrink>
+                                   Structure
+                                </InputLabel>
+                                <Autocomplete
+                                    options={ObjectListSorted}
+                                    onChange={this.OnChangeAttackerStructure}
+                                    value={attackerStructure}
+                                    size={'small'}
+                                    renderInput={(params): ReactNode =>
+                                        <TextField
+                                            {...params}
+                                            size="small"
+                                            variant="outlined"
+                                            css={`margin-bottom: ${theme.spacing(1)}px`}
+                                        />
+                                    }
+                                />
                                 <UnitList
                                     units={Object.values(attackers)}
                                     onEdit={editUnit}
@@ -401,9 +469,9 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <StyledPaper square elevation={3}>
-                                <Typography variant="h5" component="h3">
+                                <StyledSideHeading variant="h5">
                                     Defender units
-                                </Typography>
+                                </StyledSideHeading>
                                 <Tooltip title="Clear all units on this side">
                                     <SideClearIcon
                                         css={'cursor: pointer'}
@@ -411,6 +479,23 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                         fontSize={'small'}
                                     />
                                 </Tooltip>
+                                <InputLabel shrink>
+                                    Structure
+                                </InputLabel>
+                                <Autocomplete
+                                    options={ObjectListSorted}
+                                    onChange={this.OnChangeDefenderStructure}
+                                    value={defenderStructure}
+                                    size={'small'}
+                                    renderInput={(params): ReactNode =>
+                                        <TextField
+                                            {...params}
+                                            size="small"
+                                            variant="outlined"
+                                            css={`margin-bottom: ${theme.spacing(1)}px`}
+                                        />
+                                    }
+                                />
                                 <UnitList
                                     units={Object.values(defenders)}
                                     onEdit={editUnit}

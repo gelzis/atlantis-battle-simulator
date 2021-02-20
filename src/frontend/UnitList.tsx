@@ -12,6 +12,7 @@ import FileCopyIcon from '@material-ui/icons/FileCopy';
 import {Tooltip} from '@material-ui/core';
 
 import {Unit} from './types';
+import {theme} from './StyledComponents';
 
 type UnitItemProps = {
     units: Unit[]
@@ -22,7 +23,7 @@ type UnitItemProps = {
 
 export const UnitList: FC<UnitItemProps> = ({units, onDuplicate, onEdit, onDelete}: UnitItemProps): JSX.Element => {
     return (
-        <TableContainer component={Paper}>
+        <TableContainer css={`margin-top:  ${theme.spacing(1)}px`} component={Paper}>
             <Table size="small" aria-label="a dense table">
                 <TableHead>
                     <TableRow>

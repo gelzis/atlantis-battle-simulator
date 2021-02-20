@@ -19,7 +19,12 @@ app.use('/dist/main.js', express.static(path.join(__dirname, '../../src/public/d
 app.use('/', express.static(path.join(__dirname, '../../src/public')));
 
 app.post('/battle', async(req, res) => {
-    if (!req.body.battle || !Array.isArray(req.body.battle.attackers) || !Array.isArray(req.body.battle.defenders)) {
+    if (!req.body.battle ||
+        !req.body.battle.attackers ||
+        !req.body.battle.defenders ||
+        !Array.isArray(req.body.battle.attackers.units) ||
+        !Array.isArray(req.body.battle.defenders.units)
+    ) {
         return res.sendStatus(400);
     }
 

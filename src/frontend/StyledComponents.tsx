@@ -42,3 +42,7 @@ export const StyledPaper = styled(Paper)`
 export const StyledHeading = styled(Typography)`
   margin: ${theme.spacing(2)}px 0;
 `;
+
+export const StyledSideHeading = styled(Typography)`
+  margin-bottom: ${theme.spacing(1)}px;
+`;
