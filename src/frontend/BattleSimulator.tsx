@@ -384,7 +384,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                 return;
             }
 
-            if (!Array.isArray(inputJson.attackers) || !Array.isArray(inputJson.defenders)) {
+            if (!inputJson.attackers || !inputJson.defenders || !Array.isArray(inputJson.attackers.units) || !Array.isArray(inputJson.defenders.units)) {
                 this.props.setError(true, 'Invalid json format, missing attackers or defenders array!');
                 return;
             }
