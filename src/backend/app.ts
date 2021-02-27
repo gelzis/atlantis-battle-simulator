@@ -7,6 +7,7 @@ import bodyParser from 'body-parser';
 
 const app = express();
 const port = process.env.PORT || 4020;
+
 app.use(bodyParser.json());
 
 app.use('/dist/main.js', express.static(path.join(__dirname, '../../src/public/dist/main.js'), {
@@ -34,7 +35,7 @@ app.post('/battle', async(req, res) => {
     writeFileSync(filePath, JSON.stringify(req.body.battle));
 
     // no longer than 1 minute
-    execFile(`${path.join(__dirname, '../../src/engine/engine')}`, ['battle', filePath], {timeout: 60000}, (error, stdout) => {
+    execFile(`${path.join(__dirname, '../../src/engine/engine')}`, ['battle', filePath, '50'], {timeout: 60000}, (error, stdout) => {
         unlinkSync(filePath);
         if (error) {
             console.log(stdout);

@@ -82,6 +82,16 @@ export type AppState = {
     }
 }
 
+export type ServerSimulationResponse = {
+    wins: number
+    loses: number
+    draws: number
+    winRatio: number
+    victoryBattleText? : string
+    lossBattleText? : string
+    drawBattleText? : string
+}
+
 type flags = 'behind';
 
 export type ExportSkill = {

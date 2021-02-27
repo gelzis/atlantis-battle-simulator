@@ -50,9 +50,11 @@ import {
     Item,
     SET_ATTACKERS_STRUCTURE,
     SET_DEFENDERS_STRUCTURE,
+    ServerSimulationResponse,
 } from './types';
 import {getItemByAbbr, getSkillByAbbr, ObjectListSorted} from './resources';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import {SimulationResult} from './SimulationResult';
 
 const RunBattleContainer = styled.div`
   text-align: center; 
@@ -86,7 +88,7 @@ type DispatchProps = {
 type BattleSimulatorProps = StateProps & DispatchProps;
 
 type BattleSimulatorClassState = {
-    battleText: string
+    battleResult?: ServerSimulationResponse
 }
 
 const mapStateToProps = (state: AppState): StateProps => {
@@ -191,9 +193,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
     constructor(props: BattleSimulatorProps) {
         super(props);
 
-        this.state = {
-            battleText: '',
-        };
+        this.state = {};
     }
 
     convertCurrentStateToJson = (): ExportJson => {
@@ -326,7 +326,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
 
     runBattle = async(): Promise<void> => {
         this.setState({
-            battleText: '',
+            battleResult: undefined,
         });
 
         const exportJson = this.convertCurrentStateToJson();
@@ -351,8 +351,10 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             return;
         }
 
+        const simulationData: ServerSimulationResponse = await response.json();
+
         this.setState({
-            battleText: await response.text(),
+            battleResult: simulationData,
         });
 
         window.gtag && window.gtag('event', 'success', {
@@ -519,12 +521,8 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                         </Button>
                     </RunBattleContainer>
 
-                    {this.state.battleText &&
-                        <StyledPaper css={`margin-top: ${theme.spacing(2)}px; white-space: pre-wrap;`} elevation={3}>
-                            <Typography variant="body2">
-                                {this.state.battleText}
-                            </Typography>
-                        </StyledPaper>
+                    {this.state.battleResult &&
+                        <SimulationResult {...this.state.battleResult} />
                     }
                 </Container>
                 <Footer variant="body2">
