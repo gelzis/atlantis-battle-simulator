@@ -1,23 +1,43 @@
 {
-  "attackers": [
-    {
-      "name": "mage",
-      "items": [
-        {"abbr": "LEAD", "amount": 1},
-        {"abbr": "DRAG", "amount": 4}
-      ],
-      "skills": [
-        {"abbr": "FIRE", "level": 5}
-      ],
-      "flags": ["behind"],
-      "combatSpell": "FIRE"
-    }
-  ],
-  "defenders": [
-    {
-      "items": [
-        {"abbr": "BALR", "amount": 1}
-      ]
-    }
-  ]
+  "attackers": {
+    "units": [
+      {
+        "name": "Unit",
+        "skills": [
+          {
+            "abbr": "FIRE",
+            "level": 1
+          }
+        ],
+        "items": [
+          {
+            "abbr": "DRAG",
+            "amount": 4
+          },
+          {
+            "abbr": "LEAD",
+            "amount": 1
+          }
+        ],
+        "flags": [
+          "behind"
+        ],
+        "combatSpell": "FIRE"
+      }
+    ]
+  },
+  "defenders": {
+    "units": [
+      {
+        "name": "Unit",
+        "skills": [],
+        "items": [
+          {
+            "abbr": "BALR",
+            "amount": 1
+          }
+        ]
+      }
+    ]
+  }
 }
