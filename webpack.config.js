@@ -1,5 +1,5 @@
 const path = require('path');
-const ManifestPlugin = require('webpack-manifest-plugin');
+const {WebpackManifestPlugin} = require('webpack-manifest-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const fs = require('fs');
 
@@ -26,7 +26,7 @@ module.exports = {
     },
 
     plugins: [
-        new ManifestPlugin(),
+        new WebpackManifestPlugin(),
         new CleanWebpackPlugin(),
         {
             apply: (compiler) => {
@@ -37,7 +37,7 @@ module.exports = {
                     }
                     for (const entry in stats.entrypoints) {
                         const {assets} = stats.entrypoints[entry];
-                        fs.writeFileSync(`src/public/dist/${entry}.js`, `export * from '/dist/${assets[0]}';\n`);
+                        fs.writeFileSync(`src/public/dist/${entry}.js`, `export * from '/dist/${assets[0].name}';\n`);
                     }
                 });
             },
