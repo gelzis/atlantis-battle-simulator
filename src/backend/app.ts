@@ -8,6 +8,10 @@ import bodyParser from 'body-parser';
 const app = express();
 const port = process.env.PORT || 4020;
 
+app.get('/', (req, res) => {
+    return res.redirect('https://atlantis.pekle.lv/');
+});
+
 app.use(bodyParser.json());
 
 app.use('/dist/main.js', express.static(path.join(__dirname, '../../src/public/dist/main.js'), {
