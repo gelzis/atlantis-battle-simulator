@@ -308,7 +308,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                         abbr: item.abbr,
                         amount: item.amount,
                         id: uuidv4(),
-                        name: getItemByAbbr(item.abbr).name,
+                        name: itemData.name,
                     });
 
                     return list;
