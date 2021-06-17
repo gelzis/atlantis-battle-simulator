@@ -14,7 +14,6 @@ jobs:
       id: vars
       run: |
         echo ::set-output name=docker_image::docker.pkg.github.com/${{ github.repository }}/master:$(git rev-parse --short=7 ${{ github.sha }})
-        echo ::set-output name=commit_message::$(git log --format=%B -n 1)
     - name: Build docker image
       run: |
         docker build . --file Dockerfile --tag ${{ steps.vars.outputs.docker_image }}
@@ -25,5 +24,8 @@ jobs:
       run: |
         docker push ${{ steps.vars.outputs.docker_image }}
     - name: Deploy
-      run: >
-        curl -s --fail -X POST -H 'Content-Type: application/json' -H 'Authorization: Basic ${{ secrets.deployToken }}' -d '{"repository":"${{ github.repository }}","dockerImage":"${{ steps.vars.outputs.docker_image }}","branch":"${{ github.ref }}","commitMessage":"${{ steps.vars.outputs.commit_message }}"}' https://galleon.pekle.lv/deploy
+      run: |
+        jq -n \
+        --arg msg "$(git log --format=%B -n 1)" \
+        '{"repository":"${{ github.repository }}","dockerImage":"${{ steps.vars.outputs.docker_image }}","branch":"${{ github.ref }}","commitMessage":$msg}' | \
+        curl -s --fail -X POST -H 'Content-Type: application/json' -H 'Authorization: Basic ${{ secrets.deployToken }}' -d@- https://galleon.pekle.lv/deploy
