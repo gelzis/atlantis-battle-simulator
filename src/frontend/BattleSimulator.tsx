@@ -286,19 +286,27 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             }
 
             if (Array.isArray(jsonUnit.skills)) {
-                unit.skills = jsonUnit.skills.map((skill: ExportSkill): Skill => {
-                    return {
+                unit.skills = jsonUnit.skills.reduce((list: Skill[], skill: ExportSkill): Skill[] => {
+                    const skillData = getSkillByAbbr(skill.abbr);
+                    // Ignoring skills that we don't recognize
+                    if (!skillData) {
+                        return list;
+                    }
+
+                    list.push({
                         abbr: skill.abbr,
                         level: skill.level,
                         id: uuidv4(),
                         combatSpell: jsonUnit.combatSpell === skill.abbr,
-                        name: getSkillByAbbr(skill.abbr).name,
-                    };
-                });
+                        name: skillData.name,
+                    });
+
+                    return list;
+                }, []);
             }
 
             if (Array.isArray(jsonUnit.items)) {
-                unit.items = jsonUnit.items.reduce((list: Array<Item>, item: ExportItem): Array<Item> => {
+                unit.items = jsonUnit.items.reduce((list: Item[], item: ExportItem): Item[] => {
                     const itemData = getItemByAbbr(item.abbr);
                     // Ignoring items that we don't recognize as items usable for battle
                     if (!itemData) {
