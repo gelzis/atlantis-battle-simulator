@@ -14,6 +14,7 @@ import {
     CHANGE_SKILL_LEVEL,
     DELETE_UNIT,
     DUPLICATE_UNIT,
+    DUPLICATE_UNIT_TO_OTHER_SIDE,
     EDIT_UNIT,
     RESET_FORM,
     RESET_SIDE,
@@ -85,6 +86,19 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
                 const newUnit = {...state.defenders[action.payload.id]};
                 newUnit.id = uuidv4();
                 state.defenders[newUnit.id] = newUnit;
+            }
+            break;
+        }
+
+        case DUPLICATE_UNIT_TO_OTHER_SIDE: {
+            if (state.attackers[action.payload.id]) {
+                const newUnit = {...state.attackers[action.payload.id]};
+                newUnit.id = uuidv4();
+                state.defenders[newUnit.id] = newUnit;
+            } else if (state.defenders[action.payload.id]) {
+                const newUnit = {...state.defenders[action.payload.id]};
+                newUnit.id = uuidv4();
+                state.attackers[newUnit.id] = newUnit;
             }
             break;
         }

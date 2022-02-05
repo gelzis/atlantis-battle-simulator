@@ -19,6 +19,7 @@ export const SET_COMBAT_SPELL = 'SET_COMBAT_SPELL';
 
 export const EDIT_UNIT = 'EDIT_UNIT';
 export const DUPLICATE_UNIT = 'DUPLICATE_UNIT';
+export const DUPLICATE_UNIT_TO_OTHER_SIDE = 'DUPLICATE_UNIT_TO_OTHER_SIDE';
 export const DELETE_UNIT = 'DELETE_UNIT';
 
 export const SET_LOADING_STATUS = 'SET_LOADING_STATUS';
@@ -231,6 +232,13 @@ type DuplicateUnit = {
     }
 }
 
+type DuplicateUnitToOtherSide = {
+    type: typeof DUPLICATE_UNIT_TO_OTHER_SIDE
+    payload: {
+        id: string
+    }
+}
+
 type DeleteUnit = {
     type: typeof DELETE_UNIT
     payload: {
@@ -277,4 +285,4 @@ type SetDefendersStructure = {
 
 export type ActionTypes = SaveUnit | AddItemAction | AddSkillAction | ChangeItemAbbr | ChangeItemAmount |
     ChangeSkillAbbr | ChangeSkillLevel | SetBehind | ResetForm | SetUnitsName | EditUnit | DeleteUnit | DuplicateUnit |
-    SetCombatSpell | AddUnit | ResetState | SetLoadingStatus | SetError | ResetSide | SetAttackersStructure | SetDefendersStructure
+    SetCombatSpell | AddUnit | ResetState | SetLoadingStatus | SetError | ResetSide | SetAttackersStructure | SetDefendersStructure | DuplicateUnitToOtherSide;

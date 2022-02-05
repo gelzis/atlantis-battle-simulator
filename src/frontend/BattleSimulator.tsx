@@ -51,6 +51,7 @@ import {
     SET_ATTACKERS_STRUCTURE,
     SET_DEFENDERS_STRUCTURE,
     ServerSimulationResponse,
+    DUPLICATE_UNIT_TO_OTHER_SIDE,
 } from './types';
 import {getItemByAbbr, getSkillByAbbr, ObjectListSorted} from './resources';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -84,6 +85,7 @@ type DispatchProps = {
     setError: (open: boolean, text?: string) => void
     setAttackersStructure: (name: string) => void
     setDefendersStructure: (name: string) => void
+    duplicateUnitToTheOtherSide: (id: string) => void
 }
 type BattleSimulatorProps = StateProps & DispatchProps;
 
@@ -184,6 +186,15 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
             type: SET_DEFENDERS_STRUCTURE,
             payload: {
                 name,
+            },
+        });
+    },
+
+    duplicateUnitToTheOtherSide(id: string): void {
+        dispatch({
+            type: DUPLICATE_UNIT_TO_OTHER_SIDE,
+            payload: {
+                id,
             },
         });
     },
@@ -423,7 +434,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
     };
 
     render(): JSX.Element {
-        const {attackers, defenders, attackerStructure, defenderStructure, editUnit, duplicateUnit, deleteUnit, loading, error} = this.props;
+        const {attackers, defenders, attackerStructure, duplicateUnitToTheOtherSide, defenderStructure, editUnit, duplicateUnit, deleteUnit, loading, error} = this.props;
 
         return (
             <StylesProvider injectFirst>
@@ -481,6 +492,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                     onEdit={editUnit}
                                     onDelete={deleteUnit}
                                     onDuplicate={duplicateUnit}
+                                    onDuplicateUnitToOtherSide={duplicateUnitToTheOtherSide}
                                 />
                             </StyledPaper>
                         </Grid>
@@ -518,6 +530,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                     onEdit={editUnit}
                                     onDelete={deleteUnit}
                                     onDuplicate={duplicateUnit}
+                                    onDuplicateUnitToOtherSide={duplicateUnitToTheOtherSide}
                                 />
                             </StyledPaper>
                         </Grid>
@@ -541,7 +554,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                     }
                 </Container>
                 <Footer variant="body2">
-                    Copyright © Raivis Gelsbergs 2020. <br/>You can report bugs in <a target="_blank" href="https://github.com/gelzis/atlantis-battle-simulator">Github</a> and/or contact me on <a href="https://discord.gg/HusGETf">discord</a>, my name tag is Gelzis#9633. <br/>
+                    Copyright © Raivis Gelsbergs {`${new Date().getFullYear()}`}. <br/>You can report bugs in <a target="_blank" href="https://github.com/gelzis/atlantis-battle-simulator">Github</a> and/or contact me on <a href="https://discord.gg/HusGETf">discord</a>, my name tag is Gelzis#9633. <br/>
                     <a style={{color: '#000000'}} target="_blank" href="https://github.com/gelzis/atlantis-battle-simulator">
                         <GitHubIcon color="inherit"/>
                     </a>

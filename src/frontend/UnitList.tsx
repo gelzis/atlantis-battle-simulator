@@ -9,6 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
+import SyncAltIcon from '@material-ui/icons/SyncAlt';
 import {Tooltip} from '@material-ui/core';
 
 import {Unit} from './types';
@@ -19,9 +20,10 @@ type UnitItemProps = {
     onEdit: (id: string) => void
     onDelete: (id: string) => void
     onDuplicate: (id: string) => void
+    onDuplicateUnitToOtherSide: (id: string) => void
 };
 
-export const UnitList: FC<UnitItemProps> = ({units, onDuplicate, onEdit, onDelete}: UnitItemProps): JSX.Element => {
+export const UnitList: FC<UnitItemProps> = ({units, onDuplicate, onEdit, onDelete, onDuplicateUnitToOtherSide}: UnitItemProps): JSX.Element => {
     return (
         <TableContainer css={`margin-top:  ${theme.spacing(1)}px`} component={Paper}>
             <Table size="small" aria-label="a dense table">
@@ -65,6 +67,13 @@ export const UnitList: FC<UnitItemProps> = ({units, onDuplicate, onEdit, onDelet
                                     <FileCopyIcon
                                         css={'cursor: pointer'}
                                         onClick={onDuplicate.bind(null, unit.id)}
+                                        fontSize={'small'}
+                                    />
+                                </Tooltip>
+                                <Tooltip title="Duplicate to other side">
+                                    <SyncAltIcon
+                                        css={'cursor: pointer'}
+                                        onClick={onDuplicateUnitToOtherSide.bind(null, unit.id)}
                                         fontSize={'small'}
                                     />
                                 </Tooltip>
