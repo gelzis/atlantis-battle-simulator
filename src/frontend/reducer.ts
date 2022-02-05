@@ -12,16 +12,21 @@ import {
     CHANGE_ITEM_AMOUNT,
     CHANGE_SKILL_ABBR,
     CHANGE_SKILL_LEVEL,
+    CLOSE_SETTINGS,
     DELETE_UNIT,
     DUPLICATE_UNIT,
     DUPLICATE_UNIT_TO_OTHER_SIDE,
     EDIT_UNIT,
+    OPEN_SETTINGS,
     RESET_FORM,
     RESET_SIDE,
     RESET_STATE,
-    SAVE_UNIT, SET_ATTACKERS_STRUCTURE,
+    SAVE_UNIT,
+    SET_ATTACKERS_STRUCTURE,
+    SET_BATTLE_COUNT,
     SET_BEHIND,
-    SET_COMBAT_SPELL, SET_DEFENDERS_STRUCTURE,
+    SET_COMBAT_SPELL,
+    SET_DEFENDERS_STRUCTURE,
     SET_ERROR,
     SET_LOADING_STATUS,
     SET_UNITS_NAME,
@@ -44,6 +49,8 @@ const initialState: AppState = {
     defenderStructure: null,
     unit: defaultUnit,
     loading: false,
+    battleCount: 50,
+    settingsWindowOpen: false,
     error: {
         open: false,
         text: '',
@@ -248,6 +255,21 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
 
         case SET_DEFENDERS_STRUCTURE: {
             state.defenderStructure = action.payload.name;
+            break;
+        }
+
+        case OPEN_SETTINGS: {
+            state.settingsWindowOpen = true;
+            break;
+        }
+
+        case CLOSE_SETTINGS: {
+            state.settingsWindowOpen = false;
+            break;
+        }
+
+        case SET_BATTLE_COUNT: {
+            state.battleCount = action.payload.value;
             break;
         }
     }

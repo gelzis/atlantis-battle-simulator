@@ -9,6 +9,7 @@ import {
     Toolbar,
     Grid,
     Button,
+    ButtonGroup,
     Tooltip,
     CircularProgress,
     Snackbar,
@@ -20,6 +21,7 @@ import {StylesProvider} from '@material-ui/core/styles';
 import LaunchIcon from '@material-ui/icons/Launch';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+import SettingsIcon from '@material-ui/icons/Settings';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import {Dispatch} from 'redux';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -51,11 +53,12 @@ import {
     SET_ATTACKERS_STRUCTURE,
     SET_DEFENDERS_STRUCTURE,
     ServerSimulationResponse,
-    DUPLICATE_UNIT_TO_OTHER_SIDE,
+    DUPLICATE_UNIT_TO_OTHER_SIDE, OPEN_SETTINGS, CLOSE_SETTINGS,
 } from './types';
 import {getItemByAbbr, getSkillByAbbr, ObjectListSorted} from './resources';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {SimulationResult} from './SimulationResult';
+import {SettingsModal} from './SettingsModal';
 
 const RunBattleContainer = styled.div`
   text-align: center; 
@@ -73,7 +76,7 @@ const Footer = styled(Typography)`
     padding: ${theme.spacing(2)}px 0;
 `;
 
-type StateProps = Pick<AppState, 'attackers' | 'defenders' | 'unit' | 'loading' | 'error' | 'attackerStructure' | 'defenderStructure'>
+type StateProps = Pick<AppState, 'attackers' | 'defenders' | 'unit' | 'loading' | 'error' | 'attackerStructure' | 'defenderStructure' | 'settingsWindowOpen' | 'battleCount' >
 type DispatchProps = {
     editUnit: (id: string) => void
     duplicateUnit: (id: string) => void
@@ -86,6 +89,8 @@ type DispatchProps = {
     setAttackersStructure: (name: string) => void
     setDefendersStructure: (name: string) => void
     duplicateUnitToTheOtherSide: (id: string) => void
+    openSettings: () => void
+    closeSettings: () => void
 }
 type BattleSimulatorProps = StateProps & DispatchProps;
 
@@ -102,6 +107,8 @@ const mapStateToProps = (state: AppState): StateProps => {
         unit: state.unit,
         loading: state.loading,
         error: state.error,
+        settingsWindowOpen: state.settingsWindowOpen,
+        battleCount: state.battleCount,
     };
 };
 
@@ -196,6 +203,18 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
             payload: {
                 id,
             },
+        });
+    },
+
+    openSettings(): void {
+        dispatch({
+            type: OPEN_SETTINGS,
+        });
+    },
+
+    closeSettings(): void {
+        dispatch({
+            type: CLOSE_SETTINGS,
         });
     },
 });
@@ -367,13 +386,14 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             },
             body: JSON.stringify({
                 battle: exportJson,
+                battleCount: this.props.battleCount,
             }),
         });
 
         this.props.setLoadingStatus(false);
 
         if (!response.ok) {
-            this.props.setError(true, 'Failed to launch battle, check your input units!');
+            this.props.setError(true, 'Failed to launch battle, check your input units or try to reduce the number of battles run!');
             return;
         }
 
@@ -434,7 +454,20 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
     };
 
     render(): JSX.Element {
-        const {attackers, defenders, attackerStructure, duplicateUnitToTheOtherSide, defenderStructure, editUnit, duplicateUnit, deleteUnit, loading, error} = this.props;
+        const {
+            attackers,
+            defenders,
+            attackerStructure,
+            duplicateUnitToTheOtherSide,
+            defenderStructure,
+            editUnit,
+            duplicateUnit,
+            deleteUnit,
+            loading,
+            error,
+            openSettings,
+            closeSettings,
+        } = this.props;
 
         return (
             <StylesProvider injectFirst>
@@ -537,16 +570,21 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                     </Grid>
 
                     <RunBattleContainer>
-                        <Button
-                            color="primary"
-                            size="large"
-                            variant="contained"
-                            startIcon={!loading && <LaunchIcon />}
-                            onClick={this.runBattle}
-                        >
-                            {loading && <CircularProgress color="inherit" size={24}/>}
-                            {!loading && 'Run battle'}
-                        </Button>
+                        <ButtonGroup disableElevation variant="contained" color="primary">
+                            <Button
+                                color="primary"
+                                size="large"
+                                variant="contained"
+                                startIcon={!loading && <LaunchIcon />}
+                                onClick={this.runBattle}
+                            >
+                                {loading && <CircularProgress color="inherit" size={24}/>}
+                                {!loading && 'Run battle'}
+                            </Button>
+                            <Button onClick={openSettings}>
+                                <SettingsIcon />
+                            </Button>
+                        </ButtonGroup>
                     </RunBattleContainer>
 
                     {this.state.battleResult &&
@@ -565,6 +603,8 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                         {error.text}
                     </MuiAlert>
                 </Snackbar>
+
+                {this.props.settingsWindowOpen && <SettingsModal onClose={closeSettings}/>}
             </StylesProvider>
         );
     }

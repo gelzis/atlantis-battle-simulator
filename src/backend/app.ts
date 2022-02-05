@@ -29,13 +29,19 @@ app.post('/battle', async(req, res) => {
         return res.sendStatus(400);
     }
 
+    let battleCount = 50;
+    const battleCountInput = parseInt(req.body.battleCount);
+    if (battleCountInput >= 1 && battleCountInput <= 50) {
+        battleCount = battleCountInput;
+    }
+
     const filename = `${uuidv4()}.json`;
     const filePath = path.join(__dirname, `../../dist/${filename}`);
 
     writeFileSync(filePath, JSON.stringify(req.body.battle));
 
     // no longer than 1 minute
-    execFile(`${path.join(__dirname, '../../src/engine/engine')}`, ['battle', filePath, '50'], {timeout: 60000}, (error, stdout) => {
+    execFile(`${path.join(__dirname, '../../src/engine/engine')}`, ['battle', filePath, String(battleCount)], {timeout: 60000}, (error, stdout) => {
         unlinkSync(filePath);
         if (error) {
             console.log(stdout);

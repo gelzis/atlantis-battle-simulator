@@ -29,6 +29,11 @@ export const SET_DEFENDERS_STRUCTURE = 'SET_DEFENDERS_STRUCTURE';
 
 export const SET_ERROR = 'SET_ERROR';
 
+export const OPEN_SETTINGS = 'OPEN_SETTINGS';
+export const CLOSE_SETTINGS = 'CLOSE_SETTINGS';
+
+export const SET_BATTLE_COUNT = 'SET_BATTLE_COUNT';
+
 export type Side = 'attackers' | 'defenders';
 
 export type Skill = {
@@ -81,6 +86,8 @@ export type AppState = {
         open: boolean
         text: string
     }
+    battleCount: number
+    settingsWindowOpen: boolean
 }
 
 export type ServerSimulationResponse = {
@@ -283,6 +290,22 @@ type SetDefendersStructure = {
     }
 }
 
+type OpenSettings = {
+    type: typeof OPEN_SETTINGS
+}
+
+type CloseSettings = {
+    type: typeof CLOSE_SETTINGS
+}
+
+type SetBattleCount = {
+    type: typeof SET_BATTLE_COUNT
+    payload: {
+        value: number
+    }
+}
+
 export type ActionTypes = SaveUnit | AddItemAction | AddSkillAction | ChangeItemAbbr | ChangeItemAmount |
     ChangeSkillAbbr | ChangeSkillLevel | SetBehind | ResetForm | SetUnitsName | EditUnit | DeleteUnit | DuplicateUnit |
-    SetCombatSpell | AddUnit | ResetState | SetLoadingStatus | SetError | ResetSide | SetAttackersStructure | SetDefendersStructure | DuplicateUnitToOtherSide;
+    SetCombatSpell | AddUnit | ResetState | SetLoadingStatus | SetError | ResetSide | SetAttackersStructure | SetDefendersStructure |
+    DuplicateUnitToOtherSide | OpenSettings | CloseSettings | SetBattleCount;
