@@ -128,10 +128,19 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
             break;
         }
         case ADD_ITEM: {
+            let abbr = '';
+            let name = '';
+
+            // if it's the first item, prefill with a leader
+            if (!state.unit.items.length) {
+                abbr = 'LEAD';
+                name = 'leader';
+            }
+
             state.unit.items.unshift({
                 id: uuidv4(),
-                abbr: '',
-                name: '',
+                abbr,
+                name,
                 amount: 1,
             });
             break;
