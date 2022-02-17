@@ -31,7 +31,7 @@ app.post('/battle', async(req, res) => {
 
     let battleCount = 50;
     const battleCountInput = parseInt(req.body.battleCount);
-    if (battleCountInput >= 1 && battleCountInput <= 50) {
+    if (battleCountInput >= 1 && battleCountInput <= 100) {
         battleCount = battleCountInput;
     }
 

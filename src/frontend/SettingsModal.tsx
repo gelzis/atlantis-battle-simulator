@@ -52,8 +52,6 @@ class SettingsModalClass extends PureComponent<Props, ClassState> {
     constructor(props: Props) {
         super(props);
 
-        console.log(this.props);
-
         this.state = {
             battleCount: String(this.props.battleCount),
         };
@@ -75,7 +73,7 @@ class SettingsModalClass extends PureComponent<Props, ClassState> {
                         css={'width: 100%'}
                         name="name"
                         placeholder="Unit"
-                        label="Amount of battles to run (max 50)"
+                        label="Amount of battles to run (max 100)"
                         value={this.state.battleCount}
                         onChange={(event): void => this.setState({battleCount: event.target.value})}
                     />
