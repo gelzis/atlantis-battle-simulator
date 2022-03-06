@@ -24,7 +24,7 @@ export function getMartialPointsFromOrders(orders: string): MartialPointData {
         }
 
         const hasProduce = !!line.trim().match(/^produce/);
-        const hasTax = !!line.trim().match(/^pillage|tax/);
+        const hasTax = !!line.trim().match(/^(pillage|tax)/);
 
         if ((hasProduce || hasTax) && !regions[currentRegion]) {
             regions[currentRegion] = {
