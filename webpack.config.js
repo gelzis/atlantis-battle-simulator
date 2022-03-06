@@ -4,7 +4,10 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const fs = require('fs');
 
 module.exports = {
-    entry: './src/frontend/index.tsx',
+    entry: {
+        main: './src/frontend/index.tsx',
+        martialPoints: './src/frontend/MartialPoints/index.tsx',
+    },
 
     output: {
         path: path.join(__dirname, './src/public/dist'),

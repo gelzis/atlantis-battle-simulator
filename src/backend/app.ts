@@ -17,7 +17,18 @@ app.use('/dist/main.js', express.static(path.join(__dirname, '../../src/public/d
         res.setHeader('Cache-Control', 'no-store');
     },
 }));
+app.use('/dist/martial_points.js', express.static(path.join(__dirname, '../../src/public/dist/martial_points.js'), {
+    cacheControl: false,
+    etag: false,
+    setHeaders: (res) => {
+        res.setHeader('Cache-Control', 'no-store');
+    },
+}));
 app.use('/', express.static(path.join(__dirname, '../../src/public')));
+
+app.get('/martial-points', async(req, res) => {
+    res.sendFile(path.join(__dirname, '../../src/public/martial_points.html'));
+});
 
 app.post('/battle', async(req, res) => {
     if (!req.body.battle ||
