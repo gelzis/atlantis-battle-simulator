@@ -45,10 +45,10 @@ export function Report({martialPointData, onReset}: {martialPointData: MartialPo
                                     {hex.coords}
                                 </TableCell>
                                 <TableCell align="left">
-                                    {hex.produce ? 'yes' : 'no'}
+                                    {hex.tax ? 'yes' : 'no'}
                                 </TableCell>
                                 <TableCell align="left">
-                                    {hex.tax ? 'yes' : 'no'}
+                                    {hex.produce ? 'yes' : 'no'}
                                 </TableCell>
                             </TableRow>
                         ))}
