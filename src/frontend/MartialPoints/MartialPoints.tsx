@@ -60,7 +60,7 @@ export function MartialPoints(): JSX.Element {
             <Main>
                 <DropArea active={!regions} {...getRootProps()}>
                     <input {...getInputProps()} />
-                    {!regions && <> { isDragActive ? <p>Drop ALH orders here ...</p> : <p>Drag 'n' drop ALH orders here, or click to browse</p>}</>}
+                    {!regions && <> { isDragActive ? <p>Drop orders here ...</p> : <p>Drag 'n' drop orders here, or click to browse</p>}</>}
                     {regions && <Report martialPointData={regions} onReset={onReset}/>}
                 </DropArea>
             </Main>
