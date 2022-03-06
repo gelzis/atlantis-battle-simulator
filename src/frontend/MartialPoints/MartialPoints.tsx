@@ -23,7 +23,7 @@ const Main = styled.div`
 
 const DropArea = styled.div`
     width: 800px;
-    height: 400px;
+    min-height: 400px;
     border: 1px dashed #000000;
     text-align: center;
     vertical-align: middle;
@@ -32,8 +32,9 @@ const DropArea = styled.div`
     display: flex;
     position: relative;
     padding: 10px;
-
-    cursor: pointer;
+    cursor: ${(props: {active: boolean}): string => (
+        props.active ? 'pointer' : 'default'
+    )};
 `;
 
 export function MartialPoints(): JSX.Element {
@@ -57,7 +58,7 @@ export function MartialPoints(): JSX.Element {
     return (
         <Container >
             <Main>
-                <DropArea {...getRootProps()}>
+                <DropArea active={!regions} {...getRootProps()}>
                     <input {...getInputProps()} />
                     {!regions && <> { isDragActive ? <p>Drop ALH orders here ...</p> : <p>Drag 'n' drop ALH orders here, or click to browse</p>}</>}
                     {regions && <Report martialPointData={regions} onReset={onReset}/>}
