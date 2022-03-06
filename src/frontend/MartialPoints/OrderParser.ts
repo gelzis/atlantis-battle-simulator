@@ -17,8 +17,16 @@ export function getMartialPointsFromOrders(orders: string): MartialPointData {
     for (const index in lines) {
         const line = lines[index];
 
-        // matches ;*** desert (3,1)
-        const matches = line.match(/;\*\*\* \w+ \((\d+),(\d+)\)/);
+        // matches ALH version
+        // ;*** desert (3,1)
+        let matches = line.match(/;\*\*\* \w+ \((\d+),(\d+)\)/);
+        if (matches) {
+            currentRegion = `${matches[1]},${matches[2]}`;
+        }
+
+        // matches advisor version
+        // ; desert (3,1) in Great Boldur Desert
+        matches = line.match(/; \w+ \((\d+),(\d+)\)/);
         if (matches) {
             currentRegion = `${matches[1]},${matches[2]}`;
         }
