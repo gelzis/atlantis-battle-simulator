@@ -367,6 +367,14 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                 addUnitToState('defenders', jsonUnit);
             });
         }
+
+        if (inputJson.attackers.structure) {
+            this.props.setAttackersStructure(inputJson.attackers.structure.type);
+        }
+
+        if (inputJson.defenders.structure) {
+            this.props.setDefendersStructure(inputJson.attackers.structure.type);
+        }
     }
 
     runBattle = async(): Promise<void> => {
