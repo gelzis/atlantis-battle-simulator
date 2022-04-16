@@ -36,8 +36,12 @@ import {
 export const defaultUnit: Unit = {
     id: '',
     name: 'Unit',
-    skills: [],
-    items: [],
+    skills: [
+        {id: uuidv4(), abbr: '', combatSpell: false, name: '', level: 1},
+    ],
+    items: [
+        {abbr: 'LEAD', amount: 1, id: uuidv4(), name: 'leader'},
+    ],
     combatSpell: '',
     behind: false,
 };
@@ -128,21 +132,19 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
             break;
         }
         case ADD_ITEM: {
-            let abbr = '';
-            let name = '';
+            let amount = 1;
 
-            // if it's the first item, prefill with a leader
-            if (!state.unit.items.length) {
-                abbr = 'LEAD';
-                name = 'leader';
+            if (state.unit.items.length) {
+                amount = state.unit.items[state.unit.items.length - 1].amount;
             }
 
             state.unit.items.unshift({
                 id: uuidv4(),
-                abbr,
-                name,
-                amount: 1,
+                abbr: '',
+                name: '',
+                amount,
             });
+
             break;
         }
 
