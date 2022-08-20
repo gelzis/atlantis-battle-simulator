@@ -21,8 +21,8 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import SaveIcon from '@material-ui/icons/Save';
 
-import {StyledHeading, StyledPaper, theme} from './StyledComponents';
-import {SkillListSorted, ItemListSorted} from './resources';
+import {StyledHeading, StyledPaper, theme} from '../../StyledComponents';
+import {SkillListSorted, ItemListSorted} from '../resources';
 import {
     ADD_ITEM,
     ADD_SKILL,
@@ -34,7 +34,7 @@ import {
     CHANGE_SKILL_LEVEL, RESET_FORM, SET_BEHIND, SET_UNITS_NAME,
     Side,
     Unit, SET_COMBAT_SPELL,
-} from './types';
+} from '../types';
 
 const ButtonGroup = styled.div`
   margin-top: ${theme.spacing(2)}px;

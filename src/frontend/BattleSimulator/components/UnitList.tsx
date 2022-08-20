@@ -12,8 +12,8 @@ import FileCopyIcon from '@material-ui/icons/FileCopy';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
 import {Tooltip} from '@material-ui/core';
 
-import {Unit} from './types';
-import {theme} from './StyledComponents';
+import {Unit} from '../types';
+import {theme} from '../../StyledComponents';
 
 type UnitItemProps = {
     units: Unit[]

@@ -27,11 +27,11 @@ import {Dispatch} from 'redux';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {v4 as uuidv4} from 'uuid';
 
-import {StyledAppBar, StyledPaper, theme, StyledSideHeading} from './StyledComponents';
+import {StyledAppBar, StyledPaper, theme, StyledSideHeading} from '../../StyledComponents';
 import {MainForm} from './MainForm';
 import {UnitList} from './UnitList';
-import {defaultUnit} from './reducer';
-import {download} from './utils';
+import {defaultUnit} from '../reducer';
+import {download} from '../utils';
 import {
     AppState,
     EDIT_UNIT,
@@ -54,8 +54,8 @@ import {
     SET_DEFENDERS_STRUCTURE,
     ServerSimulationResponse,
     DUPLICATE_UNIT_TO_OTHER_SIDE, OPEN_SETTINGS, CLOSE_SETTINGS,
-} from './types';
-import {getItemByAbbr, getSkillByAbbr, ObjectListSorted} from './resources';
+} from '../types';
+import {getItemByAbbr, getSkillByAbbr, ObjectListSorted} from '../resources';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {SimulationResult} from './SimulationResult';
 import {SettingsModal} from './SettingsModal';

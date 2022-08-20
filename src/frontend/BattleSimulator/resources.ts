@@ -1,6 +1,6 @@
-import SkillList from '../engine/skills.json';
-import ItemList from '../engine/items.json';
-import ObjectList from '../engine/objects.json';
+import SkillList from '../../engine/skills.json';
+import ItemList from '../../engine/items.json';
+import ObjectList from '../../engine/objects.json';
 import {ItemResource, SkillResource} from './types';
 
 export const SkillListSorted = SkillList.sort((a, b) => {

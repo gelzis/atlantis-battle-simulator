@@ -9,7 +9,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import {TextField} from '@material-ui/core';
 import {connect} from 'react-redux';
 
-import {AppState, SET_BATTLE_COUNT} from './types';
+import {AppState, SET_BATTLE_COUNT} from '../types';
 
 const SettingsModalDialogContent = styled(DialogContent)`
     min-width: 400px;

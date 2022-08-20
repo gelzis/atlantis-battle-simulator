@@ -1,8 +1,8 @@
 import React, {FC} from 'react';
 import {Typography} from '@material-ui/core';
 
-import {ServerSimulationResponse} from './types';
-import {StyledPaper, theme, StyledSideHeading} from './StyledComponents';
+import {ServerSimulationResponse} from '../types';
+import {StyledPaper, theme, StyledSideHeading} from '../../StyledComponents';
 
 export const SimulationResult: FC<ServerSimulationResponse> = ({wins, loses, draws, winRatio, victoryBattleText, drawBattleText, lossBattleText}: ServerSimulationResponse): JSX.Element => {
     return (

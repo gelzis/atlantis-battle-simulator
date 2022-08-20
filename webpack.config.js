@@ -5,7 +5,7 @@ const fs = require('fs');
 
 module.exports = {
     entry: {
-        main: './src/frontend/index.tsx',
+        main: './src/frontend/BattleSimulator/index.tsx',
         martialPoints: './src/frontend/MartialPoints/index.tsx',
     },
 
