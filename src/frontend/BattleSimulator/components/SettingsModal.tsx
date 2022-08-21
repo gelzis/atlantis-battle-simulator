@@ -62,7 +62,7 @@ class SettingsModalClass extends PureComponent<Props, ClassState> {
         this.props.onClose();
     }
 
-    render(): JSX.Element {
+    render() {
         const {onClose} = this.props;
 
         return (

@@ -1,16 +1,19 @@
 module.exports = {
     "extends": [
+        "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
         "standard"
     ],
     "env": {
         "node": true,
-        "es6": true
+        "browser": true,
+        "es6": true,
+        "jest/globals": true,
     },
     "plugins": [
         "@typescript-eslint",
-        "eslint-plugin-react"
+        "eslint-plugin-react",
+        "jest"
     ],
     "rules": {
         "object-curly-spacing": [
@@ -56,14 +59,8 @@ module.exports = {
                 }
             }
         ],
-        "@typescript-eslint/no-unused-vars-experimental": [
-            "error",
-            {
-                "ignoreArgsIfArgsAfterAreUsed": true
-            }
-        ],
         "@typescript-eslint/no-unused-vars": [
-            0
+            "error"
         ],
         "camelcase": 2,
         "no-unused-vars": 0

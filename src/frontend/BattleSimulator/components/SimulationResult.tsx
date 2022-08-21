@@ -4,7 +4,7 @@ import {Typography} from '@material-ui/core';
 import {ServerSimulationResponse} from '../types';
 import {StyledPaper, theme, StyledSideHeading} from '../../StyledComponents';
 
-export const SimulationResult: FC<ServerSimulationResponse> = ({wins, loses, draws, winRatio, victoryBattleText, drawBattleText, lossBattleText}: ServerSimulationResponse): JSX.Element => {
+export const SimulationResult: FC<ServerSimulationResponse> = ({wins, loses, draws, winRatio, victoryBattleText, drawBattleText, lossBattleText}: ServerSimulationResponse) => {
     return (
         <StyledPaper css={`margin-top: ${theme.spacing(2)}px; white-space: pre-wrap;`} elevation={3}>
             <StyledSideHeading gutterBottom={true} variant="h5">

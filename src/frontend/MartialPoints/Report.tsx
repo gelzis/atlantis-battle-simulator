@@ -19,7 +19,7 @@ const ResetLink = styled.a`
     color: #000000;
 `;
 
-export function Report({martialPointData, onReset}: {martialPointData: MartialPointData, onReset: () => void}): JSX.Element {
+export function Report({martialPointData, onReset}: {martialPointData: MartialPointData, onReset: () => void}) {
     const onResetHandler = useCallback((e) => {
         e.preventDefault();
 

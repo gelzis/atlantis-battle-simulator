@@ -151,12 +151,12 @@ export type SetLoadingStatus = {
 
 type AddSkillAction = {
     type: typeof ADD_SKILL
-    payload: {}
+    payload: Record<string, never>
 }
 
 type AddItemAction = {
     type: typeof ADD_ITEM
-    payload: {}
+    payload: Record<string, never>
 }
 
 type ChangeItemAbbr = {
@@ -203,12 +203,12 @@ type SetBehind = {
 
 type ResetForm = {
     type: typeof RESET_FORM
-    payload: {}
+    payload: Record<string, never>
 }
 
 type ResetState = {
     type: typeof RESET_STATE
-    payload: {}
+    payload: Record<string, never>
 }
 
 type ResetSide = {

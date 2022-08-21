@@ -3,18 +3,18 @@ import React, {ChangeEvent, PureComponent, ReactNode} from 'react';
 import {connect} from 'react-redux';
 import styled from 'styled-components';
 import {
-    Container,
-    Typography,
-    IconButton,
-    Toolbar,
-    Grid,
     Button,
     ButtonGroup,
-    Tooltip,
     CircularProgress,
-    Snackbar,
+    Container,
+    Grid,
+    IconButton,
     InputLabel,
+    Snackbar,
     TextField,
+    Toolbar,
+    Tooltip,
+    Typography,
 } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import {StylesProvider} from '@material-ui/core/styles';
@@ -27,33 +27,35 @@ import {Dispatch} from 'redux';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {v4 as uuidv4} from 'uuid';
 
-import {StyledAppBar, StyledPaper, theme, StyledSideHeading} from '../../StyledComponents';
+import {StyledAppBar, StyledPaper, StyledSideHeading, theme} from '../../StyledComponents';
 import {MainForm} from './MainForm';
 import {UnitList} from './UnitList';
 import {defaultUnit} from '../reducer';
 import {download} from '../utils';
 import {
+    ADD_UNIT,
     AppState,
-    EDIT_UNIT,
+    CLOSE_SETTINGS,
     DELETE_UNIT,
     DUPLICATE_UNIT,
-    Unit,
-    Side,
-    ADD_UNIT,
-    RESET_STATE,
-    ExportJson,
-    ExportUnit,
+    DUPLICATE_UNIT_TO_OTHER_SIDE,
+    EDIT_UNIT,
     ExportItem,
+    ExportJson,
     ExportSkill,
-    SET_LOADING_STATUS,
-    SET_ERROR,
-    RESET_SIDE,
-    Skill,
+    ExportUnit,
     Item,
+    OPEN_SETTINGS,
+    RESET_SIDE,
+    RESET_STATE,
+    ServerSimulationResponse,
     SET_ATTACKERS_STRUCTURE,
     SET_DEFENDERS_STRUCTURE,
-    ServerSimulationResponse,
-    DUPLICATE_UNIT_TO_OTHER_SIDE, OPEN_SETTINGS, CLOSE_SETTINGS,
+    SET_ERROR,
+    SET_LOADING_STATUS,
+    Side,
+    Skill,
+    Unit,
 } from '../types';
 import {getItemByAbbr, getSkillByAbbr, ObjectListSorted} from '../resources';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -295,7 +297,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
         }
 
         return exportJson;
-    }
+    };
 
     convertJsonToCurrentState = (inputJson: ExportJson): void => {
         this.props.resetState();
@@ -375,7 +377,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
         if (inputJson.defenders.structure) {
             this.props.setDefendersStructure(inputJson.attackers.structure.type);
         }
-    }
+    };
 
     runBattle = async(): Promise<void> => {
         this.setState({
@@ -412,7 +414,6 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
         });
 
         window.gtag && window.gtag('event', 'success', {
-            // eslint-disable-next-line @typescript-eslint/camelcase
             event_category: 'battle',
         });
     };
@@ -461,7 +462,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
         this.props.setError(false);
     };
 
-    render(): JSX.Element {
+    render() {
         const {
             attackers,
             defenders,
@@ -486,14 +487,14 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                 Atlantis Battle simulator
                             </Typography>
                             <div style={{flexGrow: 1}}/>
-                            <input onChange={this.uploadJson} accept="application/JSON" style={{display: 'none'}} id="icon-button-file" type="file" />
+                            <input onChange={this.uploadJson} accept="application/JSON" style={{display: 'none'}} data-testid="json-upload-input" id="icon-button-file" type="file" />
                             <label htmlFor="icon-button-file">
                                 <IconButton edge="end" color="inherit" component="span">
                                     <Tooltip title="Upload battle as a JSON file"><CloudUploadIcon /></Tooltip>
                                 </IconButton>
                             </label>
                             <IconButton edge="end" color="inherit">
-                                <Tooltip title="Download battle as a JSON file"><CloudDownloadIcon onClick={this.downloadAsJson}/></Tooltip>
+                                <Tooltip title="Download battle as a JSON file"><CloudDownloadIcon data-testid="download-json" onClick={this.downloadAsJson}/></Tooltip>
                             </IconButton>
                         </Toolbar>
                     </StyledAppBar>
@@ -515,6 +516,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                    Structure
                                 </InputLabel>
                                 <Autocomplete
+                                    id="attacker-structure-autocomplete"
                                     options={ObjectListSorted}
                                     onChange={this.OnChangeAttackerStructure}
                                     value={attackerStructure}
@@ -553,6 +555,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                     Structure
                                 </InputLabel>
                                 <Autocomplete
+                                    id="defender-structure-autocomplete"
                                     options={ObjectListSorted}
                                     onChange={this.OnChangeDefenderStructure}
                                     value={defenderStructure}

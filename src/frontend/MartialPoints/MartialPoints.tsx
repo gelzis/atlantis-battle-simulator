@@ -37,7 +37,7 @@ const DropArea = styled.div`
     )};
 `;
 
-export function MartialPoints(): JSX.Element {
+export function MartialPoints() {
     const [regions, setRegions] = useState(null);
 
     const onReset = useCallback(() => {

@@ -23,7 +23,7 @@ type UnitItemProps = {
     onDuplicateUnitToOtherSide: (id: string) => void
 };
 
-export const UnitList: FC<UnitItemProps> = ({units, onDuplicate, onEdit, onDelete, onDuplicateUnitToOtherSide}: UnitItemProps): JSX.Element => {
+export const UnitList: FC<UnitItemProps> = ({units, onDuplicate, onEdit, onDelete, onDuplicateUnitToOtherSide}: UnitItemProps) => {
     return (
         <TableContainer css={`margin-top:  ${theme.spacing(1)}px`} component={Paper}>
             <Table size="small" aria-label="a dense table">

@@ -1,21 +1,13 @@
 module.exports = {
     presets: [
-        [
-            '@babel/preset-env',
-            {
-                modules: false,
-                targets: {
-                    browsers: 'last 5 years, ie 10',
-                },
-            },
-        ],
+        '@babel/preset-env',
         '@babel/preset-react',
         '@babel/preset-typescript',
     ],
     plugins: [
         '@babel/plugin-proposal-object-rest-spread',
         '@babel/plugin-transform-runtime',
-        ['@babel/plugin-proposal-class-properties', {loose: true}],
-        ['babel-plugin-styled-components'],
+        '@babel/plugin-proposal-class-properties',
+        'babel-plugin-styled-components',
     ],
 };

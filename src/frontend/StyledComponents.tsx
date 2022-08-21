@@ -1,5 +1,5 @@
 import styled, {CSSProp} from 'styled-components'; // eslint-disable-line @typescript-eslint/no-unused-vars
-import {AppBar, createMuiTheme, Paper, Typography} from '@material-ui/core';
+import {AppBar, createTheme, Paper, Typography} from '@material-ui/core';
 
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -10,7 +10,7 @@ declare global {
     }
 }
 
-export const theme = createMuiTheme({
+export const theme = createTheme({
     props: {
         MuiTypography: {
             variantMapping: {

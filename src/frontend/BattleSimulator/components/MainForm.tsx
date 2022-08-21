@@ -214,7 +214,7 @@ class MainFormClass extends PureComponent<FormProps, null> {
         this.props.setCombatSpell(event.target.value);
     };
 
-    render(): JSX.Element {
+    render() {
         const {unit, addItem, addSkill} = this.props;
 
         const combatSpells = unit.skills.filter((skill) => skill.combatSpell);
@@ -225,15 +225,15 @@ class MainFormClass extends PureComponent<FormProps, null> {
                     <SectionHeaderContainer>
                         Men/Items/Monsters <Tooltip title="Add new item"><AddCircleIcon onClick={addItem} css={'cursor: pointer'}/></Tooltip>
                     </SectionHeaderContainer>
-                    {unit.items.map((item) => {
+                    {unit.items.map((item, key) => {
                         return (
-                            <Grid key={item.id} container spacing={2}>
+                            <Grid key={key} container spacing={2}>
                                 <Grid item md={4} xs={6}>
                                     <InputLabel shrink>
                                         Item
                                     </InputLabel>
                                     <Autocomplete
-                                        data-id={item.id}
+                                        id={`item-autocomplete-${key}`}
                                         options={ItemListSorted}
                                         onChange={this.OnChangeItemAbbr.bind(this, item.id)}
                                         getOptionLabel={(option: JsonItem): string => `${option.name} [${option.abbr}]`}
@@ -271,14 +271,15 @@ class MainFormClass extends PureComponent<FormProps, null> {
                     <SectionHeaderContainer>
                         Skills <Tooltip title="Add new skill"><AddCircleIcon onClick={addSkill} css={'cursor: pointer'}/></Tooltip>
                     </SectionHeaderContainer>
-                    {unit.skills.map((item) => {
+                    {unit.skills.map((item, key) => {
                         return (
-                            <Grid key={item.id} container spacing={2}>
+                            <Grid key={key} container spacing={2}>
                                 <Grid item md={4} xs={6}>
                                     <InputLabel shrink>
                                         Skill
                                     </InputLabel>
                                     <Autocomplete
+                                        id={`skill-autocomplete-${key}`}
                                         options={SkillListSorted}
                                         onChange={this.OnChangeSkillAbbr.bind(this, item.id)}
                                         getOptionLabel={(option: JsonSkill): string => `${option.name} [${option.abbr}]`}
@@ -379,6 +380,7 @@ class MainFormClass extends PureComponent<FormProps, null> {
                             startIcon={<AddIcon/>}
                             size="small"
                             onClick={this.OnAddToAttackers}
+                            data-testid="add-to-attackers"
                         >
                             Add to Attackers
                         </Button>
@@ -389,6 +391,7 @@ class MainFormClass extends PureComponent<FormProps, null> {
                             startIcon={<AddIcon/>}
                             size="small"
                             onClick={this.OnAddToDefenders}
+                            data-testid="add-to-defenders"
                         >
                             Add to Defenders
                         </Button>
@@ -398,6 +401,7 @@ class MainFormClass extends PureComponent<FormProps, null> {
                             startIcon={<DeleteIcon/>}
                             size="small"
                             onClick={this.props.resetForm}
+                            data-testid="reset-form"
                         >
                             Reset
                         </Button>
