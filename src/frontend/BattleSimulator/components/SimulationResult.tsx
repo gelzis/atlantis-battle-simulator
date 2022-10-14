@@ -23,11 +23,11 @@ export const SimulationResult: FC<ServerSimulationResponse> = ({
             </StyledSideHeading>
             <StyledPaper css={`margin-top: ${theme.spacing(2)}px; white-space: pre-wrap;`} elevation={3}>
                 <Grid container>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <Typography variant='subtitle1'>Attacker</Typography>
                         <Stats runs={runs} {...attackerLooses} />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <Typography variant='subtitle1'>Defender</Typography>
                         <Stats runs={runs} {...defenderLooses} />
                     </Grid>
