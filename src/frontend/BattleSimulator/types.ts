@@ -14,6 +14,7 @@ export const CHANGE_SKILL_ABBR = 'CHANGE_SKILL_ABBR';
 export const CHANGE_SKILL_LEVEL = 'CHANGE_SKILL_LEVEL';
 
 export const SET_BEHIND = 'SET_BEHIND';
+export const SET_LINE = 'SET_LINE';
 export const SET_UNITS_NAME = 'SET_UNITS_NAME';
 export const SET_COMBAT_SPELL = 'SET_COMBAT_SPELL';
 
@@ -220,6 +221,14 @@ type SetBehind = {
     }
 }
 
+type SetLine = {
+    type: typeof SET_LINE
+    payload: {
+        id: string
+        behind: boolean
+    }
+}
+
 type ResetForm = {
     type: typeof RESET_FORM
     payload: Record<string, never>
@@ -327,4 +336,4 @@ type SetBattleCount = {
 export type ActionTypes = SaveUnit | AddItemAction | AddSkillAction | ChangeItemAbbr | ChangeItemAmount |
     ChangeSkillAbbr | ChangeSkillLevel | SetBehind | ResetForm | SetUnitsName | EditUnit | DeleteUnit | DuplicateUnit |
     SetCombatSpell | AddUnit | ResetState | SetLoadingStatus | SetError | ResetSide | SetAttackersStructure | SetDefendersStructure |
-    DuplicateUnitToOtherSide | OpenSettings | CloseSettings | SetBattleCount;
+    DuplicateUnitToOtherSide | OpenSettings | CloseSettings | SetBattleCount | SetLine;

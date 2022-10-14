@@ -28,6 +28,7 @@ import {
     SET_COMBAT_SPELL,
     SET_DEFENDERS_STRUCTURE,
     SET_ERROR,
+    SET_LINE,
     SET_LOADING_STATUS,
     SET_UNITS_NAME,
     Unit,
@@ -202,6 +203,11 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
 
         case SET_BEHIND: {
             state.unit.behind = action.payload.enabled;
+            break;
+        }
+
+        case SET_LINE: {
+            (state.attackers[action.payload.id] || state.defenders[action.payload.id]).behind = action.payload.behind
             break;
         }
 

@@ -40,6 +40,7 @@ import {
     DUPLICATE_UNIT,
     DUPLICATE_UNIT_TO_OTHER_SIDE,
     EDIT_UNIT,
+    SET_LINE,
     ExportItem,
     ExportJson,
     ExportSkill,
@@ -93,6 +94,7 @@ type DispatchProps = {
     duplicateUnitToTheOtherSide: (id: string) => void
     openSettings: () => void
     closeSettings: () => void
+    setLine: (id: string, behind: boolean) => void
 }
 type BattleSimulatorProps = StateProps & DispatchProps;
 
@@ -217,6 +219,16 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
     closeSettings(): void {
         dispatch({
             type: CLOSE_SETTINGS,
+        });
+    },
+
+    setLine(id: string, behind: boolean): void {
+        dispatch({
+            type: SET_LINE,
+            payload: {
+                id,
+                behind,
+            },
         });
     },
 });
@@ -476,6 +488,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             error,
             openSettings,
             closeSettings,
+            setLine,
         } = this.props;
 
         return (
@@ -536,6 +549,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                     onDelete={deleteUnit}
                                     onDuplicate={duplicateUnit}
                                     onDuplicateUnitToOtherSide={duplicateUnitToTheOtherSide}
+                                    onChangeLine={setLine}
                                 />
                             </StyledPaper>
                         </Grid>
@@ -575,6 +589,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                     onDelete={deleteUnit}
                                     onDuplicate={duplicateUnit}
                                     onDuplicateUnitToOtherSide={duplicateUnitToTheOtherSide}
+                                    onChangeLine={setLine}
                                 />
                             </StyledPaper>
                         </Grid>
