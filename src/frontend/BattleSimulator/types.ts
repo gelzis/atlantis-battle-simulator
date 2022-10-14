@@ -90,6 +90,22 @@ export type AppState = {
     settingsWindowOpen: boolean
 }
 
+export interface StatRecord {
+    min: number;
+    max: number;
+    range: number;
+    occurance: number;
+    mean: number;
+    median: number;
+    mode: number;
+    percentile: number[];
+    stdDev: number;
+}
+
+export interface ItemStatRecord extends StatRecord {
+    item: string;
+}
+
 export type ServerSimulationResponse = {
     wins: number
     loses: number
@@ -98,6 +114,9 @@ export type ServerSimulationResponse = {
     victoryBattleText? : string
     lossBattleText? : string
     drawBattleText? : string
+    attackerLooses: StatRecord
+    defenderLooses: StatRecord
+    spoils: ItemStatRecord[]
 }
 
 type flags = 'behind';

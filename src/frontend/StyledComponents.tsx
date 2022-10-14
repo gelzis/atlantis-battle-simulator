@@ -39,6 +39,10 @@ export const StyledPaper = styled(Paper)`
   position: relative;
 `;
 
+export const StyledPadlessPaper = styled(StyledPaper)`
+  padding: 0;
+`;
+
 export const StyledHeading = styled(Typography)`
   margin: ${theme.spacing(2)}px 0;
 `;
