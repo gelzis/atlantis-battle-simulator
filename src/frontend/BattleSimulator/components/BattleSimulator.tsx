@@ -27,11 +27,11 @@ import {Dispatch} from 'redux';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {v4 as uuidv4} from 'uuid';
 
-import {StyledAppBar, StyledPaper, StyledSideHeading, theme} from '../../StyledComponents';
+import {StyledAppBar, StyledPaper, StyledSideHeading, Formation, FormationItem, theme} from '../../StyledComponents';
 import {MainForm} from './MainForm';
 import {UnitList} from './UnitList';
 import {defaultUnit} from '../reducer';
-import {download} from '../utils';
+import {download, calcTotals} from '../utils';
 import {
     ADD_UNIT,
     AppState,
@@ -491,6 +491,9 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             setLine,
         } = this.props;
 
+        const attackerTotals = calcTotals(attackers)
+        const defenderTotals = calcTotals(defenders)
+
         return (
             <StylesProvider injectFirst>
                 <Container css="flex-grow: 1;">
@@ -525,6 +528,20 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                         fontSize={'small'}
                                     />
                                 </Tooltip>
+                                <Formation>
+                                    <FormationItem>
+                                        <Typography variant="caption">Front</Typography>
+                                        <Typography>{attackerTotals.front}</Typography>
+                                    </FormationItem>
+                                    <FormationItem>
+                                        <Typography variant="caption">Back</Typography>
+                                        <Typography>{attackerTotals.back}</Typography>
+                                    </FormationItem>
+                                    <FormationItem>
+                                        <Typography variant="caption">Total</Typography>
+                                        <Typography>{attackerTotals.total}</Typography>
+                                    </FormationItem>
+                                </Formation>
                                 <InputLabel shrink>
                                    Structure
                                 </InputLabel>
@@ -565,6 +582,20 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                         fontSize={'small'}
                                     />
                                 </Tooltip>
+                                <Formation>
+                                    <FormationItem>
+                                        <Typography variant="caption">Front</Typography>
+                                        <Typography>{defenderTotals.front}</Typography>
+                                    </FormationItem>
+                                    <FormationItem>
+                                        <Typography variant="caption">Back</Typography>
+                                        <Typography>{defenderTotals.back}</Typography>
+                                    </FormationItem>
+                                    <FormationItem>
+                                        <Typography variant="caption">Total</Typography>
+                                        <Typography>{defenderTotals.total}</Typography>
+                                    </FormationItem>
+                                </Formation>
                                 <InputLabel shrink>
                                     Structure
                                 </InputLabel>

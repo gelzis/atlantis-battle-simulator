@@ -1,1 +1,527 @@
-[{"abbr":"LEAD","name":"leader"},{"abbr":"WELF","name":"wood elf"},{"abbr":"HELF","name":"high elf"},{"abbr":"IDWA","name":"ice dwarf"},{"abbr":"HDWA","name":"hill dwarf"},{"abbr":"UDWA","name":"under dwarf"},{"abbr":"ORC","name":"orc"},{"abbr":"GNOM","name":"gnome"},{"abbr":"CTAU","name":"centaur"},{"abbr":"HERB","name":"herb"},{"abbr":"HORS","name":"horse"},{"abbr":"SWOR","name":"sword"},{"abbr":"XBOW","name":"crossbow"},{"abbr":"LBOW","name":"longbow"},{"abbr":"CARM","name":"chain armor"},{"abbr":"PARM","name":"plate armor"},{"abbr":"WING","name":"winged horse"},{"abbr":"MSWO","name":"mithril sword"},{"abbr":"MARM","name":"mithril armor"},{"abbr":"DBOW","name":"double bow"},{"abbr":"LION","name":"lion"},{"abbr":"WOLF","name":"wolf"},{"abbr":"GRIZ","name":"grizzly bear"},{"abbr":"CROC","name":"crocodile"},{"abbr":"ANAC","name":"anaconda"},{"abbr":"SCOR","name":"giant scorpion"},{"abbr":"POLA","name":"polar bear"},{"abbr":"GRAT","name":"giant rat"},{"abbr":"GSPI","name":"giant spider"},{"abbr":"GLIZ","name":"giant lizard"},{"abbr":"TREN","name":"trent"},{"abbr":"ROC","name":"roc"},{"abbr":"BOGT","name":"bog thing"},{"abbr":"KONG","name":"kong"},{"abbr":"SPHI","name":"sphinx"},{"abbr":"ICEW","name":"ice wurm"},{"abbr":"DRAG","name":"dragon"},{"abbr":"CENT","name":"centaur"},{"abbr":"KOBO","name":"kobold"},{"abbr":"OGRE","name":"ogre"},{"abbr":"LMAN","name":"lizard man"},{"abbr":"WMAN","name":"wild man"},{"abbr":"SAND","name":"sandling"},{"abbr":"YETI","name":"yeti"},{"abbr":"GOBL","name":"goblin"},{"abbr":"TROL","name":"troll"},{"abbr":"ETTI","name":"ettin"},{"abbr":"SKEL","name":"skeleton"},{"abbr":"UNDE","name":"undead"},{"abbr":"LICH","name":"lich"},{"abbr":"IMP","name":"imp"},{"abbr":"DEMO","name":"demon"},{"abbr":"BALR","name":"balrog"},{"abbr":"EAGL","name":"eagle"},{"abbr":"XXXX","name":"amulet of invulnerability"},{"abbr":"CLOA","name":"cloak of invulnerability"},{"abbr":"STAF","name":"staff of fire"},{"abbr":"AMPR","name":"amulet of protection"},{"abbr":"RUNE","name":"runesword"},{"abbr":"SHST","name":"shieldstone"},{"abbr":"iWOLF","name":"illusory wolf"},{"abbr":"iEAGL","name":"illusory eagle"},{"abbr":"iDRAG","name":"illusory dragon"},{"abbr":"iSKEL","name":"illusory skeleton"},{"abbr":"iUNDE","name":"illusory undead"},{"abbr":"iLICH","name":"illusory lich"},{"abbr":"iIMP","name":"illusory imp"},{"abbr":"iDEMO","name":"illusory demon"},{"abbr":"iBALR","name":"illusory balrog"},{"abbr":"PICK","name":"pick"},{"abbr":"SPEA","name":"spear"},{"abbr":"AXE","name":"axe"},{"abbr":"HAMM","name":"hammer"},{"abbr":"MXBO","name":"magic crossbow"},{"abbr":"LARM","name":"leather armor"},{"abbr":"PIRA","name":"pirates"},{"abbr":"KRAK","name":"kraken"},{"abbr":"MERF","name":"merfolk"},{"abbr":"ELEM","name":"elemental"},{"abbr":"HUMN","name":"human"},{"abbr":"LIZA","name":"lizardman"},{"abbr":"GBLN","name":"goblin"},{"abbr":"GNOL","name":"gnoll"},{"abbr":"BAXE","name":"battle axe"},{"abbr":"ASWR","name":"admantium sword"},{"abbr":"ARNG","name":"admantium ring mail"},{"abbr":"AARM","name":"admantium plate mail"},{"abbr":"CAME","name":"camel"},{"abbr":"DROW","name":"drow warrior"},{"abbr":"HYDR","name":"hydra"},{"abbr":"STGI","name":"storm giant"},{"abbr":"CLGI","name":"cloud giant"},{"abbr":"ILLY","name":"illyrthid"},{"abbr":"SORC","name":"evil sorcerer"},{"abbr":"MAGI","name":"evil magician"},{"abbr":"DMAG","name":"dark mage"},{"abbr":"WARR","name":"evil warrior"},{"abbr":"IDRA","name":"ice dragon"},{"abbr":"HPOT","name":"healing potion"},{"abbr":"JAVE","name":"javelin"},{"abbr":"PIKE","name":"pike"},{"abbr":"FSWO","name":"flaming sword"},{"abbr":"MSHD","name":"mithril shield"},{"abbr":"ISHD","name":"iron shield"},{"abbr":"WSHD","name":"wooden shield"},{"abbr":"STAH","name":"staff of healing"},{"abbr":"BKEX","name":"book of exorcism"},{"abbr":"HLYS","name":"holy symbol"},{"abbr":"CNSR","name":"censer of protection"},{"abbr":"TURT","name":"giant turtle"},{"abbr":"CATP","name":"catapult"},{"abbr":"STED","name":"steel defender"},{"abbr":"DEVL","name":"devil"}]
+[
+    {
+        "abbr": "LEAD",
+        "name": "leader",
+        "category": "man"
+    },
+    {
+        "abbr": "WELF",
+        "name": "wood elf",
+        "category": "man"
+    },
+    {
+        "abbr": "HELF",
+        "name": "high elf",
+        "category": "man"
+    },
+    {
+        "abbr": "IDWA",
+        "name": "ice dwarf",
+        "category": "man"
+    },
+    {
+        "abbr": "HDWA",
+        "name": "hill dwarf",
+        "category": "man"
+    },
+    {
+        "abbr": "UDWA",
+        "name": "under dwarf",
+        "category": "man"
+    },
+    {
+        "abbr": "ORC",
+        "name": "orc",
+        "category": "man"
+    },
+    {
+        "abbr": "GNOM",
+        "name": "gnome",
+        "category": "man"
+    },
+    {
+        "abbr": "CTAU",
+        "name": "centaur",
+        "category": "man"
+    },
+    {
+        "abbr": "HERB",
+        "name": "herb"
+    },
+    {
+        "abbr": "HORS",
+        "name": "horse"
+    },
+    {
+        "abbr": "SWOR",
+        "name": "sword"
+    },
+    {
+        "abbr": "XBOW",
+        "name": "crossbow"
+    },
+    {
+        "abbr": "LBOW",
+        "name": "longbow"
+    },
+    {
+        "abbr": "CARM",
+        "name": "chain armor"
+    },
+    {
+        "abbr": "PARM",
+        "name": "plate armor"
+    },
+    {
+        "abbr": "WING",
+        "name": "winged horse"
+    },
+    {
+        "abbr": "MSWO",
+        "name": "mithril sword"
+    },
+    {
+        "abbr": "MARM",
+        "name": "mithril armor"
+    },
+    {
+        "abbr": "DBOW",
+        "name": "double bow"
+    },
+    {
+        "abbr": "LION",
+        "name": "lion",
+        "category": "monster"
+    },
+    {
+        "abbr": "WOLF",
+        "name": "wolf",
+        "category": "monster"
+    },
+    {
+        "abbr": "GRIZ",
+        "name": "grizzly bear",
+        "category": "monster"
+    },
+    {
+        "abbr": "CROC",
+        "name": "crocodile",
+        "category": "monster"
+    },
+    {
+        "abbr": "ANAC",
+        "name": "anaconda",
+        "category": "monster"
+    },
+    {
+        "abbr": "SCOR",
+        "name": "giant scorpion",
+        "category": "monster"
+    },
+    {
+        "abbr": "POLA",
+        "name": "polar bear",
+        "category": "monster"
+    },
+    {
+        "abbr": "GRAT",
+        "name": "giant rat",
+        "category": "monster"
+    },
+    {
+        "abbr": "GSPI",
+        "name": "giant spider",
+        "category": "monster"
+    },
+    {
+        "abbr": "GLIZ",
+        "name": "giant lizard",
+        "category": "monster"
+    },
+    {
+        "abbr": "TREN",
+        "name": "trent",
+        "category": "monster"
+    },
+    {
+        "abbr": "ROC",
+        "name": "roc",
+        "category": "monster"
+    },
+    {
+        "abbr": "BOGT",
+        "name": "bog thing",
+        "category": "monster"
+    },
+    {
+        "abbr": "KONG",
+        "name": "kong",
+        "category": "monster"
+    },
+    {
+        "abbr": "SPHI",
+        "name": "sphinx",
+        "category": "monster"
+    },
+    {
+        "abbr": "ICEW",
+        "name": "ice wurm",
+        "category": "monster"
+    },
+    {
+        "abbr": "DRAG",
+        "name": "dragon",
+        "category": "monster"
+    },
+    {
+        "abbr": "CENT",
+        "name": "centaur",
+        "category": "monster"
+    },
+    {
+        "abbr": "KOBO",
+        "name": "kobold",
+        "category": "monster"
+    },
+    {
+        "abbr": "OGRE",
+        "name": "ogre",
+        "category": "monster"
+    },
+    {
+        "abbr": "LMAN",
+        "name": "lizard man",
+        "category": "monster"
+    },
+    {
+        "abbr": "WMAN",
+        "name": "wild man",
+        "category": "monster"
+    },
+    {
+        "abbr": "SAND",
+        "name": "sandling",
+        "category": "monster"
+    },
+    {
+        "abbr": "YETI",
+        "name": "yeti",
+        "category": "monster"
+    },
+    {
+        "abbr": "GOBL",
+        "name": "goblin",
+        "category": "monster"
+    },
+    {
+        "abbr": "TROL",
+        "name": "troll",
+        "category": "monster"
+    },
+    {
+        "abbr": "ETTI",
+        "name": "ettin",
+        "category": "monster"
+    },
+    {
+        "abbr": "SKEL",
+        "name": "skeleton",
+        "category": "monster"
+    },
+    {
+        "abbr": "UNDE",
+        "name": "undead",
+        "category": "monster"
+    },
+    {
+        "abbr": "LICH",
+        "name": "lich",
+        "category": "monster"
+    },
+    {
+        "abbr": "IMP",
+        "name": "imp",
+        "category": "monster"
+    },
+    {
+        "abbr": "DEMO",
+        "name": "demon",
+        "category": "monster"
+    },
+    {
+        "abbr": "BALR",
+        "name": "balrog",
+        "category": "monster"
+    },
+    {
+        "abbr": "EAGL",
+        "name": "eagle",
+        "category": "monster"
+    },
+    {
+        "abbr": "XXXX",
+        "name": "amulet of invulnerability"
+    },
+    {
+        "abbr": "CLOA",
+        "name": "cloak of invulnerability"
+    },
+    {
+        "abbr": "STAF",
+        "name": "staff of fire"
+    },
+    {
+        "abbr": "AMPR",
+        "name": "amulet of protection"
+    },
+    {
+        "abbr": "RUNE",
+        "name": "runesword"
+    },
+    {
+        "abbr": "SHST",
+        "name": "shieldstone"
+    },
+    {
+        "abbr": "iWOLF",
+        "name": "illusory wolf",
+        "category": "illusion"
+    },
+    {
+        "abbr": "iEAGL",
+        "name": "illusory eagle",
+        "category": "illusion"
+    },
+    {
+        "abbr": "iDRAG",
+        "name": "illusory dragon",
+        "category": "illusion"
+    },
+    {
+        "abbr": "iSKEL",
+        "name": "illusory skeleton",
+        "category": "illusion"
+    },
+    {
+        "abbr": "iUNDE",
+        "name": "illusory undead",
+        "category": "illusion"
+    },
+    {
+        "abbr": "iLICH",
+        "name": "illusory lich",
+        "category": "illusion"
+    },
+    {
+        "abbr": "iIMP",
+        "name": "illusory imp",
+        "category": "illusion"
+    },
+    {
+        "abbr": "iDEMO",
+        "name": "illusory demon",
+        "category": "illusion"
+    },
+    {
+        "abbr": "iBALR",
+        "name": "illusory balrog",
+        "category": "illusion"
+    },
+    {
+        "abbr": "PICK",
+        "name": "pick"
+    },
+    {
+        "abbr": "SPEA",
+        "name": "spear"
+    },
+    {
+        "abbr": "AXE",
+        "name": "axe"
+    },
+    {
+        "abbr": "HAMM",
+        "name": "hammer"
+    },
+    {
+        "abbr": "MXBO",
+        "name": "magic crossbow"
+    },
+    {
+        "abbr": "LARM",
+        "name": "leather armor"
+    },
+    {
+        "abbr": "PIRA",
+        "name": "pirates",
+        "category": "monster"
+    },
+    {
+        "abbr": "KRAK",
+        "name": "kraken",
+        "category": "monster"
+    },
+    {
+        "abbr": "MERF",
+        "name": "merfolk",
+        "category": "monster"
+    },
+    {
+        "abbr": "ELEM",
+        "name": "elemental",
+        "category": "monster"
+    },
+    {
+        "abbr": "HUMN",
+        "name": "human",
+        "category": "man"
+    },
+    {
+        "abbr": "LIZA",
+        "name": "lizardman",
+        "category": "man"
+    },
+    {
+        "abbr": "GBLN",
+        "name": "goblin",
+        "category": "man"
+    },
+    {
+        "abbr": "GNOL",
+        "name": "gnoll",
+        "category": "man"
+    },
+    {
+        "abbr": "BAXE",
+        "name": "battle axe"
+    },
+    {
+        "abbr": "ASWR",
+        "name": "admantium sword"
+    },
+    {
+        "abbr": "ARNG",
+        "name": "admantium ring mail"
+    },
+    {
+        "abbr": "AARM",
+        "name": "admantium plate mail"
+    },
+    {
+        "abbr": "CAME",
+        "name": "camel"
+    },
+    {
+        "abbr": "DROW",
+        "name": "drow warrior",
+        "category": "monster"
+    },
+    {
+        "abbr": "HYDR",
+        "name": "hydra",
+        "category": "monster"
+    },
+    {
+        "abbr": "STGI",
+        "name": "storm giant",
+        "category": "monster"
+    },
+    {
+        "abbr": "CLGI",
+        "name": "cloud giant",
+        "category": "monster"
+    },
+    {
+        "abbr": "ILLY",
+        "name": "illyrthid",
+        "category": "monster"
+    },
+    {
+        "abbr": "SORC",
+        "name": "evil sorcerer",
+        "category": "monster"
+    },
+    {
+        "abbr": "MAGI",
+        "name": "evil magician",
+        "category": "monster"
+    },
+    {
+        "abbr": "DMAG",
+        "name": "dark mage",
+        "category": "monster"
+    },
+    {
+        "abbr": "WARR",
+        "name": "evil warrior",
+        "category": "monster"
+    },
+    {
+        "abbr": "IDRA",
+        "name": "ice dragon",
+        "category": "monster"
+    },
+    {
+        "abbr": "HPOT",
+        "name": "healing potion"
+    },
+    {
+        "abbr": "JAVE",
+        "name": "javelin"
+    },
+    {
+        "abbr": "PIKE",
+        "name": "pike"
+    },
+    {
+        "abbr": "FSWO",
+        "name": "flaming sword"
+    },
+    {
+        "abbr": "MSHD",
+        "name": "mithril shield"
+    },
+    {
+        "abbr": "ISHD",
+        "name": "iron shield"
+    },
+    {
+        "abbr": "WSHD",
+        "name": "wooden shield"
+    },
+    {
+        "abbr": "STAH",
+        "name": "staff of healing"
+    },
+    {
+        "abbr": "BKEX",
+        "name": "book of exorcism"
+    },
+    {
+        "abbr": "HLYS",
+        "name": "holy symbol"
+    },
+    {
+        "abbr": "CNSR",
+        "name": "censer of protection"
+    },
+    {
+        "abbr": "TURT",
+        "name": "giant turtle"
+    },
+    {
+        "abbr": "CATP",
+        "name": "catapult",
+        "category": "monster"
+    },
+    {
+        "abbr": "STED",
+        "name": "steel defender",
+        "category": "monster"
+    },
+    {
+        "abbr": "DEVL",
+        "name": "devil",
+        "category": "monster"
+    }
+]

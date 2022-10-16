@@ -5,6 +5,8 @@ import {StylesProvider} from '@material-ui/core/styles';
 
 import {reducer} from './reducer';
 import {Rule, StyleSheet} from 'jss';
+import { Unit } from './types';
+import { SoldierItems } from './resources';
 
 const store = createStore(reducer);
 const generateClassName = (rule:Rule, styleSheet: StyleSheet): string => `${styleSheet.options.classNamePrefix}-${rule.key}`;
@@ -36,4 +38,26 @@ export function realNumber(value: number) {
 
 export function percent(value: number) {
     return value.toLocaleString(undefined, { style: 'percent', maximumFractionDigits: 0 });
+}
+
+export function calcTotals(side: { [id: string]: Unit }) {
+    let total = 0;
+    let front = 0;
+    let back = 0;
+
+    for (const unit of Object.values(side)) {
+        for (const item of unit.items) {
+            if (SoldierItems.includes(item.abbr)) {
+                total += item.amount;
+                if (unit.behind) {
+                    back += item.amount;
+                }
+                else {
+                    front += item.amount;
+                }
+            }
+        }
+    }
+
+    return { front, back, total };
 }

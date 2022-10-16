@@ -51,7 +51,7 @@ export const SimulationResult: FC<ServerSimulationResponse> = ({
                         Victory example:
                     </StyledSideHeading>
                     <StyledPaper css={`margin-top: ${theme.spacing(2)}px; white-space: pre-wrap;`} elevation={3}>
-                        <Typography variant="body2">
+                        <Typography variant="body2" css='font-family: monospace;'>
                             {victoryBattleText}
                         </Typography>
                     </StyledPaper>
@@ -64,7 +64,7 @@ export const SimulationResult: FC<ServerSimulationResponse> = ({
                         Draw example:
                     </StyledSideHeading>
                     <StyledPaper css={`margin-top: ${theme.spacing(2)}px; white-space: pre-wrap;`} elevation={3}>
-                        <Typography variant="body2">
+                        <Typography variant="body2" css='font-family: monospace;'>
                             {drawBattleText}
                         </Typography>
                     </StyledPaper>
@@ -77,7 +77,7 @@ export const SimulationResult: FC<ServerSimulationResponse> = ({
                         Loss example:
                     </StyledSideHeading>
                     <StyledPaper css={`margin-top: ${theme.spacing(2)}px; white-space: pre-wrap;`} elevation={3}>
-                        <Typography variant="body2">
+                        <Typography variant="body2" css='font-family: monospace;'>
                             {lossBattleText}
                         </Typography>
                     </StyledPaper>
