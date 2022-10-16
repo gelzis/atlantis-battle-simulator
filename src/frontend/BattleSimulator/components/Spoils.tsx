@@ -33,6 +33,7 @@ export default function Spoils({ runs, items }: SpoilsProps) {
                 <TableRow>
                     <TableCell>Item</TableCell>
                     <TableCell className={classes.cell}>Occurance</TableCell>
+                    <TableCell className={classes.cell}>Expected</TableCell>
                     <TableCell className={classes.cell}>Min</TableCell>
                     <TableCell className={classes.cell}>Max</TableCell>
                     <TableCell className={classes.cell}>Mean</TableCell>
@@ -43,19 +44,25 @@ export default function Spoils({ runs, items }: SpoilsProps) {
                 </TableRow>
             </TableHead>
             <TableBody>
-                { sortedItems.map(x => <TableRow key={x.item} hover>
-                    <TableCell>{x.item}</TableCell>
-                    <TableCell className={classes.cell}>{percent(x.occurance / runs)}</TableCell>
-                    <TableCell className={classes.cell}>{realNumber(x.min)}</TableCell>
-                    <TableCell className={classes.cell}>{realNumber(x.max)}</TableCell>
-                    <TableCell className={classes.cell}>{realNumber(x.mean)}</TableCell>
-                    <TableCell className={classes.cell}>{realNumber(x.median)}</TableCell>
-                    <TableCell className={classes.cell}>{realNumber(x.mode)}</TableCell>
-                    <TableCell className={classes.cell}>{realNumber(x.stdDev)}</TableCell>
-                    <TableCell className={classes.percentile}>
-                        <PercentileGraph items={x.percentile} />
-                    </TableCell>
-                </TableRow> ) }
+                { sortedItems.map(x => {
+                    const expectedFrom = Math.trunc(Math.max(0, x.mean - x.stdDev))
+                    const expectedTo = Math.trunc(x.mean + x.stdDev)
+
+                    return <TableRow key={x.item} hover>
+                        <TableCell>{x.item}</TableCell>
+                        <TableCell className={classes.cell}>{percent(x.occurance / runs)}</TableCell>
+                        <TableCell className={classes.cell}>{realNumber(expectedFrom)}&mdash;{realNumber(expectedTo)}</TableCell>
+                        <TableCell className={classes.cell}>{realNumber(x.min)}</TableCell>
+                        <TableCell className={classes.cell}>{realNumber(x.max)}</TableCell>
+                        <TableCell className={classes.cell}>{realNumber(x.mean)}</TableCell>
+                        <TableCell className={classes.cell}>{realNumber(x.median)}</TableCell>
+                        <TableCell className={classes.cell}>{realNumber(x.mode)}</TableCell>
+                        <TableCell className={classes.cell}>{realNumber(x.stdDev)}</TableCell>
+                        <TableCell className={classes.percentile}>
+                            <PercentileGraph items={x.percentile} />
+                        </TableCell>
+                    </TableRow>
+                } ) }
             </TableBody>
         </Table>
     </TableContainer>

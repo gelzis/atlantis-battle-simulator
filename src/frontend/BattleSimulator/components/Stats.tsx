@@ -15,8 +15,14 @@ const StatsContainer = styled.div`
 `;
 
 export default function Stats({ runs, occurance, min, max, mean, median, mode, stdDev, percentile }: StatsProps) {
+    const expectedFrom = Math.trunc(Math.max(0, mean - stdDev))
+    const expectedTo = Math.trunc(mean + stdDev)
+
+    const expected = <Typography>{realNumber(expectedFrom)}&mdash;{realNumber(expectedTo)}</Typography>
+
     return <StatsContainer>
         <StatValue title='Occurance' value={percent(occurance / runs)} />
+        <StatValue title='Expected' value={expected} />
         <StatValue title='Min' value={realNumber(min)} />
         <StatValue title='Max' value={realNumber(max)} />
         <StatValue title='Mean' value={realNumber(mean)} />
