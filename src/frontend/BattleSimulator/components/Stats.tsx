@@ -29,7 +29,7 @@ export default function Stats({ runs, occurance, min, max, mean, median, mode, s
         <StatValue title='Median' value={realNumber(median)} />
         <StatValue title='Mode' value={realNumber(mode)} />
         <StatValue title='StdDev' value={realNumber(stdDev)} />
-        <StatValue title='Percentile' value={<PercentileGraph items={percentile} />} />
+        <StatValue title='Percentiles' value={<PercentileGraph items={percentile} />} />
     </StatsContainer>
 }
 
