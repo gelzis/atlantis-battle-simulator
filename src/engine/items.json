@@ -46,47 +46,58 @@
     },
     {
         "abbr": "HERB",
-        "name": "herb"
+        "name": "herb",
+        "category": "other"
     },
     {
         "abbr": "HORS",
-        "name": "horse"
+        "name": "horse",
+        "category": "mount"
     },
     {
         "abbr": "SWOR",
-        "name": "sword"
+        "name": "sword",
+        "category": "weapon"
     },
     {
         "abbr": "XBOW",
-        "name": "crossbow"
+        "name": "crossbow",
+        "category": "weapon"
     },
     {
         "abbr": "LBOW",
-        "name": "longbow"
+        "name": "longbow",
+        "category": "weapon"
     },
     {
         "abbr": "CARM",
-        "name": "chain armor"
+        "name": "chain armor",
+        "category": "armour"
     },
     {
         "abbr": "PARM",
-        "name": "plate armor"
+        "name": "plate armor",
+        "category": "armour"
     },
     {
         "abbr": "WING",
-        "name": "winged horse"
+        "name": "winged horse",
+        "category": "mount"
     },
     {
         "abbr": "MSWO",
-        "name": "mithril sword"
+        "name": "mithril sword",
+        "category": "weapon"
     },
     {
         "abbr": "MARM",
-        "name": "mithril armor"
+        "name": "mithril armor",
+        "category": "armour"
     },
     {
         "abbr": "DBOW",
-        "name": "double bow"
+        "name": "double bow",
+        "category": "weapon"
     },
     {
         "abbr": "LION",
@@ -260,27 +271,33 @@
     },
     {
         "abbr": "XXXX",
-        "name": "amulet of invulnerability"
+        "name": "amulet of invulnerability",
+        "category": "other"
     },
     {
         "abbr": "CLOA",
-        "name": "cloak of invulnerability"
+        "name": "cloak of invulnerability",
+        "category": "armour"
     },
     {
         "abbr": "STAF",
-        "name": "staff of fire"
+        "name": "staff of fire",
+        "category": "other"
     },
     {
         "abbr": "AMPR",
-        "name": "amulet of protection"
+        "name": "amulet of protection",
+        "category": "other"
     },
     {
         "abbr": "RUNE",
-        "name": "runesword"
+        "name": "runesword",
+        "category": "weapon"
     },
     {
         "abbr": "SHST",
-        "name": "shieldstone"
+        "name": "shieldstone",
+        "category": "other"
     },
     {
         "abbr": "iWOLF",
@@ -329,27 +346,33 @@
     },
     {
         "abbr": "PICK",
-        "name": "pick"
+        "name": "pick",
+        "category": "weapon"
     },
     {
         "abbr": "SPEA",
-        "name": "spear"
+        "name": "spear",
+        "category": "weapon"
     },
     {
         "abbr": "AXE",
-        "name": "axe"
+        "name": "axe",
+        "category": "weapon"
     },
     {
         "abbr": "HAMM",
-        "name": "hammer"
+        "name": "hammer",
+        "category": "weapon"
     },
     {
         "abbr": "MXBO",
-        "name": "magic crossbow"
+        "name": "magic crossbow",
+        "category": "weapon"
     },
     {
         "abbr": "LARM",
-        "name": "leather armor"
+        "name": "leather armor",
+        "category": "armour"
     },
     {
         "abbr": "PIRA",
@@ -393,23 +416,28 @@
     },
     {
         "abbr": "BAXE",
-        "name": "battle axe"
+        "name": "battle axe",
+        "category": "weapon"
     },
     {
         "abbr": "ASWR",
-        "name": "admantium sword"
+        "name": "admantium sword",
+        "category": "weapon"
     },
     {
         "abbr": "ARNG",
-        "name": "admantium ring mail"
+        "name": "admantium ring mail",
+        "category": "armour"
     },
     {
         "abbr": "AARM",
-        "name": "admantium plate mail"
+        "name": "admantium plate mail",
+        "category": "armour"
     },
     {
         "abbr": "CAME",
-        "name": "camel"
+        "name": "camel",
+        "category": "mount"
     },
     {
         "abbr": "DROW",
@@ -463,51 +491,63 @@
     },
     {
         "abbr": "HPOT",
-        "name": "healing potion"
+        "name": "healing potion",
+        "category": "other"
     },
     {
         "abbr": "JAVE",
-        "name": "javelin"
+        "name": "javelin",
+        "category": "weapon"
     },
     {
         "abbr": "PIKE",
-        "name": "pike"
+        "name": "pike",
+        "category": "weapon"
     },
     {
         "abbr": "FSWO",
-        "name": "flaming sword"
+        "name": "flaming sword",
+        "category": "weapon"
     },
     {
         "abbr": "MSHD",
-        "name": "mithril shield"
+        "name": "mithril shield",
+        "category": "other"
     },
     {
         "abbr": "ISHD",
-        "name": "iron shield"
+        "name": "iron shield",
+        "category": "other"
     },
     {
         "abbr": "WSHD",
-        "name": "wooden shield"
+        "name": "wooden shield",
+        "category": "other"
     },
     {
         "abbr": "STAH",
-        "name": "staff of healing"
+        "name": "staff of healing",
+        "category": "other"
     },
     {
         "abbr": "BKEX",
-        "name": "book of exorcism"
+        "name": "book of exorcism",
+        "category": "other"
     },
     {
         "abbr": "HLYS",
-        "name": "holy symbol"
+        "name": "holy symbol",
+        "category": "other"
     },
     {
         "abbr": "CNSR",
-        "name": "censer of protection"
+        "name": "censer of protection",
+        "category": "other"
     },
     {
         "abbr": "TURT",
-        "name": "giant turtle"
+        "name": "giant turtle",
+        "category": "mount"
     },
     {
         "abbr": "CATP",
