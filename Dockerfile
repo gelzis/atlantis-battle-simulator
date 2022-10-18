@@ -1,5 +1,9 @@
-FROM node:16
+FROM ubuntu:22.04
 WORKDIR /usr/src/app
+
+RUN apt update && apt install curl -y
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
 
 COPY package.json package-lock.json ./
 RUN npm install
