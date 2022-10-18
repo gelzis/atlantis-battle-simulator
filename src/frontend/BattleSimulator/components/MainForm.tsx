@@ -3,16 +3,16 @@ import {Dispatch} from 'redux';
 import {connect} from 'react-redux';
 import styled from 'styled-components';
 import {
-    TextField,
     Button,
-    Tooltip,
     FormControlLabel,
-    Switch,
-    Slider,
     Grid,
-    MenuItem,
     InputLabel,
+    MenuItem,
     Select,
+    Slider,
+    Switch,
+    TextField,
+    Tooltip,
 } from '@material-ui/core';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import AddIcon from '@material-ui/icons/Add';
@@ -22,18 +22,22 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import SaveIcon from '@material-ui/icons/Save';
 
 import {StyledHeading, StyledPaper, theme} from '../../StyledComponents';
-import {SkillListSorted, ItemListSorted} from '../resources';
+import {ItemListSorted, SkillListSorted} from '../resources';
 import {
     ADD_ITEM,
     ADD_SKILL,
-    SAVE_UNIT,
     AppState,
     CHANGE_ITEM_ABBR,
     CHANGE_ITEM_AMOUNT,
     CHANGE_SKILL_ABBR,
-    CHANGE_SKILL_LEVEL, RESET_FORM, SET_BEHIND, SET_UNITS_NAME,
+    CHANGE_SKILL_LEVEL,
+    RESET_FORM,
+    SAVE_UNIT,
+    SET_BEHIND,
+    SET_COMBAT_SPELL,
+    SET_UNITS_NAME,
     Side,
-    Unit, SET_COMBAT_SPELL,
+    Unit,
 } from '../types';
 
 const ButtonGroup = styled.div`

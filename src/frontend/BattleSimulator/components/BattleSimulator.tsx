@@ -491,8 +491,8 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             setLine,
         } = this.props;
 
-        const attackerTotals = calcTotals(attackers)
-        const defenderTotals = calcTotals(defenders)
+        const attackerTotals = calcTotals(attackers);
+        const defenderTotals = calcTotals(defenders);
 
         return (
             <StylesProvider injectFirst>

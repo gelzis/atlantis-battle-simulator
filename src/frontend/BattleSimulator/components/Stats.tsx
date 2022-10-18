@@ -1,12 +1,12 @@
-import { Typography } from '@material-ui/core';
+import {Typography} from '@material-ui/core';
 import styled from 'styled-components';
 import React from 'react';
-import { StatRecord } from '../types';
+import {StatRecord} from '../types';
 import PercentileGraph from './PercentileGraph';
-import { percent, realNumber } from '../utils';
+import {percent, realNumber} from '../utils';
 
 export interface StatsProps extends StatRecord {
-    runs: number;
+    runs: number
 }
 
 const StatsContainer = styled.div`
@@ -14,11 +14,11 @@ const StatsContainer = styled.div`
     gap: 8px;
 `;
 
-export default function Stats({ runs, occurance, min, max, mean, median, mode, stdDev, percentile }: StatsProps) {
-    const expectedFrom = Math.trunc(Math.max(0, mean - stdDev))
-    const expectedTo = Math.trunc(mean + stdDev)
+export default function Stats({runs, occurance, min, max, mean, median, mode, stdDev, percentile}: StatsProps) {
+    const expectedFrom = Math.trunc(Math.max(0, mean - stdDev));
+    const expectedTo = Math.trunc(mean + stdDev);
 
-    const expected = <Typography>{realNumber(expectedFrom)}&mdash;{realNumber(expectedTo)}</Typography>
+    const expected = <Typography>{realNumber(expectedFrom)}&mdash;{realNumber(expectedTo)}</Typography>;
 
     return <StatsContainer>
         <StatValue title='Occurance' value={percent(occurance / runs)} />
@@ -30,20 +30,20 @@ export default function Stats({ runs, occurance, min, max, mean, median, mode, s
         <StatValue title='Mode' value={realNumber(mode)} />
         <StatValue title='StdDev' value={realNumber(stdDev)} />
         <StatValue title='Percentiles' value={<PercentileGraph items={percentile} />} />
-    </StatsContainer>
+    </StatsContainer>;
 }
 
 interface StatValueProps {
-    title: string;
-    value: React.ReactNode;
+    title: string
+    value: React.ReactNode
 }
 
-function StatValue({ title, value }: StatValueProps) {
+function StatValue({title, value}: StatValueProps) {
     return <div>
         <Typography variant='caption'>{title}</Typography>
         { (typeof value === 'string' || typeof value === 'number')
             ? <Typography>{value}</Typography>
             : value
         }
-    </div>
+    </div>;
 }

@@ -8,7 +8,7 @@ import Stats from './Stats';
 
 export const SimulationResult: FC<ServerSimulationResponse> = ({
     wins, loses, draws, winRatio, victoryBattleText, drawBattleText, lossBattleText,
-    attackerLooses, defenderLooses, spoils
+    attackerLooses, defenderLooses, spoils,
 }: ServerSimulationResponse) => {
     const runs = wins + loses + draws;
 
@@ -34,7 +34,7 @@ export const SimulationResult: FC<ServerSimulationResponse> = ({
                 </Grid>
             </StyledPaper>
 
-            { spoils.length > 0 && 
+            { spoils.length > 0 &&
                 <>
                     <StyledSideHeading variant="h6">
                         Spoils

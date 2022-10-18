@@ -92,19 +92,19 @@ export type AppState = {
 }
 
 export interface StatRecord {
-    min: number;
-    max: number;
-    range: number;
-    occurance: number;
-    mean: number;
-    median: number;
-    mode: number;
-    percentile: number[];
-    stdDev: number;
+    min: number
+    max: number
+    range: number
+    occurance: number
+    mean: number
+    median: number
+    mode: number
+    percentile: number[]
+    stdDev: number
 }
 
 export interface ItemStatRecord extends StatRecord {
-    item: string;
+    item: string
 }
 
 export type ServerSimulationResponse = {

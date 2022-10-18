@@ -5,8 +5,8 @@ import {StylesProvider} from '@material-ui/core/styles';
 
 import {reducer} from './reducer';
 import {Rule, StyleSheet} from 'jss';
-import { Unit } from './types';
-import { SoldierItems } from './resources';
+import {Unit} from './types';
+import {SoldierItems} from './resources';
 
 const store = createStore(reducer);
 const generateClassName = (rule:Rule, styleSheet: StyleSheet): string => `${styleSheet.options.classNamePrefix}-${rule.key}`;
@@ -33,11 +33,11 @@ export class WrapperForTests extends PureComponent {
 }
 
 export function realNumber(value: number) {
-    return value.toLocaleString('en-US', { maximumFractionDigits: 2, useGrouping: true }).replace(/,/g, ' ');
+    return value.toLocaleString('en-US', {maximumFractionDigits: 2, useGrouping: true}).replace(/,/g, ' ');
 }
 
 export function percent(value: number) {
-    return value.toLocaleString(undefined, { style: 'percent', maximumFractionDigits: 0 });
+    return value.toLocaleString(undefined, {style: 'percent', maximumFractionDigits: 0});
 }
 
 export function calcTotals(side: { [id: string]: Unit }) {
@@ -51,13 +51,12 @@ export function calcTotals(side: { [id: string]: Unit }) {
                 total += item.amount;
                 if (unit.behind) {
                     back += item.amount;
-                }
-                else {
+                } else {
                     front += item.amount;
                 }
             }
         }
     }
 
-    return { front, back, total };
+    return {front, back, total};
 }

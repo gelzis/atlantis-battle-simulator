@@ -1,31 +1,31 @@
-import { makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import {makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@material-ui/core';
 import React from 'react';
-import { ItemStatRecord } from '../types';
-import { percent, realNumber } from '../utils';
+import {ItemStatRecord} from '../types';
+import {percent, realNumber} from '../utils';
 import PercentileGraph from './PercentileGraph';
 
 export interface SpoilsProps {
-    runs: number;
-    items: ItemStatRecord[];
+    runs: number
+    items: ItemStatRecord[]
 }
 
 const useStyles = makeStyles({
     cell: {
-        textAlign: 'right'
+        textAlign: 'right',
     },
     percentile: {
         paddingTop: '2px',
-    }
+    },
 });
 
-export default function Spoils({ runs, items }: SpoilsProps) {
+export default function Spoils({runs, items}: SpoilsProps) {
     const classes = useStyles();
 
     const sortedItems: ItemStatRecord[] = React.useMemo(() => {
         const arr = [...items];
         arr.sort((a, b) => b.occurance - a.occurance);
         return arr;
-    }, [ items ])
+    }, [items]);
 
     return <TableContainer>
         <Table size='small' stickyHeader>
@@ -45,8 +45,8 @@ export default function Spoils({ runs, items }: SpoilsProps) {
             </TableHead>
             <TableBody>
                 { sortedItems.map(x => {
-                    const expectedFrom = Math.trunc(Math.max(0, x.mean - x.stdDev))
-                    const expectedTo = Math.trunc(x.mean + x.stdDev)
+                    const expectedFrom = Math.trunc(Math.max(0, x.mean - x.stdDev));
+                    const expectedTo = Math.trunc(x.mean + x.stdDev);
 
                     return <TableRow key={x.item} hover>
                         <TableCell>{x.item}</TableCell>
@@ -61,9 +61,9 @@ export default function Spoils({ runs, items }: SpoilsProps) {
                         <TableCell className={classes.percentile}>
                             <PercentileGraph items={x.percentile} />
                         </TableCell>
-                    </TableRow>
-                } ) }
+                    </TableRow>;
+                }) }
             </TableBody>
         </Table>
-    </TableContainer>
+    </TableContainer>;
 }

@@ -207,7 +207,7 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
         }
 
         case SET_LINE: {
-            (state.attackers[action.payload.id] || state.defenders[action.payload.id]).behind = action.payload.behind
+            (state.attackers[action.payload.id] || state.defenders[action.payload.id]).behind = action.payload.behind;
             break;
         }
 

@@ -10,7 +10,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
-import {BackdropProps, Checkbox, Tooltip} from '@material-ui/core';
+import {Checkbox, Tooltip} from '@material-ui/core';
 
 import {Unit} from '../types';
 import {theme} from '../../StyledComponents';
@@ -24,7 +24,7 @@ type UnitItemProps = {
     onChangeLine: (id: string, behind: boolean) => void
 };
 
-export const UnitList: FC<UnitItemProps> = ({units, onDuplicate, onEdit, onDelete, onDuplicateUnitToOtherSide, onChangeLine }: UnitItemProps) => {
+export const UnitList: FC<UnitItemProps> = ({units, onDuplicate, onEdit, onDelete, onDuplicateUnitToOtherSide, onChangeLine}: UnitItemProps) => {
     return (
         <TableContainer css={`margin-top:  ${theme.spacing(1)}px`} component={Paper}>
             <Table size="small" aria-label="a dense table">

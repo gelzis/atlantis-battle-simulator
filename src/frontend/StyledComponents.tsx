@@ -55,8 +55,8 @@ export const Formation = styled.div`
   display: flex;
   gap: ${theme.spacing(2)}px;
   margin-bottom: ${theme.spacing(2)}px;
-`
+`;
 
 export const FormationItem = styled.div`
   
-`
+`;
