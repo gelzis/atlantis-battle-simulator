@@ -14,6 +14,7 @@ export const CHANGE_SKILL_ABBR = 'CHANGE_SKILL_ABBR';
 export const CHANGE_SKILL_LEVEL = 'CHANGE_SKILL_LEVEL';
 
 export const SET_BEHIND = 'SET_BEHIND';
+export const SET_LINE = 'SET_LINE';
 export const SET_UNITS_NAME = 'SET_UNITS_NAME';
 export const SET_COMBAT_SPELL = 'SET_COMBAT_SPELL';
 
@@ -71,6 +72,12 @@ export type Unit = {
     behind: boolean
 };
 
+export type SideStats = {
+    total: number
+    front: number
+    back: number
+}
+
 export type AppState = {
     attackers: {
         [key: string]: Unit
@@ -80,6 +87,8 @@ export type AppState = {
     }
     attackerStructure: string
     defenderStructure: string
+    attackerStats: SideStats
+    defenderStats: SideStats
     unit: Unit
     loading: boolean
     error: {
@@ -90,6 +99,22 @@ export type AppState = {
     settingsWindowOpen: boolean
 }
 
+export interface StatRecord {
+    min: number
+    max: number
+    range: number
+    occurance: number
+    mean: number
+    median: number
+    mode: number
+    percentile: number[]
+    stdDev: number
+}
+
+export interface ItemStatRecord extends StatRecord {
+    item: string
+}
+
 export type ServerSimulationResponse = {
     wins: number
     loses: number
@@ -98,6 +123,9 @@ export type ServerSimulationResponse = {
     victoryBattleText? : string
     lossBattleText? : string
     drawBattleText? : string
+    attackerLooses: StatRecord
+    defenderLooses: StatRecord
+    spoils: ItemStatRecord[]
 }
 
 type flags = 'behind';
@@ -198,6 +226,14 @@ type SetBehind = {
     type: typeof SET_BEHIND
     payload: {
         enabled: boolean
+    }
+}
+
+type SetLine = {
+    type: typeof SET_LINE
+    payload: {
+        id: string
+        behind: boolean
     }
 }
 
@@ -308,4 +344,4 @@ type SetBattleCount = {
 export type ActionTypes = SaveUnit | AddItemAction | AddSkillAction | ChangeItemAbbr | ChangeItemAmount |
     ChangeSkillAbbr | ChangeSkillLevel | SetBehind | ResetForm | SetUnitsName | EditUnit | DeleteUnit | DuplicateUnit |
     SetCombatSpell | AddUnit | ResetState | SetLoadingStatus | SetError | ResetSide | SetAttackersStructure | SetDefendersStructure |
-    DuplicateUnitToOtherSide | OpenSettings | CloseSettings | SetBattleCount;
+    DuplicateUnitToOtherSide | OpenSettings | CloseSettings | SetBattleCount | SetLine;

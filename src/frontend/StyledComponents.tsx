@@ -39,10 +39,24 @@ export const StyledPaper = styled(Paper)`
   position: relative;
 `;
 
+export const StyledPadlessPaper = styled(StyledPaper)`
+  padding: 0;
+`;
+
 export const StyledHeading = styled(Typography)`
   margin: ${theme.spacing(2)}px 0;
 `;
 
 export const StyledSideHeading = styled(Typography)`
   margin-bottom: ${theme.spacing(1)}px;
+`;
+
+export const Formation = styled.div`
+  display: flex;
+  gap: ${theme.spacing(2)}px;
+  margin-bottom: ${theme.spacing(2)}px;
+`;
+
+export const FormationItem = styled.div`
+  
 `;

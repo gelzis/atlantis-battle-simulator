@@ -27,7 +27,7 @@ import {Dispatch} from 'redux';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {v4 as uuidv4} from 'uuid';
 
-import {StyledAppBar, StyledPaper, StyledSideHeading, theme} from '../../StyledComponents';
+import {StyledAppBar, StyledPaper, StyledSideHeading, Formation, FormationItem, theme} from '../../StyledComponents';
 import {MainForm} from './MainForm';
 import {UnitList} from './UnitList';
 import {defaultUnit} from '../reducer';
@@ -40,6 +40,7 @@ import {
     DUPLICATE_UNIT,
     DUPLICATE_UNIT_TO_OTHER_SIDE,
     EDIT_UNIT,
+    SET_LINE,
     ExportItem,
     ExportJson,
     ExportSkill,
@@ -78,7 +79,19 @@ const Footer = styled(Typography)`
     padding: ${theme.spacing(2)}px 0;
 `;
 
-type StateProps = Pick<AppState, 'attackers' | 'defenders' | 'unit' | 'loading' | 'error' | 'attackerStructure' | 'defenderStructure' | 'settingsWindowOpen' | 'battleCount' >
+type StateProps = Pick<AppState,
+    'attackers' |
+    'defenders' |
+    'unit' |
+    'loading' |
+    'error' |
+    'attackerStructure' |
+    'defenderStructure' |
+    'settingsWindowOpen' |
+    'battleCount' |
+    'attackerStats' |
+    'defenderStats'
+>
 type DispatchProps = {
     editUnit: (id: string) => void
     duplicateUnit: (id: string) => void
@@ -93,6 +106,7 @@ type DispatchProps = {
     duplicateUnitToTheOtherSide: (id: string) => void
     openSettings: () => void
     closeSettings: () => void
+    setLine: (id: string, behind: boolean) => void
 }
 type BattleSimulatorProps = StateProps & DispatchProps;
 
@@ -106,6 +120,8 @@ const mapStateToProps = (state: AppState): StateProps => {
         defenders: state.defenders,
         attackerStructure: state.attackerStructure,
         defenderStructure: state.defenderStructure,
+        attackerStats: state.attackerStats,
+        defenderStats: state.defenderStats,
         unit: state.unit,
         loading: state.loading,
         error: state.error,
@@ -217,6 +233,16 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
     closeSettings(): void {
         dispatch({
             type: CLOSE_SETTINGS,
+        });
+    },
+
+    setLine(id: string, behind: boolean): void {
+        dispatch({
+            type: SET_LINE,
+            payload: {
+                id,
+                behind,
+            },
         });
     },
 });
@@ -476,6 +502,9 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             error,
             openSettings,
             closeSettings,
+            setLine,
+            attackerStats,
+            defenderStats,
         } = this.props;
 
         return (
@@ -512,6 +541,20 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                         fontSize={'small'}
                                     />
                                 </Tooltip>
+                                <Formation>
+                                    <FormationItem>
+                                        <Typography variant="caption">Front</Typography>
+                                        <Typography>{attackerStats.front}</Typography>
+                                    </FormationItem>
+                                    <FormationItem>
+                                        <Typography variant="caption">Back</Typography>
+                                        <Typography>{attackerStats.back}</Typography>
+                                    </FormationItem>
+                                    <FormationItem>
+                                        <Typography variant="caption">Total</Typography>
+                                        <Typography>{attackerStats.total}</Typography>
+                                    </FormationItem>
+                                </Formation>
                                 <InputLabel shrink>
                                    Structure
                                 </InputLabel>
@@ -536,6 +579,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                     onDelete={deleteUnit}
                                     onDuplicate={duplicateUnit}
                                     onDuplicateUnitToOtherSide={duplicateUnitToTheOtherSide}
+                                    onChangeLine={setLine}
                                 />
                             </StyledPaper>
                         </Grid>
@@ -551,6 +595,20 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                         fontSize={'small'}
                                     />
                                 </Tooltip>
+                                <Formation>
+                                    <FormationItem>
+                                        <Typography variant="caption">Front</Typography>
+                                        <Typography>{defenderStats.front}</Typography>
+                                    </FormationItem>
+                                    <FormationItem>
+                                        <Typography variant="caption">Back</Typography>
+                                        <Typography>{defenderStats.back}</Typography>
+                                    </FormationItem>
+                                    <FormationItem>
+                                        <Typography variant="caption">Total</Typography>
+                                        <Typography>{defenderStats.total}</Typography>
+                                    </FormationItem>
+                                </Formation>
                                 <InputLabel shrink>
                                     Structure
                                 </InputLabel>
@@ -575,6 +633,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                     onDelete={deleteUnit}
                                     onDuplicate={duplicateUnit}
                                     onDuplicateUnitToOtherSide={duplicateUnitToTheOtherSide}
+                                    onChangeLine={setLine}
                                 />
                             </StyledPaper>
                         </Grid>

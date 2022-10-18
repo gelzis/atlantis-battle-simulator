@@ -10,7 +10,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
-import {Tooltip} from '@material-ui/core';
+import {Checkbox, Tooltip} from '@material-ui/core';
 
 import {Unit} from '../types';
 import {theme} from '../../StyledComponents';
@@ -21,9 +21,10 @@ type UnitItemProps = {
     onDelete: (id: string) => void
     onDuplicate: (id: string) => void
     onDuplicateUnitToOtherSide: (id: string) => void
+    onChangeLine: (id: string, behind: boolean) => void
 };
 
-export const UnitList: FC<UnitItemProps> = ({units, onDuplicate, onEdit, onDelete, onDuplicateUnitToOtherSide}: UnitItemProps) => {
+export const UnitList: FC<UnitItemProps> = ({units, onDuplicate, onEdit, onDelete, onDuplicateUnitToOtherSide, onChangeLine}: UnitItemProps) => {
     return (
         <TableContainer css={`margin-top:  ${theme.spacing(1)}px`} component={Paper}>
             <Table size="small" aria-label="a dense table">
@@ -53,7 +54,7 @@ export const UnitList: FC<UnitItemProps> = ({units, onDuplicate, onEdit, onDelet
                                 })}
                             </TableCell>
                             <TableCell align="left">
-                                {unit.behind ? 'yes' : 'no'}
+                                <Checkbox color="default" checked={unit.behind} onChange={(e, checked) => onChangeLine(unit.id, checked)} />
                             </TableCell>
                             <TableCell align="right">
                                 <Tooltip title="Edit">

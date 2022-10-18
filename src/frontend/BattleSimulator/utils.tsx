@@ -29,3 +29,11 @@ export class WrapperForTests extends PureComponent {
         return <Provider store={store}><StylesProvider generateClassName={generateClassName}>{this.props.children}</StylesProvider></Provider>;
     }
 }
+
+export function realNumber(value: number) {
+    return value.toLocaleString('en-US', {maximumFractionDigits: 2, useGrouping: true}).replace(/,/g, ' ');
+}
+
+export function percent(value: number) {
+    return value.toLocaleString(undefined, {style: 'percent', maximumFractionDigits: 0});
+}

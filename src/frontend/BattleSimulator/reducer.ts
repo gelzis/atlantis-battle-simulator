@@ -28,10 +28,13 @@ import {
     SET_COMBAT_SPELL,
     SET_DEFENDERS_STRUCTURE,
     SET_ERROR,
+    SET_LINE,
     SET_LOADING_STATUS,
     SET_UNITS_NAME,
+    SideStats,
     Unit,
 } from './types';
+import {SoldierItems} from './resources';
 
 export const defaultUnit: Unit = {
     id: '',
@@ -54,12 +57,35 @@ const initialState: AppState = {
     unit: defaultUnit,
     loading: false,
     battleCount: 50,
+    attackerStats: {total: 0, front: 0, back: 0},
+    defenderStats: {total: 0, front: 0, back: 0},
     settingsWindowOpen: false,
     error: {
         open: false,
         text: '',
     },
 };
+
+function calcTotals(side: { [id: string]: Unit }): SideStats {
+    let total = 0;
+    let front = 0;
+    let back = 0;
+
+    for (const unit of Object.values(side)) {
+        for (const item of unit.items) {
+            if (SoldierItems.includes(item.abbr)) {
+                total += item.amount;
+                if (unit.behind) {
+                    back += item.amount;
+                } else {
+                    front += item.amount;
+                }
+            }
+        }
+    }
+
+    return {front, back, total};
+}
 
 export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState, action: ActionTypes): AppState | void => {
     switch (action.type) {
@@ -74,17 +100,22 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
             if (state.unit.id) {
                 if (state.attackers[state.unit.id]) {
                     state.attackers[state.unit.id] = state.unit;
+                    state.attackerStats = calcTotals(state.attackers);
                 } else if (state.defenders[state.unit.id]) {
                     state.defenders[state.unit.id] = state.unit;
+                    state.defenderStats = calcTotals(state.defenders);
                 }
             } else {
                 state.unit.id = uuidv4();
                 if (action.payload.side === 'attackers') {
                     state.attackers[state.unit.id] = state.unit;
+                    state.attackerStats = calcTotals(state.attackers);
                 } else {
                     state.defenders[state.unit.id] = state.unit;
+                    state.defenderStats = calcTotals(state.defenders);
                 }
             }
+
             state.unit = defaultUnit;
             break;
         }
@@ -93,10 +124,12 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
                 const newUnit = {...state.attackers[action.payload.id]};
                 newUnit.id = uuidv4();
                 state.attackers[newUnit.id] = newUnit;
+                state.attackerStats = calcTotals(state.attackers);
             } else if (state.defenders[action.payload.id]) {
                 const newUnit = {...state.defenders[action.payload.id]};
                 newUnit.id = uuidv4();
                 state.defenders[newUnit.id] = newUnit;
+                state.defenderStats = calcTotals(state.defenders);
             }
             break;
         }
@@ -106,18 +139,22 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
                 const newUnit = {...state.attackers[action.payload.id]};
                 newUnit.id = uuidv4();
                 state.defenders[newUnit.id] = newUnit;
+                state.defenderStats = calcTotals(state.defenders);
             } else if (state.defenders[action.payload.id]) {
                 const newUnit = {...state.defenders[action.payload.id]};
                 newUnit.id = uuidv4();
                 state.attackers[newUnit.id] = newUnit;
+                state.attackerStats = calcTotals(state.attackers);
             }
             break;
         }
         case DELETE_UNIT: {
             if (state.attackers[action.payload.id]) {
                 delete state.attackers[action.payload.id];
+                state.attackerStats = calcTotals(state.attackers);
             } else if (state.defenders[action.payload.id]) {
                 delete state.defenders[action.payload.id];
+                state.defenderStats = calcTotals(state.defenders);
             }
             break;
         }
@@ -205,6 +242,11 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
             break;
         }
 
+        case SET_LINE: {
+            (state.attackers[action.payload.id] || state.defenders[action.payload.id]).behind = action.payload.behind;
+            break;
+        }
+
         case SET_COMBAT_SPELL: {
             state.unit.combatSpell = action.payload.abbr;
             break;
@@ -222,8 +264,10 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
         case ADD_UNIT: {
             if (action.payload.side === 'attackers') {
                 state.attackers[action.payload.unit.id] = action.payload.unit;
+                state.attackerStats = calcTotals(state.attackers);
             } else {
                 state.defenders[action.payload.unit.id] = action.payload.unit;
+                state.defenderStats = calcTotals(state.defenders);
             }
             break;
         }
@@ -236,8 +280,10 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
         case RESET_SIDE: {
             if (action.payload.side === 'attackers') {
                 state.attackers = {};
+                state.attackerStats = calcTotals({});
             } else {
                 state.defenders = {};
+                state.defenderStats = calcTotals({});
             }
             break;
         }

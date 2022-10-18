@@ -86,7 +86,7 @@ exports[`allows json upload of the units 1`] = `
       class="MuiPaper-root StyledComponents__StyledPaper-sc-4eawh9-1 kkcYNg MuiPaper-elevation3"
     >
       <h5
-        class="MuiTypography-root StyledComponents__StyledHeading-sc-4eawh9-2 MainForm___StyledStyledHeading-sc-1e5y3lf-2 deDFYq kAKEhK MuiTypography-h5"
+        class="MuiTypography-root StyledComponents__StyledHeading-sc-4eawh9-3 MainForm___StyledStyledHeading-sc-1e5y3lf-2 KZHAX kAKEhK MuiTypography-h5"
       >
         <div
           class="MainForm__SectionHeaderContainer-sc-1e5y3lf-1 hKKygX"
@@ -240,7 +240,7 @@ exports[`allows json upload of the units 1`] = `
         </div>
       </h5>
       <h5
-        class="MuiTypography-root StyledComponents__StyledHeading-sc-4eawh9-2 deDFYq MuiTypography-h5"
+        class="MuiTypography-root StyledComponents__StyledHeading-sc-4eawh9-3 KZHAX MuiTypography-h5"
       >
         <div
           class="MainForm__SectionHeaderContainer-sc-1e5y3lf-1 hKKygX"
@@ -652,7 +652,7 @@ exports[`allows json upload of the units 1`] = `
           class="MuiPaper-root StyledComponents__StyledPaper-sc-4eawh9-1 kkcYNg MuiPaper-elevation3"
         >
           <h5
-            class="MuiTypography-root StyledComponents__StyledSideHeading-sc-4eawh9-3 fHDZeF MuiTypography-h5 MuiTypography-gutterBottom"
+            class="MuiTypography-root StyledComponents__StyledSideHeading-sc-4eawh9-4 eFSVka MuiTypography-h5 MuiTypography-gutterBottom"
           >
             Attacker units
           </h5>
@@ -667,6 +667,52 @@ exports[`allows json upload of the units 1`] = `
               d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
             />
           </svg>
+          <div
+            class="StyledComponents__Formation-sc-4eawh9-5 jzWhww"
+          >
+            <div
+              class="StyledComponents__FormationItem-sc-4eawh9-6"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-caption"
+              >
+                Front
+              </span>
+              <p
+                class="MuiTypography-root MuiTypography-body1"
+              >
+                2
+              </p>
+            </div>
+            <div
+              class="StyledComponents__FormationItem-sc-4eawh9-6"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-caption"
+              >
+                Back
+              </span>
+              <p
+                class="MuiTypography-root MuiTypography-body1"
+              >
+                0
+              </p>
+            </div>
+            <div
+              class="StyledComponents__FormationItem-sc-4eawh9-6"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-caption"
+              >
+                Total
+              </span>
+              <p
+                class="MuiTypography-root MuiTypography-body1"
+              >
+                2
+              </p>
+            </div>
+          </div>
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-animated MuiInputLabel-shrink"
             data-shrink="true"
@@ -837,7 +883,34 @@ exports[`allows json upload of the units 1`] = `
                   <td
                     class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall"
                   >
-                    no
+                    <span
+                      aria-disabled="false"
+                      class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root MuiCheckbox-root"
+                    >
+                      <span
+                        class="MuiIconButton-label"
+                      >
+                        <input
+                          class="PrivateSwitchBase-input"
+                          data-indeterminate="false"
+                          type="checkbox"
+                          value=""
+                        />
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                          />
+                        </svg>
+                      </span>
+                      <span
+                        class="MuiTouchRipple-root"
+                      />
+                    </span>
                   </td>
                   <td
                     class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignRight MuiTableCell-sizeSmall"
@@ -900,7 +973,7 @@ exports[`allows json upload of the units 1`] = `
           class="MuiPaper-root StyledComponents__StyledPaper-sc-4eawh9-1 kkcYNg MuiPaper-elevation3"
         >
           <h5
-            class="MuiTypography-root StyledComponents__StyledSideHeading-sc-4eawh9-3 fHDZeF MuiTypography-h5"
+            class="MuiTypography-root StyledComponents__StyledSideHeading-sc-4eawh9-4 eFSVka MuiTypography-h5"
           >
             Defender units
           </h5>
@@ -915,6 +988,52 @@ exports[`allows json upload of the units 1`] = `
               d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
             />
           </svg>
+          <div
+            class="StyledComponents__Formation-sc-4eawh9-5 jzWhww"
+          >
+            <div
+              class="StyledComponents__FormationItem-sc-4eawh9-6"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-caption"
+              >
+                Front
+              </span>
+              <p
+                class="MuiTypography-root MuiTypography-body1"
+              >
+                1
+              </p>
+            </div>
+            <div
+              class="StyledComponents__FormationItem-sc-4eawh9-6"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-caption"
+              >
+                Back
+              </span>
+              <p
+                class="MuiTypography-root MuiTypography-body1"
+              >
+                0
+              </p>
+            </div>
+            <div
+              class="StyledComponents__FormationItem-sc-4eawh9-6"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-caption"
+              >
+                Total
+              </span>
+              <p
+                class="MuiTypography-root MuiTypography-body1"
+              >
+                1
+              </p>
+            </div>
+          </div>
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-animated MuiInputLabel-shrink"
             data-shrink="true"
@@ -1085,7 +1204,34 @@ exports[`allows json upload of the units 1`] = `
                   <td
                     class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall"
                   >
-                    no
+                    <span
+                      aria-disabled="false"
+                      class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root MuiCheckbox-root"
+                    >
+                      <span
+                        class="MuiIconButton-label"
+                      >
+                        <input
+                          class="PrivateSwitchBase-input"
+                          data-indeterminate="false"
+                          type="checkbox"
+                          value=""
+                        />
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                          />
+                        </svg>
+                      </span>
+                      <span
+                        class="MuiTouchRipple-root"
+                      />
+                    </span>
                   </td>
                   <td
                     class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignRight MuiTableCell-sizeSmall"
