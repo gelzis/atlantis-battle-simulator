@@ -5,8 +5,6 @@ import {StylesProvider} from '@material-ui/core/styles';
 
 import {reducer} from './reducer';
 import {Rule, StyleSheet} from 'jss';
-import {Unit} from './types';
-import {SoldierItems} from './resources';
 
 const store = createStore(reducer);
 const generateClassName = (rule:Rule, styleSheet: StyleSheet): string => `${styleSheet.options.classNamePrefix}-${rule.key}`;

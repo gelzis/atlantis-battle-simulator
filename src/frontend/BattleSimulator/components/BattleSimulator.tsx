@@ -504,7 +504,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             closeSettings,
             setLine,
             attackerStats,
-            defenderStats
+            defenderStats,
         } = this.props;
 
         return (

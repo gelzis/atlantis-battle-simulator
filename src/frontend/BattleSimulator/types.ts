@@ -87,8 +87,8 @@ export type AppState = {
     }
     attackerStructure: string
     defenderStructure: string
-    attackerStats: SideStats,
-    defenderStats: SideStats,
+    attackerStats: SideStats
+    defenderStats: SideStats
     unit: Unit
     loading: boolean
     error: {
