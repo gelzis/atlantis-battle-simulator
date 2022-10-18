@@ -31,7 +31,7 @@ import {StyledAppBar, StyledPaper, StyledSideHeading, Formation, FormationItem, 
 import {MainForm} from './MainForm';
 import {UnitList} from './UnitList';
 import {defaultUnit} from '../reducer';
-import {download, calcTotals} from '../utils';
+import {download} from '../utils';
 import {
     ADD_UNIT,
     AppState,
@@ -79,7 +79,19 @@ const Footer = styled(Typography)`
     padding: ${theme.spacing(2)}px 0;
 `;
 
-type StateProps = Pick<AppState, 'attackers' | 'defenders' | 'unit' | 'loading' | 'error' | 'attackerStructure' | 'defenderStructure' | 'settingsWindowOpen' | 'battleCount' >
+type StateProps = Pick<AppState,
+    'attackers' |
+    'defenders' |
+    'unit' |
+    'loading' |
+    'error' |
+    'attackerStructure' |
+    'defenderStructure' |
+    'settingsWindowOpen' |
+    'battleCount' |
+    'attackerStats' |
+    'defenderStats'
+>
 type DispatchProps = {
     editUnit: (id: string) => void
     duplicateUnit: (id: string) => void
@@ -108,6 +120,8 @@ const mapStateToProps = (state: AppState): StateProps => {
         defenders: state.defenders,
         attackerStructure: state.attackerStructure,
         defenderStructure: state.defenderStructure,
+        attackerStats: state.attackerStats,
+        defenderStats: state.defenderStats,
         unit: state.unit,
         loading: state.loading,
         error: state.error,
@@ -489,10 +503,9 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             openSettings,
             closeSettings,
             setLine,
+            attackerStats,
+            defenderStats
         } = this.props;
-
-        const attackerTotals = calcTotals(attackers);
-        const defenderTotals = calcTotals(defenders);
 
         return (
             <StylesProvider injectFirst>
@@ -531,15 +544,15 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                 <Formation>
                                     <FormationItem>
                                         <Typography variant="caption">Front</Typography>
-                                        <Typography>{attackerTotals.front}</Typography>
+                                        <Typography>{attackerStats.front}</Typography>
                                     </FormationItem>
                                     <FormationItem>
                                         <Typography variant="caption">Back</Typography>
-                                        <Typography>{attackerTotals.back}</Typography>
+                                        <Typography>{attackerStats.back}</Typography>
                                     </FormationItem>
                                     <FormationItem>
                                         <Typography variant="caption">Total</Typography>
-                                        <Typography>{attackerTotals.total}</Typography>
+                                        <Typography>{attackerStats.total}</Typography>
                                     </FormationItem>
                                 </Formation>
                                 <InputLabel shrink>
@@ -585,15 +598,15 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                 <Formation>
                                     <FormationItem>
                                         <Typography variant="caption">Front</Typography>
-                                        <Typography>{defenderTotals.front}</Typography>
+                                        <Typography>{defenderStats.front}</Typography>
                                     </FormationItem>
                                     <FormationItem>
                                         <Typography variant="caption">Back</Typography>
-                                        <Typography>{defenderTotals.back}</Typography>
+                                        <Typography>{defenderStats.back}</Typography>
                                     </FormationItem>
                                     <FormationItem>
                                         <Typography variant="caption">Total</Typography>
-                                        <Typography>{defenderTotals.total}</Typography>
+                                        <Typography>{defenderStats.total}</Typography>
                                     </FormationItem>
                                 </Formation>
                                 <InputLabel shrink>

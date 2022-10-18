@@ -72,6 +72,12 @@ export type Unit = {
     behind: boolean
 };
 
+export type SideStats = {
+    total: number
+    front: number
+    back: number
+}
+
 export type AppState = {
     attackers: {
         [key: string]: Unit
@@ -81,6 +87,8 @@ export type AppState = {
     }
     attackerStructure: string
     defenderStructure: string
+    attackerStats: SideStats,
+    defenderStats: SideStats,
     unit: Unit
     loading: boolean
     error: {
