@@ -61,6 +61,7 @@ export type SkillResource = {
 export type ItemResource = {
     abbr: string
     name: string
+    category: 'man' | 'monster' | 'illusion' | 'weapon' | 'armour' | 'mount' | 'tool'
 }
 
 export type Unit = {

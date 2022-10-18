@@ -57,7 +57,7 @@ type JsonSkill = {
 type JsonItem = {
     abbr: string
     name: string
-    category?: 'man' | 'monster' | 'illusion'
+    category?: 'man' | 'monster' | 'illusion' | 'weapon' | 'armour' | 'mount' | 'tool'
 }
 
 type StateProps = {

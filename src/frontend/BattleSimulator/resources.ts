@@ -1,7 +1,9 @@
 import SkillList from '../../engine/skills.json';
-import ItemList from '../../engine/items.json';
+import ItemListUntyped from '../../engine/items.json';
 import ObjectList from '../../engine/objects.json';
 import {ItemResource, SkillResource} from './types';
+
+const ItemList: ItemResource[] = ItemListUntyped as [];
 
 export const SkillListSorted = SkillList.sort((a, b) => {
     if (a.name > b.name) {
