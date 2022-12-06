@@ -243,7 +243,13 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
         }
 
         case SET_LINE: {
-            (state.attackers[action.payload.id] || state.defenders[action.payload.id]).behind = action.payload.behind;
+            if (state.attackers[action.payload.id]) {
+                state.attackers[action.payload.id].behind = action.payload.behind;
+                state.attackerStats = calcTotals(state.attackers);
+            } else if (state.defenders[action.payload.id]) {
+                state.defenders[action.payload.id].behind = action.payload.behind;
+                state.defenderStats = calcTotals(state.defenders);
+            }
             break;
         }
 

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`allows json upload of the units 1`] = `
+exports[`allows to set unit behind from unit list 1`] = `
 <DocumentFragment>
   <div
     class="MuiContainer-root BattleSimulator___StyledContainer-sc-p84n5w-5 lgCyvA MuiContainer-maxWidthLg"
@@ -681,7 +681,7 @@ exports[`allows json upload of the units 1`] = `
               <p
                 class="MuiTypography-root MuiTypography-body1"
               >
-                2
+                0
               </p>
             </div>
             <div
@@ -695,7 +695,7 @@ exports[`allows json upload of the units 1`] = `
               <p
                 class="MuiTypography-root MuiTypography-body1"
               >
-                0
+                1
               </p>
             </div>
             <div
@@ -709,7 +709,7 @@ exports[`allows json upload of the units 1`] = `
               <p
                 class="MuiTypography-root MuiTypography-body1"
               >
-                2
+                1
               </p>
             </div>
           </div>
@@ -868,13 +868,13 @@ exports[`allows json upload of the units 1`] = `
                     role="cell"
                     scope="row"
                   >
-                    hell yeah
+                    Unit
                   </th>
                   <td
                     class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall"
                   >
                     <div>
-                      2 [LEAD]
+                      1 [LEAD]
                     </div>
                   </td>
                   <td
@@ -885,7 +885,7 @@ exports[`allows json upload of the units 1`] = `
                   >
                     <span
                       aria-disabled="false"
-                      class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root MuiCheckbox-root"
+                      class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root MuiCheckbox-root PrivateSwitchBase-checked MuiCheckbox-checked"
                       data-testid="set-behind"
                     >
                       <span
@@ -904,7 +904,7 @@ exports[`allows json upload of the units 1`] = `
                           viewBox="0 0 24 24"
                         >
                           <path
-                            d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                            d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
                           />
                         </svg>
                       </span>
@@ -1003,7 +1003,7 @@ exports[`allows json upload of the units 1`] = `
               <p
                 class="MuiTypography-root MuiTypography-body1"
               >
-                1
+                0
               </p>
             </div>
             <div
@@ -1031,7 +1031,7 @@ exports[`allows json upload of the units 1`] = `
               <p
                 class="MuiTypography-root MuiTypography-body1"
               >
-                1
+                0
               </p>
             </div>
           </div>
@@ -1181,110 +1181,7 @@ exports[`allows json upload of the units 1`] = `
               </thead>
               <tbody
                 class="MuiTableBody-root"
-              >
-                <tr
-                  class="MuiTableRow-root"
-                >
-                  <th
-                    class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall"
-                    role="cell"
-                    scope="row"
-                  >
-                    Unit
-                  </th>
-                  <td
-                    class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall"
-                  >
-                    <div>
-                      1 [LEAD]
-                    </div>
-                  </td>
-                  <td
-                    class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall"
-                  />
-                  <td
-                    class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall"
-                  >
-                    <span
-                      aria-disabled="false"
-                      class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root MuiCheckbox-root"
-                      data-testid="set-behind"
-                    >
-                      <span
-                        class="MuiIconButton-label"
-                      >
-                        <input
-                          class="PrivateSwitchBase-input"
-                          data-indeterminate="false"
-                          type="checkbox"
-                          value=""
-                        />
-                        <svg
-                          aria-hidden="true"
-                          class="MuiSvgIcon-root"
-                          focusable="false"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
-                          />
-                        </svg>
-                      </span>
-                      <span
-                        class="MuiTouchRipple-root"
-                      />
-                    </span>
-                  </td>
-                  <td
-                    class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignRight MuiTableCell-sizeSmall"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="MuiSvgIcon-root UnitList___StyledEditIcon-sc-1jknfe-1 kZIxit MuiSvgIcon-fontSizeSmall"
-                      focusable="false"
-                      title="Edit"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
-                      />
-                    </svg>
-                    <svg
-                      aria-hidden="true"
-                      class="MuiSvgIcon-root UnitList___StyledFileCopyIcon-sc-1jknfe-2 gQOMaF MuiSvgIcon-fontSizeSmall"
-                      focusable="false"
-                      title="Duplicate"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"
-                      />
-                    </svg>
-                    <svg
-                      aria-hidden="true"
-                      class="MuiSvgIcon-root UnitList___StyledSyncAltIcon-sc-1jknfe-3 fCdAbp MuiSvgIcon-fontSizeSmall"
-                      focusable="false"
-                      title="Duplicate to other side"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M22 8l-4-4v3H3v2h15v3l4-4zM2 16l4 4v-3h15v-2H6v-3l-4 4z"
-                      />
-                    </svg>
-                    <svg
-                      aria-hidden="true"
-                      class="MuiSvgIcon-root UnitList___StyledDeleteIcon-sc-1jknfe-4 fckdFN MuiSvgIcon-fontSizeSmall"
-                      focusable="false"
-                      title="Delete"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
-                      />
-                    </svg>
-                  </td>
-                </tr>
-              </tbody>
+              />
             </table>
           </div>
         </div>

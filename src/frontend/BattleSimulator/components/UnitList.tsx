@@ -54,7 +54,13 @@ export const UnitList: FC<UnitItemProps> = ({units, onDuplicate, onEdit, onDelet
                                 })}
                             </TableCell>
                             <TableCell align="left">
-                                <Checkbox color="default" checked={unit.behind} onChange={(e, checked) => onChangeLine(unit.id, checked)} />
+                                <Checkbox
+                                    data-testid="set-behind"
+                                    color="default"
+                                    checked={unit.behind}
+                                    onChange={(e, checked) => onChangeLine(unit.id, checked)}
+                                />
+
                             </TableCell>
                             <TableCell align="right">
                                 <Tooltip title="Edit">
