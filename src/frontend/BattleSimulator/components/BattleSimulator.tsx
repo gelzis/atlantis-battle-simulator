@@ -22,7 +22,7 @@ import LaunchIcon from '@material-ui/icons/Launch';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import SettingsIcon from '@material-ui/icons/Settings';
-import {Dispatch} from 'redux';
+import {bindActionCreators, Dispatch} from 'redux';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {v4 as uuidv4} from 'uuid';
 
@@ -32,27 +32,13 @@ import {UnitList} from './UnitList';
 import {defaultUnit} from '../reducer';
 import {download} from '../utils';
 import {
-    ADD_UNIT,
     AppState,
-    CLOSE_SETTINGS,
-    DELETE_UNIT,
-    DUPLICATE_UNIT,
-    DUPLICATE_UNIT_TO_OTHER_SIDE,
-    EDIT_UNIT,
-    SET_LINE,
     ExportItem,
     ExportJson,
     ExportSkill,
     ExportUnit,
     Item,
-    OPEN_SETTINGS,
-    RESET_SIDE,
-    RESET_STATE,
     ServerSimulationResponse,
-    SET_ATTACKERS_STRUCTURE,
-    SET_DEFENDERS_STRUCTURE,
-    SET_ERROR,
-    SET_LOADING_STATUS,
     Side,
     Skill,
     Unit,
@@ -62,6 +48,22 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import {SimulationResult} from './SimulationResult';
 import {SettingsModal} from './SettingsModal';
 import {PageFooter} from './PageFooter';
+import {
+    addUnit,
+    closeSettings,
+    deleteUnit,
+    duplicateUnit,
+    duplicateUnitToTheOtherSide,
+    editUnit,
+    openSettings,
+    resetSide,
+    resetState,
+    setAttackersStructure,
+    setDefendersStructure,
+    setError,
+    setLine,
+    setLoadingStatus,
+} from '../actions/simulatorActions';
 
 const RunBattleContainer = styled.div`
   text-align: center; 
@@ -88,20 +90,20 @@ type StateProps = Pick<AppState,
     'defenderStats'
 >
 type DispatchProps = {
-    editUnit: (id: string) => void
-    duplicateUnit: (id: string) => void
-    deleteUnit: (id: string) => void
-    addUnit: (side: Side, unit: Unit) => void
-    resetState: () => void
-    resetSide: (side: Side) => void
-    setLoadingStatus: (status: boolean) => void
-    setError: (open: boolean, text?: string) => void
-    setAttackersStructure: (name: string) => void
-    setDefendersStructure: (name: string) => void
-    duplicateUnitToTheOtherSide: (id: string) => void
-    openSettings: () => void
-    closeSettings: () => void
-    setLine: (id: string, behind: boolean) => void
+    editUnit: typeof editUnit
+    duplicateUnit: typeof duplicateUnit
+    deleteUnit: typeof deleteUnit
+    addUnit: typeof addUnit
+    resetState: typeof resetState
+    resetSide: typeof resetSide
+    setLoadingStatus: typeof setLoadingStatus
+    setError: typeof setError
+    setAttackersStructure: typeof setAttackersStructure
+    setDefendersStructure: typeof setDefendersStructure
+    duplicateUnitToTheOtherSide: typeof duplicateUnitToTheOtherSide
+    openSettings: typeof openSettings
+    closeSettings: typeof closeSettings
+    setLine: typeof setLine
 }
 type BattleSimulatorProps = StateProps & DispatchProps;
 
@@ -125,122 +127,24 @@ const mapStateToProps = (state: AppState): StateProps => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-    editUnit(id): void {
-        dispatch({
-            type: EDIT_UNIT,
-            payload: {
-                id,
-            },
-        });
-    },
-    duplicateUnit(id): void {
-        dispatch({
-            type: DUPLICATE_UNIT,
-            payload: {
-                id,
-            },
-        });
-    },
-    deleteUnit(id): void {
-        dispatch({
-            type: DELETE_UNIT,
-            payload: {
-                id,
-            },
-        });
-    },
-    addUnit(side, unit): void {
-        dispatch({
-            type: ADD_UNIT,
-            payload: {
-                side,
-                unit,
-            },
-        });
-    },
-    resetState(): void {
-        dispatch({
-            type: RESET_STATE,
-        });
-    },
-
-    resetSide(side): void {
-        dispatch({
-            type: RESET_SIDE,
-            payload: {
-                side,
-            },
-        });
-    },
-    setLoadingStatus(status): void {
-        dispatch({
-            type: SET_LOADING_STATUS,
-            payload: {
-                status,
-            },
-        });
-    },
-
-    setError(open, text): void {
-        dispatch({
-            type: SET_ERROR,
-            payload: {
-                open,
-                text,
-            },
-        });
-    },
-
-    setAttackersStructure(name): void {
-        dispatch({
-            type: SET_ATTACKERS_STRUCTURE,
-            payload: {
-                name,
-            },
-        });
-    },
-
-    setDefendersStructure(name): void {
-        dispatch({
-            type: SET_DEFENDERS_STRUCTURE,
-            payload: {
-                name,
-            },
-        });
-    },
-
-    duplicateUnitToTheOtherSide(id: string): void {
-        dispatch({
-            type: DUPLICATE_UNIT_TO_OTHER_SIDE,
-            payload: {
-                id,
-            },
-        });
-    },
-
-    openSettings(): void {
-        dispatch({
-            type: OPEN_SETTINGS,
-        });
-    },
-
-    closeSettings(): void {
-        dispatch({
-            type: CLOSE_SETTINGS,
-        });
-    },
-
-    setLine(id: string, behind: boolean): void {
-        dispatch({
-            type: SET_LINE,
-            payload: {
-                id,
-                behind,
-            },
-        });
-    },
-});
+const mapDispatchToProps = (dispatch: Dispatch) => {
+    return bindActionCreators({
+        addUnit,
+        closeSettings,
+        deleteUnit,
+        duplicateUnit,
+        duplicateUnitToTheOtherSide,
+        editUnit,
+        openSettings,
+        resetSide,
+        resetState,
+        setAttackersStructure,
+        setDefendersStructure,
+        setError,
+        setLine,
+        setLoadingStatus,
+    }, dispatch);
+};
 
 export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, BattleSimulatorClassState> {
     constructor(props: BattleSimulatorProps) {

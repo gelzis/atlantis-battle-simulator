@@ -225,7 +225,7 @@ export const reducer: Reducer<AppState, ActionTypes> = produce((state: AppState,
 
         case CHANGE_SKILL_LEVEL: {
             const skill = state.unit.skills.find((item) => {
-                return item.id === action.payload.id;
+                return item.id === action.payload.skillId;
             });
 
             skill.level = action.payload.level;

@@ -178,17 +178,15 @@ export type SetLoadingStatus = {
     }
 }
 
-type AddSkillAction = {
+export type AddSkill = {
     type: typeof ADD_SKILL
-    payload: Record<string, never>
 }
 
-type AddItemAction = {
+export type AddItem = {
     type: typeof ADD_ITEM
-    payload: Record<string, never>
 }
 
-type ChangeItemAbbr = {
+export type ChangeItemAbbr = {
     type: typeof CHANGE_ITEM_ABBR
     payload: {
         id: string
@@ -197,7 +195,7 @@ type ChangeItemAbbr = {
     }
 }
 
-type ChangeItemAmount = {
+export type ChangeItemAmount = {
     type: typeof CHANGE_ITEM_AMOUNT
     payload: {
         id: string
@@ -205,7 +203,7 @@ type ChangeItemAmount = {
     }
 }
 
-type ChangeSkillAbbr = {
+export type ChangeSkillAbbr = {
     type: typeof CHANGE_SKILL_ABBR
     payload: {
         id: string
@@ -215,22 +213,22 @@ type ChangeSkillAbbr = {
     }
 }
 
-type ChangeSkillLevel = {
+export type ChangeSkillLevel = {
     type: typeof CHANGE_SKILL_LEVEL
     payload: {
-        id: string
+        skillId: string
         level: number
     }
 }
 
-type SetBehind = {
+export type SetBehind = {
     type: typeof SET_BEHIND
     payload: {
         enabled: boolean
     }
 }
 
-type SetLine = {
+export type SetLine = {
     type: typeof SET_LINE
     payload: {
         id: string
@@ -238,66 +236,64 @@ type SetLine = {
     }
 }
 
-type ResetForm = {
+export type ResetForm = {
     type: typeof RESET_FORM
-    payload: Record<string, never>
 }
 
-type ResetState = {
+export type ResetState = {
     type: typeof RESET_STATE
-    payload: Record<string, never>
 }
 
-type ResetSide = {
+export type ResetSide = {
     type: typeof RESET_SIDE
     payload: {
         side: Side
     }
 }
 
-type SetUnitsName = {
+export type SetUnitsName = {
     type: typeof SET_UNITS_NAME
     payload: {
         name: string
     }
 }
 
-type EditUnit = {
+export type EditUnit = {
     type: typeof EDIT_UNIT
     payload: {
         id: string
     }
 }
 
-type DuplicateUnit = {
+export type DuplicateUnit = {
     type: typeof DUPLICATE_UNIT
     payload: {
         id: string
     }
 }
 
-type DuplicateUnitToOtherSide = {
+export type DuplicateUnitToOtherSide = {
     type: typeof DUPLICATE_UNIT_TO_OTHER_SIDE
     payload: {
         id: string
     }
 }
 
-type DeleteUnit = {
+export type DeleteUnit = {
     type: typeof DELETE_UNIT
     payload: {
         id: string
     }
 }
 
-type SetCombatSpell = {
+export type SetCombatSpell = {
     type: typeof SET_COMBAT_SPELL
     payload: {
         abbr: string
     }
 }
 
-type AddUnit = {
+export type AddUnit = {
     type: typeof ADD_UNIT
     payload: {
         side: Side
@@ -305,7 +301,7 @@ type AddUnit = {
     }
 }
 
-type SetError = {
+export type SetError = {
     type: typeof SET_ERROR
     payload: {
         open: boolean
@@ -313,36 +309,36 @@ type SetError = {
     }
 }
 
-type SetAttackersStructure = {
+export type SetAttackersStructure = {
     type: typeof SET_ATTACKERS_STRUCTURE
     payload: {
         name: string
     }
 }
 
-type SetDefendersStructure = {
+export type SetDefendersStructure = {
     type: typeof SET_DEFENDERS_STRUCTURE
     payload: {
         name: string
     }
 }
 
-type OpenSettings = {
+export type OpenSettings = {
     type: typeof OPEN_SETTINGS
 }
 
-type CloseSettings = {
+export type CloseSettings = {
     type: typeof CLOSE_SETTINGS
 }
 
-type SetBattleCount = {
+export type SetBattleCount = {
     type: typeof SET_BATTLE_COUNT
     payload: {
         value: number
     }
 }
 
-export type ActionTypes = SaveUnit | AddItemAction | AddSkillAction | ChangeItemAbbr | ChangeItemAmount |
+export type ActionTypes = SaveUnit | AddItem | AddSkill | ChangeItemAbbr | ChangeItemAmount |
     ChangeSkillAbbr | ChangeSkillLevel | SetBehind | ResetForm | SetUnitsName | EditUnit | DeleteUnit | DuplicateUnit |
     SetCombatSpell | AddUnit | ResetState | SetLoadingStatus | SetError | ResetSide | SetAttackersStructure | SetDefendersStructure |
     DuplicateUnitToOtherSide | OpenSettings | CloseSettings | SetBattleCount | SetLine;

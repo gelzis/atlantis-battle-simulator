@@ -1,5 +1,5 @@
 import React, {ChangeEvent, PureComponent, ReactNode} from 'react';
-import {Dispatch} from 'redux';
+import {bindActionCreators, Dispatch} from 'redux';
 import {connect} from 'react-redux';
 import styled from 'styled-components';
 import {
@@ -24,21 +24,22 @@ import SaveIcon from '@material-ui/icons/Save';
 import {StyledHeading, StyledPaper, theme} from '../../StyledComponents';
 import {ItemListSorted, SkillListSorted} from '../resources';
 import {
-    ADD_ITEM,
-    ADD_SKILL,
     AppState,
-    CHANGE_ITEM_ABBR,
-    CHANGE_ITEM_AMOUNT,
-    CHANGE_SKILL_ABBR,
-    CHANGE_SKILL_LEVEL,
-    RESET_FORM,
-    SAVE_UNIT,
-    SET_BEHIND,
-    SET_COMBAT_SPELL,
-    SET_UNITS_NAME,
-    Side,
     Unit,
 } from '../types';
+import {
+    addItem,
+    addSkill,
+    changeItemAbbr,
+    changeItemAmount,
+    changeSkillAbbr,
+    changeSkillLevel,
+    resetForm,
+    saveUnit,
+    setBehind,
+    setCombatSpell,
+    setUnitsName,
+} from '../actions/formActions';
 
 const ButtonGroup = styled.div`
   margin-top: ${theme.spacing(2)}px;
@@ -65,21 +66,21 @@ type StateProps = {
 };
 
 type DispatchProps = {
-    saveUnit: (side?: Side) => void
-    addSkill: () => void
-    addItem: () => void
+    saveUnit: typeof saveUnit
+    addSkill: typeof addSkill
+    addItem: typeof addItem
 
-    changeItemAbbr: (id: string, abbr: string, name: string) => void
-    changeItemAmount: (id: string, amount: number) => void
+    changeItemAbbr: typeof changeItemAbbr
+    changeItemAmount: typeof changeItemAmount
 
-    changeSkillAbbr: (id: string, abbr: string, name: string, combatSpell: boolean) => void
-    changeSkillLevel: (id: string, skill: number) => void
+    changeSkillAbbr: typeof changeSkillAbbr
+    changeSkillLevel: typeof changeSkillLevel
 
-    setBehind: (enabled: boolean) => void
-    setUnitsName: (name: string) => void
-    setCombatSpell: (attr: string) => void
+    setBehind: typeof setBehind
+    setUnitsName: typeof setUnitsName
+    setCombatSpell: typeof setCombatSpell
 
-    resetForm: () => void
+    resetForm: typeof resetForm
 };
 type FormProps = StateProps & DispatchProps;
 
@@ -87,95 +88,21 @@ const mapStateToProps = (state: AppState): StateProps => ({
     unit: state.unit,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-    saveUnit(side): void {
-        dispatch({
-            type: SAVE_UNIT,
-            payload: {
-                side,
-            },
-        });
-    },
-    addItem(): void {
-        dispatch({
-            type: ADD_ITEM,
-        });
-    },
-    addSkill(): void {
-        dispatch({
-            type: ADD_SKILL,
-        });
-    },
-    changeItemAbbr(id, abbr, name): void {
-        dispatch({
-            type: CHANGE_ITEM_ABBR,
-            payload: {
-                id,
-                abbr,
-                name,
-            },
-        });
-    },
-    changeItemAmount(id, amount): void {
-        dispatch({
-            type: CHANGE_ITEM_AMOUNT,
-            payload: {
-                id,
-                amount,
-            },
-        });
-    },
-    changeSkillAbbr(id, abbr, name, combatSpell): void {
-        dispatch({
-            type: CHANGE_SKILL_ABBR,
-            payload: {
-                id,
-                abbr,
-                name,
-                combatSpell,
-            },
-        });
-    },
-    changeSkillLevel(id, level): void {
-        dispatch({
-            type: CHANGE_SKILL_LEVEL,
-            payload: {
-                id,
-                level,
-            },
-        });
-    },
-    setBehind(enabled): void {
-        dispatch({
-            type: SET_BEHIND,
-            payload: {
-                enabled,
-            },
-        });
-    },
-    resetForm(): void {
-        dispatch({
-            type: RESET_FORM,
-            payload: {},
-        });
-    },
-    setUnitsName(name): void {
-        dispatch({
-            type: SET_UNITS_NAME,
-            payload: {
-                name,
-            },
-        });
-    },
-    setCombatSpell(abbr): void {
-        dispatch({
-            type: SET_COMBAT_SPELL,
-            payload: {
-                abbr,
-            },
-        });
-    },
-});
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
+    return bindActionCreators({
+        addItem,
+        addSkill,
+        changeItemAbbr,
+        changeItemAmount,
+        changeSkillAbbr,
+        changeSkillLevel,
+        resetForm,
+        saveUnit,
+        setBehind,
+        setCombatSpell,
+        setUnitsName,
+    }, dispatch);
+};
 
 class MainFormClass extends PureComponent<FormProps, null> {
     OnChangeItemAbbr = (itemId: string, event: ChangeEvent, object: JsonItem): void => {

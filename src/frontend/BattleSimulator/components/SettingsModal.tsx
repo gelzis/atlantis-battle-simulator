@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react';
-import {Dispatch} from 'redux';
+import {bindActionCreators, Dispatch} from 'redux';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -9,7 +9,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import {TextField} from '@material-ui/core';
 import {connect} from 'react-redux';
 
-import {AppState, SET_BATTLE_COUNT} from '../types';
+import {AppState} from '../types';
+import {setBattleCount} from "../actions/settingsModalAtions";
 
 const SettingsModalDialogContent = styled(DialogContent)`
     min-width: 400px;
@@ -28,19 +29,14 @@ type SettingsModalProps = {
 };
 
 type DispatchProps = {
-    saveBattleCount: (count: number) => void
+    setBattleCount: typeof setBattleCount
 };
 
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-    saveBattleCount(value): void {
-        dispatch({
-            type: SET_BATTLE_COUNT,
-            payload: {
-                value,
-            },
-        });
-    },
-});
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
+    return bindActionCreators({
+        setBattleCount,
+    }, dispatch);
+};
 
 type ClassState = {
     battleCount: string
@@ -58,7 +54,7 @@ class SettingsModalClass extends PureComponent<Props, ClassState> {
     }
 
     _onSave(): void {
-        this.props.saveBattleCount(parseInt(this.state.battleCount) || 50);
+        this.props.setBattleCount(parseInt(this.state.battleCount) || 50);
         this.props.onClose();
     }
 
