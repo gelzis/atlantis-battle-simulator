@@ -19,6 +19,7 @@ import LaunchIcon from '@material-ui/icons/Launch';
 import SettingsIcon from '@material-ui/icons/Settings';
 import {bindActionCreators, Dispatch} from 'redux';
 import DeleteIcon from '@material-ui/icons/Delete';
+import posthog from 'posthog-js';
 
 import {StyledPaper, StyledSideHeading, theme} from '../../StyledComponents';
 import {MainForm} from './MainForm';
@@ -179,9 +180,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             battleResult: simulationData,
         });
 
-        window.gtag && window.gtag('event', 'success', {
-            event_category: 'battle',
-        });
+        posthog.capture('battle_run');
     };
 
     OnChangeAttackerStructure = (event: ChangeEvent, value: string): void => {
