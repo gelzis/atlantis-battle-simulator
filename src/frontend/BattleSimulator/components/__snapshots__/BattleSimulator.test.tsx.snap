@@ -668,10 +668,10 @@ exports[`allows json upload of the units 1`] = `
             />
           </svg>
           <div
-            class="StyledComponents__Formation-sc-4eawh9-5 jzWhww"
+            class="SideStats__Formation-sc-1qhfsb5-0 lbGtPo"
           >
             <div
-              class="StyledComponents__FormationItem-sc-4eawh9-6"
+              class="SideStats__FormationItem-sc-1qhfsb5-1"
             >
               <span
                 class="MuiTypography-root MuiTypography-caption"
@@ -685,7 +685,7 @@ exports[`allows json upload of the units 1`] = `
               </p>
             </div>
             <div
-              class="StyledComponents__FormationItem-sc-4eawh9-6"
+              class="SideStats__FormationItem-sc-1qhfsb5-1"
             >
               <span
                 class="MuiTypography-root MuiTypography-caption"
@@ -699,7 +699,7 @@ exports[`allows json upload of the units 1`] = `
               </p>
             </div>
             <div
-              class="StyledComponents__FormationItem-sc-4eawh9-6"
+              class="SideStats__FormationItem-sc-1qhfsb5-1"
             >
               <span
                 class="MuiTypography-root MuiTypography-caption"
@@ -990,10 +990,10 @@ exports[`allows json upload of the units 1`] = `
             />
           </svg>
           <div
-            class="StyledComponents__Formation-sc-4eawh9-5 jzWhww"
+            class="SideStats__Formation-sc-1qhfsb5-0 lbGtPo"
           >
             <div
-              class="StyledComponents__FormationItem-sc-4eawh9-6"
+              class="SideStats__FormationItem-sc-1qhfsb5-1"
             >
               <span
                 class="MuiTypography-root MuiTypography-caption"
@@ -1007,7 +1007,7 @@ exports[`allows json upload of the units 1`] = `
               </p>
             </div>
             <div
-              class="StyledComponents__FormationItem-sc-4eawh9-6"
+              class="SideStats__FormationItem-sc-1qhfsb5-1"
             >
               <span
                 class="MuiTypography-root MuiTypography-caption"
@@ -1021,7 +1021,7 @@ exports[`allows json upload of the units 1`] = `
               </p>
             </div>
             <div
-              class="StyledComponents__FormationItem-sc-4eawh9-6"
+              class="SideStats__FormationItem-sc-1qhfsb5-1"
             >
               <span
                 class="MuiTypography-root MuiTypography-caption"
