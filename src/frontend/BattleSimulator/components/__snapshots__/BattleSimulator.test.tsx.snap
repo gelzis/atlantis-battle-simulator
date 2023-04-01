@@ -3,7 +3,7 @@
 exports[`allows json upload of the units 1`] = `
 <DocumentFragment>
   <div
-    class="MuiContainer-root BattleSimulator___StyledContainer-sc-p84n5w-5 lgCyvA MuiContainer-maxWidthLg"
+    class="MuiContainer-root BattleSimulator___StyledContainer-sc-p84n5w-4 jBOaKV MuiContainer-maxWidthLg"
   >
     <header
       class="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic MuiAppBar-colorPrimary StyledComponents__StyledAppBar-sc-4eawh9-0 fWtYRQ MuiPaper-elevation4"
@@ -725,7 +725,7 @@ exports[`allows json upload of the units 1`] = `
             role="combobox"
           >
             <div
-              class="MuiFormControl-root MuiTextField-root BattleSimulator___StyledTextField-sc-p84n5w-6 liQjIF MuiFormControl-fullWidth"
+              class="MuiFormControl-root MuiTextField-root BattleSimulator___StyledTextField-sc-p84n5w-5 gwkaYS MuiFormControl-fullWidth"
             >
               <div
                 class="MuiInputBase-root MuiOutlinedInput-root MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiOutlinedInput-adornedEnd MuiInputBase-marginDense MuiOutlinedInput-marginDense"
@@ -1047,7 +1047,7 @@ exports[`allows json upload of the units 1`] = `
             role="combobox"
           >
             <div
-              class="MuiFormControl-root MuiTextField-root BattleSimulator___StyledTextField2-sc-p84n5w-7 kAaUSu MuiFormControl-fullWidth"
+              class="MuiFormControl-root MuiTextField-root BattleSimulator___StyledTextField2-sc-p84n5w-6 fuihVj MuiFormControl-fullWidth"
             >
               <div
                 class="MuiInputBase-root MuiOutlinedInput-root MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiOutlinedInput-adornedEnd MuiInputBase-marginDense MuiOutlinedInput-marginDense"
@@ -1351,42 +1351,5 @@ exports[`allows json upload of the units 1`] = `
       </div>
     </div>
   </div>
-  <p
-    class="MuiTypography-root BattleSimulator__Footer-sc-p84n5w-4 rOIdr MuiTypography-body2"
-  >
-    Copyright © Raivis Gelsbergs 2022. 
-    <br />
-    You can report bugs in 
-    <a
-      href="https://github.com/gelzis/atlantis-battle-simulator"
-      target="_blank"
-    >
-      Github
-    </a>
-     and/or contact me on 
-    <a
-      href="https://discord.gg/HusGETf"
-    >
-      discord
-    </a>
-    , my name tag is Gelzis#9633. 
-    <br />
-    <a
-      href="https://github.com/gelzis/atlantis-battle-simulator"
-      style="color: rgb(0, 0, 0);"
-      target="_blank"
-    >
-      <svg
-        aria-hidden="true"
-        class="MuiSvgIcon-root"
-        focusable="false"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8 0 3.2.9.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1 .9 2.2v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3"
-        />
-      </svg>
-    </a>
-  </p>
 </DocumentFragment>
 `;

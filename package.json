@@ -13,7 +13,7 @@
   "author": "Raivis Gelsbergs",
   "license": "MIT",
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=16.0.0"
   },
   "dependencies": {
     "@babel/core": "^7.18.6",

@@ -4,6 +4,8 @@ import {render, fireEvent, screen} from '@testing-library/react';
 import {BattleSimulator} from './BattleSimulator';
 import {WrapperForTests} from '../utils';
 
+jest.mock('./PageFooter');
+
 it('allows to set unit behind from unit list', () => {
     const {asFragment} = render(<WrapperForTests><BattleSimulator/></WrapperForTests>);
 

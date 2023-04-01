@@ -6,6 +6,8 @@ import {BattleSimulator} from './BattleSimulator';
 import {download, WrapperForTests} from '../utils';
 import Mock = jest.Mock;
 
+jest.mock('./PageFooter');
+
 jest.mock('../utils', () => {
     const actual = jest.requireActual('../utils');
 

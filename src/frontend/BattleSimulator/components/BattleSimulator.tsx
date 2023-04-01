@@ -22,7 +22,6 @@ import LaunchIcon from '@material-ui/icons/Launch';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import SettingsIcon from '@material-ui/icons/Settings';
-import GitHubIcon from '@material-ui/icons/GitHub';
 import {Dispatch} from 'redux';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {v4 as uuidv4} from 'uuid';
@@ -62,6 +61,7 @@ import {getItemByAbbr, getSkillByAbbr, ObjectListSorted} from '../resources';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {SimulationResult} from './SimulationResult';
 import {SettingsModal} from './SettingsModal';
+import {PageFooter} from './PageFooter';
 
 const RunBattleContainer = styled.div`
   text-align: center; 
@@ -72,11 +72,6 @@ const SideClearIcon = styled(DeleteIcon)`
     position: absolute;
     top: 10px;
     right: 10px;
-`;
-
-const Footer = styled(Typography)`
-    text-align: center;
-    padding: ${theme.spacing(2)}px 0;
 `;
 
 type StateProps = Pick<AppState,
@@ -661,12 +656,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                         <SimulationResult {...this.state.battleResult} />
                     }
                 </Container>
-                <Footer variant="body2">
-                    Copyright © Raivis Gelsbergs {`${new Date().getFullYear()}`}. <br/>You can report bugs in <a target="_blank" href="https://github.com/gelzis/atlantis-battle-simulator">Github</a> and/or contact me on <a href="https://discord.gg/HusGETf">discord</a>, my name tag is Gelzis#9633. <br/>
-                    <a style={{color: '#000000'}} target="_blank" href="https://github.com/gelzis/atlantis-battle-simulator">
-                        <GitHubIcon color="inherit"/>
-                    </a>
-                </Footer>
+                <PageFooter/>
 
                 <Snackbar anchorOrigin={{vertical: 'top', horizontal: 'center'}} open={error.open} autoHideDuration={6000} onClose={this.closeError}>
                     <MuiAlert elevation={6} variant="filled" onClose={this.closeError} severity="error">
