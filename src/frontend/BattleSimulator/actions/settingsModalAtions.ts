@@ -6,5 +6,5 @@ export function setBattleCount(value: number): SetBattleCount {
         payload: {
             value,
         },
-    }
+    };
 }
