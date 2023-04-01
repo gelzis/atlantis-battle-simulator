@@ -26,7 +26,7 @@ import {bindActionCreators, Dispatch} from 'redux';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {v4 as uuidv4} from 'uuid';
 
-import {StyledAppBar, StyledPaper, StyledSideHeading, Formation, FormationItem, theme} from '../../StyledComponents';
+import {StyledAppBar, StyledPaper, StyledSideHeading, theme} from '../../StyledComponents';
 import {MainForm} from './MainForm';
 import {UnitList} from './UnitList';
 import {defaultUnit} from '../reducer';
@@ -64,6 +64,7 @@ import {
     setLine,
     setLoadingStatus,
 } from '../actions/simulatorActions';
+import {SideStats} from './SideStats';
 
 const RunBattleContainer = styled.div`
   text-align: center; 
@@ -440,20 +441,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                         fontSize={'small'}
                                     />
                                 </Tooltip>
-                                <Formation>
-                                    <FormationItem>
-                                        <Typography variant="caption">Front</Typography>
-                                        <Typography>{attackerStats.front}</Typography>
-                                    </FormationItem>
-                                    <FormationItem>
-                                        <Typography variant="caption">Back</Typography>
-                                        <Typography>{attackerStats.back}</Typography>
-                                    </FormationItem>
-                                    <FormationItem>
-                                        <Typography variant="caption">Total</Typography>
-                                        <Typography>{attackerStats.total}</Typography>
-                                    </FormationItem>
-                                </Formation>
+                                <SideStats stats={attackerStats}/>
                                 <InputLabel shrink>
                                    Structure
                                 </InputLabel>
@@ -494,20 +482,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                         fontSize={'small'}
                                     />
                                 </Tooltip>
-                                <Formation>
-                                    <FormationItem>
-                                        <Typography variant="caption">Front</Typography>
-                                        <Typography>{defenderStats.front}</Typography>
-                                    </FormationItem>
-                                    <FormationItem>
-                                        <Typography variant="caption">Back</Typography>
-                                        <Typography>{defenderStats.back}</Typography>
-                                    </FormationItem>
-                                    <FormationItem>
-                                        <Typography variant="caption">Total</Typography>
-                                        <Typography>{defenderStats.total}</Typography>
-                                    </FormationItem>
-                                </Formation>
+                                <SideStats stats={defenderStats}/>
                                 <InputLabel shrink>
                                     Structure
                                 </InputLabel>

@@ -50,13 +50,3 @@ export const StyledHeading = styled(Typography)`
 export const StyledSideHeading = styled(Typography)`
   margin-bottom: ${theme.spacing(1)}px;
 `;
-
-export const Formation = styled.div`
-  display: flex;
-  gap: ${theme.spacing(2)}px;
-  margin-bottom: ${theme.spacing(2)}px;
-`;
-
-export const FormationItem = styled.div`
-  
-`;
