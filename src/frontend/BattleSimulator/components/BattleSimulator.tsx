@@ -50,7 +50,7 @@ import {
     setLoadingStatus,
 } from '../actions/simulatorActions';
 import {SideStats} from './SideStats';
-import {convertCurrentStateToJson} from './selectors';
+import {convertCurrentStateToJson} from './transformers';
 import {Header} from './Header';
 
 const RunBattleContainer = styled.div`

@@ -1,9 +1,9 @@
-import React, {ChangeEvent, PureComponent} from 'react';
+import React, {ChangeEvent, FC, useCallback} from 'react';
 import {IconButton, Toolbar, Tooltip, Typography} from '@material-ui/core';
 
 import {StyledAppBar} from '../../StyledComponents';
 import {
-    AppState, ExportItem,
+    ExportItem,
     ExportJson,
     ExportSkill,
     ExportUnit,
@@ -14,90 +14,33 @@ import {
 } from '../types';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
-import {bindActionCreators, Dispatch} from 'redux';
-import {connect} from 'react-redux';
 
-import {convertCurrentStateToJson} from './selectors';
+import {selectAttackersWithStructures} from './selectors';
+import {convertCurrentStateToJson} from './transformers';
 import {download} from '../utils';
 import {defaultUnit} from '../reducer';
 import {v4 as uuidv4} from 'uuid';
 import {getItemByAbbr, getSkillByAbbr} from '../resources';
 import {addUnit, resetState, setAttackersStructure, setDefendersStructure, setError} from '../actions/simulatorActions';
+import {useAppDispatch, useAppSelector} from '../store';
 
-type StateProps = Pick<AppState,
-    'attackers' |
-    'defenders' |
-    'attackerStructure' |
-    'defenderStructure'
->
+export const Header: FC = () => {
+    const {attackers, defenders, defenderStructure, attackerStructure} = useAppSelector(selectAttackersWithStructures);
+    const dispatch = useAppDispatch();
 
-const mapStateToProps = (state: AppState): StateProps => ({
-    attackers: state.attackers,
-    defenders: state.defenders,
-    attackerStructure: state.attackerStructure,
-    defenderStructure: state.defenderStructure,
-});
-
-type DispatchProps = {
-    setError: typeof setError
-    setAttackersStructure: typeof setAttackersStructure
-    setDefendersStructure: typeof setDefendersStructure
-    resetState: typeof resetState
-    addUnit: typeof addUnit
-};
-
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
-    return bindActionCreators({
-        addUnit,
-        resetState,
-        setAttackersStructure,
-        setDefendersStructure,
-        setError,
-    }, dispatch);
-};
-
-type Props = DispatchProps & StateProps;
-
-class HeaderClass extends PureComponent<Props> {
-    downloadAsJson = (): void => {
+    const downloadAsJson = useCallback(() => {
         const exportJson = convertCurrentStateToJson({
-            attackers: this.props.attackers,
-            defenders: this.props.defenders,
-            defenderStructure: this.props.defenderStructure,
-            attackerStructure: this.props.attackerStructure,
+            attackers: attackers,
+            defenders: defenders,
+            defenderStructure: defenderStructure,
+            attackerStructure: attackerStructure,
         });
 
         download(JSON.stringify(exportJson), 'battle.json');
-    };
+    }, [attackers, defenders, defenderStructure, attackerStructure]);
 
-    uploadJson = (event: ChangeEvent<HTMLInputElement>): void => {
-        if (!event.target.files.length) {
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.readAsText(event.target.files[0]);
-        reader.onload = (e): void => {
-            let inputJson;
-            try {
-                inputJson = JSON.parse(String(e.target.result));
-            } catch (e) {
-                console.log('failed parsing', e);
-                this.props.setError(true, 'Failed to parse the json, check json formatting!');
-                return;
-            }
-
-            if (!inputJson.attackers || !inputJson.defenders || !Array.isArray(inputJson.attackers.units) || !Array.isArray(inputJson.defenders.units)) {
-                this.props.setError(true, 'Invalid json format, missing attackers or defenders array!');
-                return;
-            }
-
-            this.convertJsonToCurrentState(inputJson);
-        };
-    };
-
-    convertJsonToCurrentState = (inputJson: ExportJson): void => {
-        this.props.resetState();
+    const convertJsonToCurrentState = useCallback((inputJson: ExportJson): void => {
+        dispatch(resetState());
 
         const addUnitToState = (side: Side, jsonUnit: ExportUnit): void => {
             const unit: Unit = {...defaultUnit};
@@ -152,7 +95,7 @@ class HeaderClass extends PureComponent<Props> {
                 }, []);
             }
 
-            this.props.addUnit(side, unit);
+            dispatch(addUnit(side, unit));
         };
 
         if (inputJson.attackers.units.length) {
@@ -168,35 +111,57 @@ class HeaderClass extends PureComponent<Props> {
         }
 
         if (inputJson.attackers.structure) {
-            this.props.setAttackersStructure(inputJson.attackers.structure.type);
+            dispatch(setAttackersStructure(inputJson.attackers.structure.type));
         }
 
         if (inputJson.defenders.structure) {
-            this.props.setDefendersStructure(inputJson.attackers.structure.type);
+            dispatch(setDefendersStructure(inputJson.attackers.structure.type));
         }
-    };
+    }, [dispatch]);
 
-    render() {
-        return (
-            <StyledAppBar position="static">
-                <Toolbar>
-                    <Typography variant="h6">
-                        Atlantis Battle simulator
-                    </Typography>
-                    <div style={{flexGrow: 1}}/>
-                    <input onChange={this.uploadJson} accept="application/JSON" style={{display: 'none'}} data-testid="json-upload-input" id="icon-button-file" type="file" />
-                    <label htmlFor="icon-button-file">
-                        <IconButton edge="end" color="inherit" component="span">
-                            <Tooltip title="Upload battle as a JSON file"><CloudUploadIcon /></Tooltip>
-                        </IconButton>
-                    </label>
-                    <IconButton edge="end" color="inherit">
-                        <Tooltip title="Download battle as a JSON file"><CloudDownloadIcon data-testid="download-json" onClick={this.downloadAsJson}/></Tooltip>
+    const uploadJson = useCallback((event: ChangeEvent<HTMLInputElement>): void => {
+        if (!event.target.files.length) {
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.readAsText(event.target.files[0]);
+        reader.onload = (e): void => {
+            let inputJson;
+            try {
+                inputJson = JSON.parse(String(e.target.result));
+            } catch (e) {
+                console.log('failed parsing', e);
+                dispatch(setError(true, 'Failed to parse the json, check json formatting!'));
+                return;
+            }
+
+            if (!inputJson.attackers || !inputJson.defenders || !Array.isArray(inputJson.attackers.units) || !Array.isArray(inputJson.defenders.units)) {
+                dispatch(setError(true, 'Invalid json format, missing attackers or defenders array!'));
+                return;
+            }
+
+            convertJsonToCurrentState(inputJson);
+        };
+    }, [convertJsonToCurrentState]);
+
+    return (
+        <StyledAppBar position="static">
+            <Toolbar>
+                <Typography variant="h6">
+                    Atlantis Battle simulator
+                </Typography>
+                <div style={{flexGrow: 1}}/>
+                <input onChange={uploadJson} accept="application/JSON" style={{display: 'none'}} data-testid="json-upload-input" id="icon-button-file" type="file" />
+                <label htmlFor="icon-button-file">
+                    <IconButton edge="end" color="inherit" component="span">
+                        <Tooltip title="Upload battle as a JSON file"><CloudUploadIcon /></Tooltip>
                     </IconButton>
-                </Toolbar>
-            </StyledAppBar>
-        );
-    }
-}
-
-export const Header = connect(mapStateToProps, mapDispatchToProps)(HeaderClass);
+                </label>
+                <IconButton edge="end" color="inherit">
+                    <Tooltip title="Download battle as a JSON file"><CloudDownloadIcon data-testid="download-json" onClick={downloadAsJson}/></Tooltip>
+                </IconButton>
+            </Toolbar>
+        </StyledAppBar>
+    );
+};
