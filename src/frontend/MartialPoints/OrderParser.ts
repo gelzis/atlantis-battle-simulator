@@ -19,16 +19,25 @@ export function getMartialPointsFromOrders(orders: string): MartialPointData {
 
         // matches ALH version
         // ;*** desert (3,1)
-        let matches = line.match(/;\*\*\* \w+ \((\d+),(\d+)\)/);
+        // also
+        // ;*** desert (3,1,underworld)
+        let matches = line.match(/;\*\*\* \w+ \((\d+),(\d+),?(\w+)?\)/);
         if (matches) {
             currentRegion = `${matches[1]},${matches[2]}`;
+            if (matches[3]) {
+                currentRegion += `,${matches[3]}`;
+            }
         }
 
         // matches advisor version
         // ; desert (3,1) in Great Boldur Desert
-        matches = line.match(/; \w+ \((\d+),(\d+)\)/);
+        // ; desert (3,1,underworld) in Great Boldur Desert
+        matches = line.match(/; \w+ \((\d+),(\d+),?(\w+)?\)/);
         if (matches) {
             currentRegion = `${matches[1]},${matches[2]}`;
+            if (matches[3]) {
+                currentRegion += `,${matches[3]}`;
+            }
         }
 
         const hasProduce = !!line.trim().match(/^[@]?produce/);
