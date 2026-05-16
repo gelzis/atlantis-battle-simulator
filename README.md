@@ -5,7 +5,7 @@ This repository contains battle simulator UI written in TypeScript.
 ## How does it work?
 
 It uses modified version of the [Atlantis](https://github.com/Atlantis-PBEM/Atlantis) which is available 
-[here](https://github.com/gelzis/Atlantis/tree/battle-simulator-json).
+[here](https://github.com/gelzis/Atlantis/tree/merge-master).
 Modified version includes two features that are used by this UI:
 - created `battle` cli command, that can read specificly structured JSON file and run the battle based on the file content, example of the json file [available here](https://atlantis.pekle.lv/example.json). example run `engine battle example.json`.
 - created `exportdata` command, which exports two json files with all available current games items and combat related skills. `engine exportdata`, this is used to keep available skills/items up to date when game changes are made.
