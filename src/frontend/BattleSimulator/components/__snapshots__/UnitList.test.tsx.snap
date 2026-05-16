@@ -2,11 +2,136 @@
 
 exports[`allows to set unit behind from unit list 1`] = `
 <DocumentFragment>
-  <div
-    class="MuiContainer-root BattleSimulator___StyledContainer-sc-p84n5w-4 jBOaKV MuiContainer-maxWidthLg"
+  .c1 {
+  margin-bottom: 32px;
+}
+
+.c2 {
+  padding: 10px;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.c3 {
+  margin: 16px 0;
+}
+
+.c15 {
+  margin-bottom: 8px;
+}
+
+.c12 {
+  margin-top: 16px;
+}
+
+.c5 {
+  margin-bottom: 8px;
+}
+
+.c4 {
+  margin-top: 0;
+}
+
+.c6 {
+  cursor: pointer;
+}
+
+.c7 {
+  margin-bottom: 8px;
+}
+
+.c8 {
+  width: 100%;
+}
+
+.c9 {
+  cursor: pointer;
+}
+
+.c10 {
+  margin-bottom: 8px;
+}
+
+.c11 {
+  width: 100%;
+}
+
+.c13 {
+  margin-right: 8px;
+}
+
+.c14 {
+  margin-right: 8px;
+}
+
+.c20 {
+  margin-top: 8px;
+}
+
+.c21 {
+  cursor: pointer;
+}
+
+.c22 {
+  cursor: pointer;
+}
+
+.c23 {
+  cursor: pointer;
+}
+
+.c24 {
+  cursor: pointer;
+}
+
+.c18 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.c27 {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.c16 {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.c25 {
+  cursor: pointer;
+}
+
+.c17 {
+  cursor: pointer;
+}
+
+.c0 {
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+.c19 {
+  margin-bottom: 8px;
+}
+
+.c26 {
+  margin-bottom: 8px;
+}
+
+<div
+    class="MuiContainer-root c0 MuiContainer-maxWidthLg"
   >
     <header
-      class="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic MuiAppBar-colorPrimary StyledComponents__StyledAppBar-sc-4eawh9-0 fWtYRQ MuiPaper-elevation4"
+      class="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic MuiAppBar-colorPrimary c1 MuiPaper-elevation4"
     >
       <div
         class="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters"
@@ -83,18 +208,18 @@ exports[`allows to set unit behind from unit list 1`] = `
       </div>
     </header>
     <div
-      class="MuiPaper-root StyledComponents__StyledPaper-sc-4eawh9-1 kkcYNg MuiPaper-elevation3"
+      class="MuiPaper-root c2 MuiPaper-elevation3"
     >
       <h5
-        class="MuiTypography-root StyledComponents__StyledHeading-sc-4eawh9-3 MainForm___StyledStyledHeading-sc-1e5y3lf-2 KZHAX kAKEhK MuiTypography-h5"
+        class="MuiTypography-root c3 c4 MuiTypography-h5"
       >
         <div
-          class="MainForm__SectionHeaderContainer-sc-1e5y3lf-1 hKKygX"
+          class="c5"
         >
           Men/Items/Monsters 
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MainForm___StyledAddCircleIcon-sc-1e5y3lf-3 cIwIql"
+            class="MuiSvgIcon-root c6"
             focusable="false"
             title="Add new item"
             viewBox="0 0 24 24"
@@ -122,7 +247,7 @@ exports[`allows to set unit behind from unit list 1`] = `
               role="combobox"
             >
               <div
-                class="MuiFormControl-root MuiTextField-root MainForm___StyledTextField-sc-1e5y3lf-4 fvSpYD MuiFormControl-fullWidth"
+                class="MuiFormControl-root MuiTextField-root c7 MuiFormControl-fullWidth"
               >
                 <div
                   class="MuiInputBase-root MuiOutlinedInput-root MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiOutlinedInput-adornedEnd MuiInputBase-marginDense MuiOutlinedInput-marginDense"
@@ -220,7 +345,7 @@ exports[`allows to set unit behind from unit list 1`] = `
               Amount
             </label>
             <div
-              class="MuiFormControl-root MuiTextField-root MainForm___StyledTextField2-sc-1e5y3lf-5 jKvPUZ"
+              class="MuiFormControl-root MuiTextField-root c8"
             >
               <div
                 class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -240,15 +365,15 @@ exports[`allows to set unit behind from unit list 1`] = `
         </div>
       </h5>
       <h5
-        class="MuiTypography-root StyledComponents__StyledHeading-sc-4eawh9-3 KZHAX MuiTypography-h5"
+        class="MuiTypography-root c3 MuiTypography-h5"
       >
         <div
-          class="MainForm__SectionHeaderContainer-sc-1e5y3lf-1 hKKygX"
+          class="c5"
         >
           Skills 
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MainForm___StyledAddCircleIcon2-sc-1e5y3lf-6 dVZBDi"
+            class="MuiSvgIcon-root c9"
             focusable="false"
             title="Add new skill"
             viewBox="0 0 24 24"
@@ -276,7 +401,7 @@ exports[`allows to set unit behind from unit list 1`] = `
               role="combobox"
             >
               <div
-                class="MuiFormControl-root MuiTextField-root MainForm___StyledTextField3-sc-1e5y3lf-7 fxMBxj MuiFormControl-fullWidth"
+                class="MuiFormControl-root MuiTextField-root c10 MuiFormControl-fullWidth"
               >
                 <div
                   class="MuiInputBase-root MuiOutlinedInput-root MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiOutlinedInput-adornedEnd MuiInputBase-marginDense MuiOutlinedInput-marginDense"
@@ -526,7 +651,7 @@ exports[`allows to set unit behind from unit list 1`] = `
             class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
           >
             <div
-              class="MuiFormControl-root MuiTextField-root MainForm___StyledTextField4-sc-1e5y3lf-9 iYYoyr"
+              class="MuiFormControl-root MuiTextField-root c11"
             >
               <label
                 class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
@@ -551,10 +676,10 @@ exports[`allows to set unit behind from unit list 1`] = `
         </div>
       </div>
       <div
-        class="MainForm__ButtonGroup-sc-1e5y3lf-0 iRCkBV"
+        class="c12"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MainForm___StyledButton2-sc-1e5y3lf-11 jZYmOv MuiButton-containedPrimary MuiButton-containedSizeSmall MuiButton-sizeSmall"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained c13 MuiButton-containedPrimary MuiButton-containedSizeSmall MuiButton-sizeSmall"
           data-testid="add-to-attackers"
           tabindex="0"
           type="button"
@@ -583,7 +708,7 @@ exports[`allows to set unit behind from unit list 1`] = `
           />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MainForm___StyledButton3-sc-1e5y3lf-12 ibPwVl MuiButton-containedPrimary MuiButton-containedSizeSmall MuiButton-sizeSmall"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained c14 MuiButton-containedPrimary MuiButton-containedSizeSmall MuiButton-sizeSmall"
           data-testid="add-to-defenders"
           tabindex="0"
           type="button"
@@ -649,16 +774,16 @@ exports[`allows to set unit behind from unit list 1`] = `
         class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6"
       >
         <div
-          class="MuiPaper-root StyledComponents__StyledPaper-sc-4eawh9-1 kkcYNg MuiPaper-elevation3"
+          class="MuiPaper-root c2 MuiPaper-elevation3"
         >
           <h5
-            class="MuiTypography-root StyledComponents__StyledSideHeading-sc-4eawh9-4 eFSVka MuiTypography-h5 MuiTypography-gutterBottom"
+            class="MuiTypography-root c15 MuiTypography-h5 MuiTypography-gutterBottom"
           >
             Attacker units
           </h5>
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root BattleSimulator__SideClearIcon-sc-p84n5w-1 BattleSimulator___StyledSideClearIcon-sc-p84n5w-3 gRsiHN egHhhE MuiSvgIcon-fontSizeSmall"
+            class="MuiSvgIcon-root c16 c17 MuiSvgIcon-fontSizeSmall"
             focusable="false"
             title="Clear all units on this side"
             viewBox="0 0 24 24"
@@ -668,10 +793,10 @@ exports[`allows to set unit behind from unit list 1`] = `
             />
           </svg>
           <div
-            class="SideStats__Formation-sc-1qhfsb5-0 lbGtPo"
+            class="c18"
           >
             <div
-              class="SideStats__FormationItem-sc-1qhfsb5-1"
+              class=""
             >
               <span
                 class="MuiTypography-root MuiTypography-caption"
@@ -685,7 +810,7 @@ exports[`allows to set unit behind from unit list 1`] = `
               </p>
             </div>
             <div
-              class="SideStats__FormationItem-sc-1qhfsb5-1"
+              class=""
             >
               <span
                 class="MuiTypography-root MuiTypography-caption"
@@ -699,7 +824,7 @@ exports[`allows to set unit behind from unit list 1`] = `
               </p>
             </div>
             <div
-              class="SideStats__FormationItem-sc-1qhfsb5-1"
+              class=""
             >
               <span
                 class="MuiTypography-root MuiTypography-caption"
@@ -725,7 +850,7 @@ exports[`allows to set unit behind from unit list 1`] = `
             role="combobox"
           >
             <div
-              class="MuiFormControl-root MuiTextField-root BattleSimulator___StyledTextField-sc-p84n5w-5 gwkaYS MuiFormControl-fullWidth"
+              class="MuiFormControl-root MuiTextField-root c19 MuiFormControl-fullWidth"
             >
               <div
                 class="MuiInputBase-root MuiOutlinedInput-root MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiOutlinedInput-adornedEnd MuiInputBase-marginDense MuiOutlinedInput-marginDense"
@@ -813,7 +938,7 @@ exports[`allows to set unit behind from unit list 1`] = `
             </div>
           </div>
           <div
-            class="MuiPaper-root MuiTableContainer-root UnitList___StyledTableContainer-sc-1jknfe-0 eryOhk MuiPaper-elevation1 MuiPaper-rounded"
+            class="MuiPaper-root MuiTableContainer-root c20 MuiPaper-elevation1 MuiPaper-rounded"
           >
             <table
               aria-label="a dense table"
@@ -918,7 +1043,7 @@ exports[`allows to set unit behind from unit list 1`] = `
                   >
                     <svg
                       aria-hidden="true"
-                      class="MuiSvgIcon-root UnitList___StyledEditIcon-sc-1jknfe-1 kZIxit MuiSvgIcon-fontSizeSmall"
+                      class="MuiSvgIcon-root c21 MuiSvgIcon-fontSizeSmall"
                       focusable="false"
                       title="Edit"
                       viewBox="0 0 24 24"
@@ -929,7 +1054,7 @@ exports[`allows to set unit behind from unit list 1`] = `
                     </svg>
                     <svg
                       aria-hidden="true"
-                      class="MuiSvgIcon-root UnitList___StyledFileCopyIcon-sc-1jknfe-2 gQOMaF MuiSvgIcon-fontSizeSmall"
+                      class="MuiSvgIcon-root c22 MuiSvgIcon-fontSizeSmall"
                       focusable="false"
                       title="Duplicate"
                       viewBox="0 0 24 24"
@@ -940,7 +1065,7 @@ exports[`allows to set unit behind from unit list 1`] = `
                     </svg>
                     <svg
                       aria-hidden="true"
-                      class="MuiSvgIcon-root UnitList___StyledSyncAltIcon-sc-1jknfe-3 fCdAbp MuiSvgIcon-fontSizeSmall"
+                      class="MuiSvgIcon-root c23 MuiSvgIcon-fontSizeSmall"
                       focusable="false"
                       title="Duplicate to other side"
                       viewBox="0 0 24 24"
@@ -951,7 +1076,7 @@ exports[`allows to set unit behind from unit list 1`] = `
                     </svg>
                     <svg
                       aria-hidden="true"
-                      class="MuiSvgIcon-root UnitList___StyledDeleteIcon-sc-1jknfe-4 fckdFN MuiSvgIcon-fontSizeSmall"
+                      class="MuiSvgIcon-root c24 MuiSvgIcon-fontSizeSmall"
                       focusable="false"
                       title="Delete"
                       viewBox="0 0 24 24"
@@ -971,16 +1096,16 @@ exports[`allows to set unit behind from unit list 1`] = `
         class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6"
       >
         <div
-          class="MuiPaper-root StyledComponents__StyledPaper-sc-4eawh9-1 kkcYNg MuiPaper-elevation3"
+          class="MuiPaper-root c2 MuiPaper-elevation3"
         >
           <h5
-            class="MuiTypography-root StyledComponents__StyledSideHeading-sc-4eawh9-4 eFSVka MuiTypography-h5"
+            class="MuiTypography-root c15 MuiTypography-h5"
           >
             Defender units
           </h5>
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root BattleSimulator__SideClearIcon-sc-p84n5w-1 BattleSimulator___StyledSideClearIcon2-sc-p84n5w-2 gRsiHN Hsxbf MuiSvgIcon-fontSizeSmall"
+            class="MuiSvgIcon-root c16 c25 MuiSvgIcon-fontSizeSmall"
             focusable="false"
             title="Clear all units on this side"
             viewBox="0 0 24 24"
@@ -990,10 +1115,10 @@ exports[`allows to set unit behind from unit list 1`] = `
             />
           </svg>
           <div
-            class="SideStats__Formation-sc-1qhfsb5-0 lbGtPo"
+            class="c18"
           >
             <div
-              class="SideStats__FormationItem-sc-1qhfsb5-1"
+              class=""
             >
               <span
                 class="MuiTypography-root MuiTypography-caption"
@@ -1007,7 +1132,7 @@ exports[`allows to set unit behind from unit list 1`] = `
               </p>
             </div>
             <div
-              class="SideStats__FormationItem-sc-1qhfsb5-1"
+              class=""
             >
               <span
                 class="MuiTypography-root MuiTypography-caption"
@@ -1021,7 +1146,7 @@ exports[`allows to set unit behind from unit list 1`] = `
               </p>
             </div>
             <div
-              class="SideStats__FormationItem-sc-1qhfsb5-1"
+              class=""
             >
               <span
                 class="MuiTypography-root MuiTypography-caption"
@@ -1047,7 +1172,7 @@ exports[`allows to set unit behind from unit list 1`] = `
             role="combobox"
           >
             <div
-              class="MuiFormControl-root MuiTextField-root BattleSimulator___StyledTextField2-sc-p84n5w-6 fuihVj MuiFormControl-fullWidth"
+              class="MuiFormControl-root MuiTextField-root c26 MuiFormControl-fullWidth"
             >
               <div
                 class="MuiInputBase-root MuiOutlinedInput-root MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiOutlinedInput-adornedEnd MuiInputBase-marginDense MuiOutlinedInput-marginDense"
@@ -1135,7 +1260,7 @@ exports[`allows to set unit behind from unit list 1`] = `
             </div>
           </div>
           <div
-            class="MuiPaper-root MuiTableContainer-root UnitList___StyledTableContainer-sc-1jknfe-0 eryOhk MuiPaper-elevation1 MuiPaper-rounded"
+            class="MuiPaper-root MuiTableContainer-root c20 MuiPaper-elevation1 MuiPaper-rounded"
           >
             <table
               aria-label="a dense table"
@@ -1188,7 +1313,7 @@ exports[`allows to set unit behind from unit list 1`] = `
       </div>
     </div>
     <div
-      class="BattleSimulator__RunBattleContainer-sc-p84n5w-0 kvGwZo"
+      class="c27"
     >
       <div
         class="MuiButtonGroup-root MuiButtonGroup-disableElevation MuiButtonGroup-contained"

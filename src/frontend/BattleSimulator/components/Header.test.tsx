@@ -25,10 +25,27 @@ it('allows to get json download of the units', () => {
     fireEvent.click(screen.getByTestId('download-json'));
 
     expect((download as Mock).mock.calls.length).toBe(1);
-    expect((download as Mock).mock.calls[0][0]).toBe('{"attackers":{"units":[{"name":"Unit","skills":[],"items":[{"abbr":"LEAD","amount":1}]}]},"defenders":{"units":[{"name":"Unit","skills":[],"items":[{"abbr":"LEAD","amount":1}]}]}}');
+    expect((download as Mock).mock.calls[0][0]).toBe('{"attackers":{"units":[{"name":"Unit","items":[{"tag":"LEAD","amount":1}]}]},"defenders":{"units":[{"name":"Unit","items":[{"tag":"LEAD","amount":1}]}]}}');
 });
 
 it('allows json upload of the units', async() => {
+    const user = userEvent.setup({
+        applyAccept: false,
+    });
+    const {asFragment} = render(<WrapperForTests><BattleSimulator/></WrapperForTests>);
+
+    const str = '{"attackers":{"units":[{"name":"hell yeah","items":[{"tag":"LEAD","amount":2}]}]},"defenders":{"units":[{"name":"Unit","items":[{"tag":"LEAD","amount":1}]}]}}';
+    const blob = new Blob([str]);
+    const file = new File([blob], 'battle.json', {
+        type: 'application/JSON',
+    });
+    const input = screen.getByTestId('json-upload-input');
+    await user.upload(input, file);
+
+    expect(asFragment()).toMatchSnapshot();
+});
+
+it('accepts legacy json upload format', async() => {
     const user = userEvent.setup({
         applyAccept: false,
     });

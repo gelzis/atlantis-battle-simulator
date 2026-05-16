@@ -31,11 +31,20 @@ app.get('/martial-points', async(req, res) => {
 });
 
 app.post('/battle', async(req, res) => {
+    const sideHasUnits = (side: {units?: unknown, structures?: unknown[]}): boolean => {
+        if (!side || typeof side !== 'object') return false;
+        if (Array.isArray(side.units)) return true;
+        if (!Array.isArray(side.structures)) return false;
+        return side.structures.some(
+            (structure: {units?: unknown}) => structure && Array.isArray(structure.units),
+        );
+    };
+
     if (!req.body.battle ||
         !req.body.battle.attackers ||
         !req.body.battle.defenders ||
-        !Array.isArray(req.body.battle.attackers.units) ||
-        !Array.isArray(req.body.battle.defenders.units)
+        !sideHasUnits(req.body.battle.attackers) ||
+        !sideHasUnits(req.body.battle.defenders)
     ) {
         return res.sendStatus(400);
     }

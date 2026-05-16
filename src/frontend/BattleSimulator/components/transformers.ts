@@ -1,4 +1,4 @@
-import {AppState, ExportJson, ExportUnit, Side, Unit} from '../types';
+import {AppState, ExportJson, ExportSide, ExportUnit, Unit} from '../types';
 
 type ConvertCurrentStateToJsonParams = Pick<AppState,
     'attackers' |
@@ -7,73 +7,58 @@ type ConvertCurrentStateToJsonParams = Pick<AppState,
     'defenderStructure'
 >
 
-export const convertCurrentStateToJson = ({attackers, defenders, defenderStructure, attackerStructure}: ConvertCurrentStateToJsonParams): ExportJson => {
-    const exportJson: ExportJson = {
-        attackers: {
-            units: [],
-        },
-        defenders: {
-            units: [],
-        },
+const buildExportUnit = (unit: Unit): ExportUnit => {
+    const exportUnit: ExportUnit = {
+        name: unit.name,
+        items: unit.items.map((item) => ({
+            tag: item.abbr,
+            amount: item.amount,
+        })),
     };
 
-    const addUnitToJson = (side: Side, unit: Unit): void => {
-        const exportUnit: ExportUnit = {
-            name: unit.name,
-            skills: [],
-            items: [],
-        };
-
-        if (unit.behind) {
-            exportUnit.flags = ['behind'];
-        }
-
-        if (unit.combatSpell) {
-            exportUnit.combatSpell = unit.combatSpell;
-        }
-
-        for (const skill of unit.skills) {
-            exportUnit.skills.push({
-                abbr: skill.abbr,
+    if (unit.skills.length) {
+        exportUnit.skills = {
+            known: unit.skills.map((skill) => ({
+                tag: skill.abbr,
                 level: skill.level,
-            });
-        }
+            })),
+        };
+    }
 
-        for (const item of unit.items) {
-            exportUnit.items.push({
-                abbr: item.abbr,
-                amount: item.amount,
-            });
-        }
+    if (unit.combatSpell) {
+        exportUnit.combat_spell = {tag: unit.combatSpell};
+    }
 
-        if (side === 'attackers') {
-            exportJson.attackers.units.push(exportUnit);
-        } else {
-            exportJson.defenders.units.push(exportUnit);
-        }
+    if (unit.behind) {
+        exportUnit.flags = {behind: true};
+    }
+
+    return exportUnit;
+};
+
+const buildSide = (units: Unit[], structureType: string): ExportSide => {
+    const exportUnits = units.map(buildExportUnit);
+
+    if (structureType) {
+        return {
+            structures: [{
+                type: structureType,
+                units: exportUnits,
+            }],
+        };
+    }
+
+    return {
+        units: exportUnits,
     };
+};
 
-    for (const id in attackers) {
-        const unit = attackers[id];
-        addUnitToJson('attackers', unit);
-    }
+export const convertCurrentStateToJson = ({attackers, defenders, defenderStructure, attackerStructure}: ConvertCurrentStateToJsonParams): ExportJson => {
+    const attackerUnits = Object.keys(attackers).map((id) => attackers[id]);
+    const defenderUnits = Object.keys(defenders).map((id) => defenders[id]);
 
-    for (const id in defenders) {
-        const unit = defenders[id];
-        addUnitToJson('defenders', unit);
-    }
-
-    if (attackerStructure) {
-        exportJson.attackers.structure = {
-            type: attackerStructure,
-        };
-    }
-
-    if (defenderStructure) {
-        exportJson.defenders.structure = {
-            type: defenderStructure,
-        };
-    }
-
-    return exportJson;
+    return {
+        attackers: buildSide(attackerUnits, attackerStructure),
+        defenders: buildSide(defenderUnits, defenderStructure),
+    };
 };

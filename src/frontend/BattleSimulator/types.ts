@@ -129,38 +129,83 @@ export type ServerSimulationResponse = {
     spoils: ItemStatRecord[]
 }
 
-type flags = 'behind';
-
 export type ExportSkill = {
-    abbr: string
+    tag: string
     level: number
 }
 
 export type ExportItem = {
-    abbr: string
+    tag: string
     amount: number
+}
+
+export type ExportFlags = {
+    behind?: boolean
+}
+
+export type ExportKnownSkills = {
+    known: ExportSkill[]
+}
+
+export type ExportCombatSpell = {
+    tag: string
 }
 
 export type ExportUnit = {
     name: string
-    skills: ExportSkill[]
     items: ExportItem[]
-    combatSpell?: string
-    flags?: flags[]
+    skills?: ExportKnownSkills
+    combat_spell?: ExportCombatSpell
+    flags?: ExportFlags
 }
 
-export type Structure = {
+export type ExportStructure = {
     type: string
+    units: ExportUnit[]
+}
+
+export type ExportSide = {
+    units?: ExportUnit[]
+    structures?: ExportStructure[]
 }
 
 export type ExportJson = {
+    attackers: ExportSide
+    defenders: ExportSide
+}
+
+type LegacyFlag = 'behind';
+
+export type LegacyExportSkill = {
+    abbr: string
+    level: number
+}
+
+export type LegacyExportItem = {
+    abbr: string
+    amount: number
+}
+
+export type LegacyExportUnit = {
+    name: string
+    skills: LegacyExportSkill[]
+    items: LegacyExportItem[]
+    combatSpell?: string
+    flags?: LegacyFlag[]
+}
+
+export type LegacyStructure = {
+    type: string
+}
+
+export type LegacyExportJson = {
     attackers: {
-        units: ExportUnit[]
-        structure?: Structure
+        units: LegacyExportUnit[]
+        structure?: LegacyStructure
     }
     defenders: {
-        units: ExportUnit[]
-        structure?: Structure
+        units: LegacyExportUnit[]
+        structure?: LegacyStructure
     }
 }
 
