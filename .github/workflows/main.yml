@@ -23,9 +23,3 @@ jobs:
     - name: Push docker image
       run: |
         docker push ${{ steps.vars.outputs.docker_image }}
-    - name: Deploy
-      run: |
-        jq -n \
-        --arg msg "$(git log --format=%B -n 1)" \
-        '{"repository":"${{ github.repository }}","dockerImage":"${{ steps.vars.outputs.docker_image }}","branch":"${{ github.ref }}","commitMessage":$msg}' | \
-        curl -s --fail -X POST -H 'Content-Type: application/json' -H 'Authorization: Basic ${{ secrets.deployToken }}' -d@- https://galleon.pekle.lv/deploy
