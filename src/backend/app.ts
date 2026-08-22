@@ -4,9 +4,12 @@ import {unlinkSync, writeFileSync} from 'fs';
 import {v4 as uuidv4} from 'uuid';
 import express from 'express';
 import bodyParser from 'body-parser';
+import {BattleStore} from './battleStore';
 
 const app = express();
 const port = process.env.PORT || 4020;
+const databasePath = process.env.BATTLE_DATABASE_PATH || path.join(__dirname, '../../data/battles.sqlite');
+const battleStore = new BattleStore(databasePath);
 
 app.use(bodyParser.json());
 
@@ -28,6 +31,38 @@ app.use('/', express.static(path.join(__dirname, '../../src/public')));
 
 app.get('/martial-points', async(req, res) => {
     res.sendFile(path.join(__dirname, '../../src/public/martial_points.html'));
+});
+
+const isBattle = (battle: unknown): battle is {attackers: unknown, defenders: unknown} => {
+    if (!battle || typeof battle !== 'object') return false;
+    const value = battle as {attackers?: unknown, defenders?: unknown};
+    return !!value.attackers && typeof value.attackers === 'object' &&
+        !!value.defenders && typeof value.defenders === 'object';
+};
+
+app.post('/saved-battles', async(req, res) => {
+    if (!isBattle(req.body.battle)) return res.sendStatus(400);
+
+    try {
+        const saved = await battleStore.save(req.body.battle);
+        res.status(201).json({id: saved.id, url: `/b/${saved.id}`});
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    }
+});
+
+app.get('/saved-battles/:id', async(req, res) => {
+    if (!/^[a-f0-9]{64}$/.test(req.params.id)) return res.sendStatus(404);
+
+    try {
+        const saved = await battleStore.get(req.params.id);
+        if (!saved) return res.sendStatus(404);
+        res.json(saved);
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    }
 });
 
 app.post('/battle', async(req, res) => {
@@ -74,7 +109,16 @@ app.post('/battle', async(req, res) => {
     });
 });
 
-// start the express server
-app.listen(port, () => {
-    console.log(`server started on port ${port}`);
+app.get('/b/:id', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../src/public/index.html'));
+});
+
+// Start accepting requests only after the database schema is ready.
+battleStore.initialize().then(() => {
+    app.listen(port, () => {
+        console.log(`server started on port ${port}`);
+    });
+}).catch((error) => {
+    console.error('Failed to initialize battle database', error);
+    process.exit(1);
 });

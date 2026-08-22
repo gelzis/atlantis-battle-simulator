@@ -7,4 +7,6 @@ module.exports = {
     transformIgnorePatterns: [
         '/node_modules/(?!(uuid)/)',
     ],
+    modulePathIgnorePatterns: ['<rootDir>/dist/'],
+    testPathIgnorePatterns: ['<rootDir>/dist/'],
 };

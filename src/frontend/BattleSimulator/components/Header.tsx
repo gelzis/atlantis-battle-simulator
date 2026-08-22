@@ -1,34 +1,27 @@
-import React, {ChangeEvent, FC, useCallback} from 'react';
+/* global fetch */
+import React, {ChangeEvent, FC, useCallback, useState} from 'react';
 import {IconButton, Toolbar, Tooltip, Typography} from '@material-ui/core';
 
 import {StyledAppBar} from '../../StyledComponents';
 import {
-    ExportItem,
     ExportJson,
     ExportSide,
-    ExportSkill,
-    ExportStructure,
     ExportUnit,
-    Item,
     LegacyExportItem,
     LegacyExportJson,
     LegacyExportSkill,
     LegacyExportUnit,
-    Side,
-    Skill,
-    Unit,
 } from '../types';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+import ShareIcon from '@material-ui/icons/Share';
 
 import {selectAttackersWithStructures} from './selectors';
 import {convertCurrentStateToJson} from './transformers';
 import {download} from '../utils';
-import {defaultUnit} from '../reducer';
-import {v4 as uuidv4} from 'uuid';
-import {getItemByAbbr, getSkillByAbbr} from '../resources';
-import {addUnit, resetState, setAttackersStructure, setDefendersStructure, setError} from '../actions/simulatorActions';
+import {setError} from '../actions/simulatorActions';
 import {useAppDispatch, useAppSelector} from '../store';
+import {loadBattleIntoStore} from '../battleImport';
 
 const isLegacyExportJson = (input: ExportJson | LegacyExportJson): input is LegacyExportJson => {
     const sides = [input.attackers, input.defenders];
@@ -91,28 +84,6 @@ const normalizeLegacy = (input: LegacyExportJson): ExportJson => {
     };
 };
 
-const collectSideUnits = (side: ExportSide): {units: ExportUnit[], structureType?: string} => {
-    const units: ExportUnit[] = [];
-    let structureType: string | undefined;
-
-    if (Array.isArray(side.units)) {
-        units.push(...side.units);
-    }
-
-    if (Array.isArray(side.structures)) {
-        for (const structure of side.structures as ExportStructure[]) {
-            if (structure && Array.isArray(structure.units)) {
-                units.push(...structure.units);
-            }
-            if (structure && structure.type && !structureType) {
-                structureType = structure.type;
-            }
-        }
-    }
-
-    return {units, structureType};
-};
-
 const validateExportJson = (input: ExportJson): boolean => {
     const validSide = (side: ExportSide): boolean => {
         if (!side || typeof side !== 'object') return false;
@@ -127,6 +98,7 @@ const validateExportJson = (input: ExportJson): boolean => {
 export const Header: FC = () => {
     const {attackers, defenders, defenderStructure, attackerStructure} = useAppSelector(selectAttackersWithStructures);
     const dispatch = useAppDispatch();
+    const [saving, setSaving] = useState(false);
 
     const downloadAsJson = useCallback(() => {
         const exportJson = convertCurrentStateToJson({
@@ -139,82 +111,38 @@ export const Header: FC = () => {
         download(JSON.stringify(exportJson), 'battle.json');
     }, [attackers, defenders, defenderStructure, attackerStructure]);
 
-    const convertJsonToCurrentState = useCallback((inputJson: ExportJson): void => {
-        dispatch(resetState());
+    const saveAndShare = useCallback(async(): Promise<void> => {
+        const battle = convertCurrentStateToJson({
+            attackers,
+            defenders,
+            defenderStructure,
+            attackerStructure,
+        });
 
-        const addUnitToState = (side: Side, jsonUnit: ExportUnit): void => {
-            const unit: Unit = {...defaultUnit};
-            unit.id = uuidv4();
-            if (jsonUnit.name) {
-                unit.name = jsonUnit.name;
+        setSaving(true);
+        try {
+            const response = await fetch('/saved-battles', {
+                method: 'POST',
+                headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
+                body: JSON.stringify({battle}),
+            });
+            if (!response.ok) {
+                dispatch(setError(true, 'Failed to save the battle.'));
+                return;
             }
 
-            const combatSpellTag = jsonUnit.combat_spell ? jsonUnit.combat_spell.tag : '';
-            if (combatSpellTag) {
-                unit.combatSpell = combatSpellTag;
+            const saved: {url: string} = await response.json();
+            const savedUrl = new URL(saved.url, window.location.origin).toString();
+            window.history.pushState({}, '', saved.url);
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(savedUrl).catch(() => undefined);
             }
-
-            if (jsonUnit.flags && jsonUnit.flags.behind) {
-                unit.behind = true;
-            }
-
-            const knownSkills = jsonUnit.skills && Array.isArray(jsonUnit.skills.known)
-                ? jsonUnit.skills.known
-                : [];
-
-            unit.skills = knownSkills.reduce((list: Skill[], skill: ExportSkill): Skill[] => {
-                const skillData = getSkillByAbbr(skill.tag);
-                // Ignoring skills that we don't recognize
-                if (!skillData) {
-                    return list;
-                }
-
-                list.push({
-                    abbr: skill.tag,
-                    level: skill.level,
-                    id: uuidv4(),
-                    combatSpell: combatSpellTag === skill.tag,
-                    name: skillData.name,
-                });
-
-                return list;
-            }, []);
-
-            if (Array.isArray(jsonUnit.items)) {
-                unit.items = jsonUnit.items.reduce((list: Item[], item: ExportItem): Item[] => {
-                    const itemData = getItemByAbbr(item.tag);
-                    // Ignoring items that we don't recognize as items usable for battle
-                    if (!itemData) {
-                        return list;
-                    }
-                    list.push({
-                        abbr: item.tag,
-                        amount: item.amount,
-                        id: uuidv4(),
-                        name: itemData.name,
-                    });
-
-                    return list;
-                }, []);
-            }
-
-            dispatch(addUnit(side, unit));
-        };
-
-        const attackerSide = collectSideUnits(inputJson.attackers);
-        const defenderSide = collectSideUnits(inputJson.defenders);
-
-        attackerSide.units.forEach((jsonUnit) => addUnitToState('attackers', jsonUnit));
-        defenderSide.units.forEach((jsonUnit) => addUnitToState('defenders', jsonUnit));
-
-        if (attackerSide.structureType) {
-            dispatch(setAttackersStructure(attackerSide.structureType));
+        } catch (error) {
+            dispatch(setError(true, 'Failed to save the battle.'));
+        } finally {
+            setSaving(false);
         }
-
-        if (defenderSide.structureType) {
-            dispatch(setDefendersStructure(defenderSide.structureType));
-        }
-    }, [dispatch]);
+    }, [attackers, defenders, defenderStructure, attackerStructure, dispatch]);
 
     const uploadJson = useCallback((event: ChangeEvent<HTMLInputElement>): void => {
         if (!event.target.files.length) {
@@ -247,9 +175,9 @@ export const Header: FC = () => {
                 return;
             }
 
-            convertJsonToCurrentState(normalized);
+            loadBattleIntoStore(normalized, dispatch);
         };
-    }, [convertJsonToCurrentState]);
+    }, [dispatch]);
 
     return (
         <StyledAppBar position="static">
@@ -266,6 +194,9 @@ export const Header: FC = () => {
                 </label>
                 <IconButton edge="end" color="inherit">
                     <Tooltip title="Download battle as a JSON file"><CloudDownloadIcon data-testid="download-json" onClick={downloadAsJson}/></Tooltip>
+                </IconButton>
+                <IconButton edge="end" color="inherit" disabled={saving} onClick={saveAndShare}>
+                    <Tooltip title="Save battle and copy share link"><ShareIcon data-testid="save-and-share"/></Tooltip>
                 </IconButton>
             </Toolbar>
         </StyledAppBar>

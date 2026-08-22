@@ -26,6 +26,7 @@ import {MainForm} from './MainForm';
 import {UnitList} from './UnitList';
 import {
     AppState,
+    ExportJson,
     ServerSimulationResponse,
 } from '../types';
 import {ObjectListSorted} from '../resources';
@@ -52,6 +53,7 @@ import {
 import {SideStats} from './SideStats';
 import {convertCurrentStateToJson} from './transformers';
 import {Header} from './Header';
+import {loadBattleIntoStore} from '../battleImport';
 
 const RunBattleContainer = styled.div`
   text-align: center; 
@@ -92,6 +94,7 @@ type DispatchProps = {
     openSettings: typeof openSettings
     closeSettings: typeof closeSettings
     setLine: typeof setLine
+    loadBattle: (battle: ExportJson) => void
 }
 type BattleSimulatorProps = StateProps & DispatchProps;
 
@@ -116,22 +119,25 @@ const mapStateToProps = (state: AppState): StateProps => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
-    return bindActionCreators({
-        addUnit,
-        closeSettings,
-        deleteUnit,
-        duplicateUnit,
-        duplicateUnitToTheOtherSide,
-        editUnit,
-        openSettings,
-        resetSide,
-        resetState,
-        setAttackersStructure,
-        setDefendersStructure,
-        setError,
-        setLine,
-        setLoadingStatus,
-    }, dispatch);
+    return {
+        ...bindActionCreators({
+            addUnit,
+            closeSettings,
+            deleteUnit,
+            duplicateUnit,
+            duplicateUnitToTheOtherSide,
+            editUnit,
+            openSettings,
+            resetSide,
+            resetState,
+            setAttackersStructure,
+            setDefendersStructure,
+            setError,
+            setLine,
+            setLoadingStatus,
+        }, dispatch),
+        loadBattle: (battle: ExportJson): void => loadBattleIntoStore(battle, dispatch),
+    };
 };
 
 export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, BattleSimulatorClassState> {
@@ -140,6 +146,23 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
 
         this.state = {};
     }
+
+    componentDidMount = async(): Promise<void> => {
+        const match = window.location.pathname.match(/^\/b\/([a-f0-9]{64})\/?$/);
+        if (!match) return;
+
+        try {
+            const response = await fetch(`/saved-battles/${match[1]}`);
+            if (!response.ok) {
+                this.props.setError(true, response.status === 404 ? 'This saved battle does not exist.' : 'Failed to load the saved battle.');
+                return;
+            }
+            const saved: {battle: ExportJson} = await response.json();
+            this.props.loadBattle(saved.battle);
+        } catch (error) {
+            this.props.setError(true, 'Failed to load the saved battle.');
+        }
+    };
 
     runBattle = async(): Promise<void> => {
         this.setState({
