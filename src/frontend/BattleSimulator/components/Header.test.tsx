@@ -1,5 +1,5 @@
 import React from 'react';
-import {render, fireEvent, screen} from '@testing-library/react';
+import {render, fireEvent, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import {BattleSimulator} from './BattleSimulator';
@@ -60,4 +60,23 @@ it('accepts legacy json upload format', async() => {
     await user.upload(input, file);
 
     expect(asFragment()).toMatchSnapshot();
+});
+
+it('confirms when a share link is copied', async() => {
+    const originalFetch = global.fetch;
+    const writeText = jest.fn().mockResolvedValue(undefined);
+    global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        json: async() => ({url: '/b/abc'}),
+    } as Response);
+    Object.defineProperty(navigator, 'clipboard', {configurable: true, value: {writeText}});
+
+    render(<WrapperForTests><BattleSimulator/></WrapperForTests>);
+    fireEvent.click(screen.getByTestId('save-and-share'));
+
+    await waitFor(() => expect(screen.getByText('Battle saved. Share link copied!')).toBeTruthy());
+    expect(writeText).toHaveBeenCalledWith(`${window.location.origin}/b/abc`);
+
+    global.fetch = originalFetch;
+    window.history.replaceState({}, '', '/');
 });

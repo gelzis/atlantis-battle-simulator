@@ -1,6 +1,7 @@
 /* global fetch */
 import React, {ChangeEvent, FC, useCallback, useState} from 'react';
-import {IconButton, Toolbar, Tooltip, Typography} from '@material-ui/core';
+import {IconButton, Snackbar, Toolbar, Tooltip, Typography} from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 
 import {StyledAppBar} from '../../StyledComponents';
 import {
@@ -99,6 +100,7 @@ export const Header: FC = () => {
     const {attackers, defenders, defenderStructure, attackerStructure} = useAppSelector(selectAttackersWithStructures);
     const dispatch = useAppDispatch();
     const [saving, setSaving] = useState(false);
+    const [shareConfirmation, setShareConfirmation] = useState<string>();
 
     const downloadAsJson = useCallback(() => {
         const exportJson = convertCurrentStateToJson({
@@ -134,9 +136,18 @@ export const Header: FC = () => {
             const saved: {url: string} = await response.json();
             const savedUrl = new URL(saved.url, window.location.origin).toString();
             window.history.pushState({}, '', saved.url);
+            let copied = false;
             if (navigator.clipboard) {
-                navigator.clipboard.writeText(savedUrl).catch(() => undefined);
+                try {
+                    await navigator.clipboard.writeText(savedUrl);
+                    copied = true;
+                } catch (error) {
+                    copied = false;
+                }
             }
+            setShareConfirmation(copied
+                ? 'Battle saved. Share link copied!'
+                : 'Battle saved. Copy the share link from the address bar.');
         } catch (error) {
             dispatch(setError(true, 'Failed to save the battle.'));
         } finally {
@@ -180,25 +191,37 @@ export const Header: FC = () => {
     }, [dispatch]);
 
     return (
-        <StyledAppBar position="static">
-            <Toolbar>
-                <Typography variant="h6">
-                    Atlantis Battle simulator
-                </Typography>
-                <div style={{flexGrow: 1}}/>
-                <input onChange={uploadJson} accept="application/JSON" style={{display: 'none'}} data-testid="json-upload-input" id="icon-button-file" type="file" />
-                <label htmlFor="icon-button-file">
-                    <IconButton edge="end" color="inherit" component="span">
-                        <Tooltip title="Upload battle as a JSON file"><CloudUploadIcon /></Tooltip>
+        <>
+            <StyledAppBar position="static">
+                <Toolbar>
+                    <Typography variant="h6">
+                        Atlantis Battle simulator
+                    </Typography>
+                    <div style={{flexGrow: 1}}/>
+                    <input onChange={uploadJson} accept="application/JSON" style={{display: 'none'}} data-testid="json-upload-input" id="icon-button-file" type="file" />
+                    <label htmlFor="icon-button-file">
+                        <IconButton edge="end" color="inherit" component="span">
+                            <Tooltip title="Upload battle as a JSON file"><CloudUploadIcon /></Tooltip>
+                        </IconButton>
+                    </label>
+                    <IconButton edge="end" color="inherit">
+                        <Tooltip title="Download battle as a JSON file"><CloudDownloadIcon data-testid="download-json" onClick={downloadAsJson}/></Tooltip>
                     </IconButton>
-                </label>
-                <IconButton edge="end" color="inherit">
-                    <Tooltip title="Download battle as a JSON file"><CloudDownloadIcon data-testid="download-json" onClick={downloadAsJson}/></Tooltip>
-                </IconButton>
-                <IconButton edge="end" color="inherit" disabled={saving} onClick={saveAndShare}>
-                    <Tooltip title="Save battle and copy share link"><ShareIcon data-testid="save-and-share"/></Tooltip>
-                </IconButton>
-            </Toolbar>
-        </StyledAppBar>
+                    <IconButton edge="end" color="inherit" disabled={saving} onClick={saveAndShare}>
+                        <Tooltip title="Save battle and copy share link"><ShareIcon data-testid="save-and-share"/></Tooltip>
+                    </IconButton>
+                </Toolbar>
+            </StyledAppBar>
+            <Snackbar
+                anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                open={!!shareConfirmation}
+                autoHideDuration={4000}
+                onClose={(): void => setShareConfirmation(undefined)}
+            >
+                <MuiAlert elevation={6} variant="filled" severity="success" onClose={(): void => setShareConfirmation(undefined)}>
+                    {shareConfirmation}
+                </MuiAlert>
+            </Snackbar>
+        </>
     );
 };
