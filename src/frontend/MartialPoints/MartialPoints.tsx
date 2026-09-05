@@ -21,7 +21,7 @@ const Main = styled.div`
     justify-content: center;
 `;
 
-const DropArea = styled.div`
+const DropArea = styled.div<{$active: boolean}>`
     width: 800px;
     min-height: 400px;
     border: 1px dashed #000000;
@@ -32,8 +32,8 @@ const DropArea = styled.div`
     display: flex;
     position: relative;
     padding: 10px;
-    cursor: ${(props: {active: boolean}): string => (
-        props.active ? 'pointer' : 'default'
+    cursor: ${(props): string => (
+        props.$active ? 'pointer' : 'default'
     )};
 `;
 
@@ -44,7 +44,7 @@ export function MartialPoints() {
         setRegions(null);
     }, []);
 
-    const onDrop = useCallback(acceptedFiles => {
+    const onDrop = useCallback((acceptedFiles: File[]) => {
         const reader = new FileReader();
         reader.readAsText(acceptedFiles[0]);
         reader.onload = (e): void => {
@@ -58,7 +58,7 @@ export function MartialPoints() {
     return (
         <Container >
             <Main>
-                <DropArea active={!regions} {...getRootProps()}>
+                <DropArea $active={!regions} {...getRootProps()}>
                     <input {...getInputProps()} />
                     {!regions && <> { isDragActive ? <p>Drop orders here ...</p> : <p>Drag 'n' drop orders here, or click to browse</p>}</>}
                     {regions && <Report martialPointData={regions} onReset={onReset}/>}

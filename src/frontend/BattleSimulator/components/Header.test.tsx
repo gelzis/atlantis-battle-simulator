@@ -8,6 +8,8 @@ import Mock = jest.Mock;
 
 jest.mock('./PageFooter');
 
+beforeEach(() => jest.clearAllMocks());
+
 jest.mock('../utils', () => {
     const actual = jest.requireActual('../utils');
 
@@ -32,7 +34,7 @@ it('allows json upload of the units', async() => {
     const user = userEvent.setup({
         applyAccept: false,
     });
-    const {asFragment} = render(<WrapperForTests><BattleSimulator/></WrapperForTests>);
+    render(<WrapperForTests><BattleSimulator/></WrapperForTests>);
 
     const str = '{"attackers":{"units":[{"name":"hell yeah","items":[{"tag":"LEAD","amount":2}]}]},"defenders":{"units":[{"name":"Unit","items":[{"tag":"LEAD","amount":1}]}]}}';
     const blob = new Blob([str]);
@@ -42,14 +44,15 @@ it('allows json upload of the units', async() => {
     const input = screen.getByTestId('json-upload-input');
     await user.upload(input, file);
 
-    expect(asFragment()).toMatchSnapshot();
+    fireEvent.click(screen.getByTestId('download-json'));
+    expect(JSON.parse((download as Mock).mock.calls[0][0])).toEqual(JSON.parse(str));
 });
 
 it('accepts legacy json upload format', async() => {
     const user = userEvent.setup({
         applyAccept: false,
     });
-    const {asFragment} = render(<WrapperForTests><BattleSimulator/></WrapperForTests>);
+    render(<WrapperForTests><BattleSimulator/></WrapperForTests>);
 
     const str = '{"attackers":{"units":[{"name":"hell yeah","skills":[],"items":[{"abbr":"LEAD","amount":2}]}]},"defenders":{"units":[{"name":"Unit","skills":[],"items":[{"abbr":"LEAD","amount":1}]}]}}';
     const blob = new Blob([str]);
@@ -59,7 +62,11 @@ it('accepts legacy json upload format', async() => {
     const input = screen.getByTestId('json-upload-input');
     await user.upload(input, file);
 
-    expect(asFragment()).toMatchSnapshot();
+    fireEvent.click(screen.getByTestId('download-json'));
+    expect(JSON.parse((download as Mock).mock.calls[0][0])).toEqual({
+        attackers: {units: [{name: 'hell yeah', items: [{tag: 'LEAD', amount: 2}]}]},
+        defenders: {units: [{name: 'Unit', items: [{tag: 'LEAD', amount: 1}]}]},
+    });
 });
 
 it('confirms when a share link is copied', async() => {

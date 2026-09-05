@@ -1,4 +1,4 @@
-import {Typography} from '@material-ui/core';
+import {Typography} from '@mui/material';
 import styled from 'styled-components';
 import React from 'react';
 import {StatRecord} from '../types';
@@ -10,25 +10,40 @@ export interface StatsProps extends StatRecord {
 }
 
 const StatsContainer = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(88px, 1fr));
+    gap: 16px;
+    margin-top: 8px;
+`;
+
+const StatContainer = styled.div`
     display: flex;
-    gap: 8px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    min-width: 0;
+    font-variant-numeric: tabular-nums;
+`;
+
+const StatContent = styled.div`
+    white-space: nowrap;
 `;
 
 export default function Stats({runs, occurance, min, max, mean, median, mode, stdDev, percentile}: StatsProps) {
     const expectedFrom = Math.trunc(Math.max(0, mean - stdDev));
     const expectedTo = Math.trunc(mean + stdDev);
 
-    const expected = <Typography>{realNumber(expectedFrom)}&mdash;{realNumber(expectedTo)}</Typography>;
+    const expected = `${realNumber(expectedFrom)}–${realNumber(expectedTo)}`;
 
     return <StatsContainer>
-        <StatValue title='Occurance' value={percent(occurance / runs)} />
+        <StatValue title='Occurrence' value={percent(occurance / runs)} />
         <StatValue title='Expected' value={expected} />
         <StatValue title='Min' value={realNumber(min)} />
         <StatValue title='Max' value={realNumber(max)} />
         <StatValue title='Mean' value={realNumber(mean)} />
         <StatValue title='Median' value={realNumber(median)} />
         <StatValue title='Mode' value={realNumber(mode)} />
-        <StatValue title='StdDev' value={realNumber(stdDev)} />
+        <StatValue title='Std. dev.' value={realNumber(stdDev)} />
         <StatValue title='Percentiles' value={<PercentileGraph items={percentile} />} />
     </StatsContainer>;
 }
@@ -39,11 +54,13 @@ interface StatValueProps {
 }
 
 function StatValue({title, value}: StatValueProps) {
-    return <div>
-        <Typography variant='caption'>{title}</Typography>
-        { (typeof value === 'string' || typeof value === 'number')
-            ? <Typography>{value}</Typography>
-            : value
-        }
-    </div>;
+    return <StatContainer>
+        <Typography variant='caption' color='text.secondary'>{title}</Typography>
+        <StatContent>
+            { (typeof value === 'string' || typeof value === 'number')
+                ? <Typography>{value}</Typography>
+                : value
+            }
+        </StatContent>
+    </StatContainer>;
 }

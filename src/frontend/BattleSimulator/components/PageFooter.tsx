@@ -1,13 +1,13 @@
 import React, {FC} from 'react';
-import {Typography} from '@material-ui/core';
+import {Typography} from '@mui/material';
 
 import {theme} from '../../StyledComponents';
-import GitHubIcon from '@material-ui/icons/GitHub';
+import GitHubIcon from '@mui/icons-material/GitHub';
 import styled from 'styled-components';
 
 const Footer = styled(Typography)`
     text-align: center;
-    padding: ${theme.spacing(2)}px 0;
+    padding: ${theme.spacing(2)} 0;
 `;
 
 export const PageFooter: FC = () => {

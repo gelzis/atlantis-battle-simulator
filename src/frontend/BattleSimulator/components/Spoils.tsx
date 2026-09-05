@@ -1,4 +1,4 @@
-import {makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@material-ui/core';
+import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
 import React from 'react';
 import {ItemStatRecord} from '../types';
 import {percent, realNumber} from '../utils';
@@ -9,18 +9,7 @@ export interface SpoilsProps {
     items: ItemStatRecord[]
 }
 
-const useStyles = makeStyles({
-    cell: {
-        textAlign: 'right',
-    },
-    percentile: {
-        paddingTop: '2px',
-    },
-});
-
 export default function Spoils({runs, items}: SpoilsProps) {
-    const classes = useStyles();
-
     const sortedItems: ItemStatRecord[] = React.useMemo(() => {
         const arr = [...items];
         arr.sort((a, b) => b.occurance - a.occurance);
@@ -32,15 +21,15 @@ export default function Spoils({runs, items}: SpoilsProps) {
             <TableHead>
                 <TableRow>
                     <TableCell>Item</TableCell>
-                    <TableCell className={classes.cell}>Occurance</TableCell>
-                    <TableCell className={classes.cell}>Expected</TableCell>
-                    <TableCell className={classes.cell}>Min</TableCell>
-                    <TableCell className={classes.cell}>Max</TableCell>
-                    <TableCell className={classes.cell}>Mean</TableCell>
-                    <TableCell className={classes.cell}>Median</TableCell>
-                    <TableCell className={classes.cell}>Mode</TableCell>
-                    <TableCell className={classes.cell}>StdDev</TableCell>
-                    <TableCell className={classes.cell}>Percentiles</TableCell>
+                    <TableCell align="right">Occurrence</TableCell>
+                    <TableCell align="right">Expected</TableCell>
+                    <TableCell align="right">Min</TableCell>
+                    <TableCell align="right">Max</TableCell>
+                    <TableCell align="right">Mean</TableCell>
+                    <TableCell align="right">Median</TableCell>
+                    <TableCell align="right">Mode</TableCell>
+                    <TableCell align="right">StdDev</TableCell>
+                    <TableCell align="right">Percentiles</TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>
@@ -50,15 +39,15 @@ export default function Spoils({runs, items}: SpoilsProps) {
 
                     return <TableRow key={x.item} hover>
                         <TableCell>{x.item}</TableCell>
-                        <TableCell className={classes.cell}>{percent(x.occurance / runs)}</TableCell>
-                        <TableCell className={classes.cell}>{realNumber(expectedFrom)}&mdash;{realNumber(expectedTo)}</TableCell>
-                        <TableCell className={classes.cell}>{realNumber(x.min)}</TableCell>
-                        <TableCell className={classes.cell}>{realNumber(x.max)}</TableCell>
-                        <TableCell className={classes.cell}>{realNumber(x.mean)}</TableCell>
-                        <TableCell className={classes.cell}>{realNumber(x.median)}</TableCell>
-                        <TableCell className={classes.cell}>{realNumber(x.mode)}</TableCell>
-                        <TableCell className={classes.cell}>{realNumber(x.stdDev)}</TableCell>
-                        <TableCell className={classes.percentile}>
+                        <TableCell align="right">{percent(x.occurance / runs)}</TableCell>
+                        <TableCell align="right">{realNumber(expectedFrom)}&mdash;{realNumber(expectedTo)}</TableCell>
+                        <TableCell align="right">{realNumber(x.min)}</TableCell>
+                        <TableCell align="right">{realNumber(x.max)}</TableCell>
+                        <TableCell align="right">{realNumber(x.mean)}</TableCell>
+                        <TableCell align="right">{realNumber(x.median)}</TableCell>
+                        <TableCell align="right">{realNumber(x.mode)}</TableCell>
+                        <TableCell align="right">{realNumber(x.stdDev)}</TableCell>
+                        <TableCell sx={{paddingTop: '2px'}}>
                             <PercentileGraph items={x.percentile} />
                         </TableCell>
                     </TableRow>;

@@ -1,12 +1,12 @@
 import React, {PureComponent} from 'react';
 import {bindActionCreators, Dispatch} from 'redux';
 import styled from 'styled-components';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import {TextField} from '@material-ui/core';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import {TextField} from '@mui/material';
 import {connect} from 'react-redux';
 
 import {AppState} from '../types';
@@ -66,9 +66,10 @@ class SettingsModalClass extends PureComponent<Props, ClassState> {
                 <DialogTitle id="form-dialog-title">Settings</DialogTitle>
                 <SettingsModalDialogContent>
                     <TextField
-                        css={'width: 100%'}
+                        fullWidth
+                        margin="dense"
+                        size="small"
                         name="name"
-                        placeholder="Unit"
                         label="Amount of battles to run (max 100)"
                         value={this.state.battleCount}
                         onChange={(event): void => this.setState({battleCount: event.target.value})}

@@ -14,10 +14,12 @@ Engine executable is used on the backend and gets executed based on the json fil
 
 ## How to run locally for development
 
+Use Node.js 22 or newer. Dependency versions are pinned in `package.json`; use `npm ci` to install the matching lockfile.
+
 To run locally:
 
 ```
-npm i
+npm ci
 npm run dev
 npm run dev-server
 ``` 

@@ -1,11 +1,9 @@
 import {Provider} from 'react-redux';
-import React, {PureComponent} from 'react';
-import {StylesProvider} from '@material-ui/core/styles';
+import React, {PropsWithChildren, PureComponent} from 'react';
+import {ThemeProvider} from '@mui/material/styles';
 
-import {store} from './store';
-import {Rule, StyleSheet} from 'jss';
-
-const generateClassName = (rule:Rule, styleSheet: StyleSheet): string => `${styleSheet.options.classNamePrefix}-${rule.key}`;
+import {createAppStore} from './store';
+import {theme} from '../StyledComponents';
 
 export function download(text: string, filename: string): void {
     const blob = new Blob(
@@ -22,9 +20,11 @@ export function download(text: string, filename: string): void {
     a.click();
 }
 
-export class WrapperForTests extends PureComponent {
+export class WrapperForTests extends PureComponent<PropsWithChildren> {
+    private readonly store = createAppStore();
+
     render() {
-        return <Provider store={store}><StylesProvider generateClassName={generateClassName}>{this.props.children}</StylesProvider></Provider>;
+        return <Provider store={this.store}><ThemeProvider theme={theme}>{this.props.children}</ThemeProvider></Provider>;
     }
 }
 

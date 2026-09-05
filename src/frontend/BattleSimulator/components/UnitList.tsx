@@ -1,16 +1,16 @@
 import React, {FC} from 'react';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
-import SyncAltIcon from '@material-ui/icons/SyncAlt';
-import {Checkbox, Tooltip} from '@material-ui/core';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+import SyncAltIcon from '@mui/icons-material/SyncAlt';
+import {Checkbox, Tooltip} from '@mui/material';
 
 import {Unit} from '../types';
 import {theme} from '../../StyledComponents';
@@ -26,7 +26,7 @@ type UnitItemProps = {
 
 export const UnitList: FC<UnitItemProps> = ({units, onDuplicate, onEdit, onDelete, onDuplicateUnitToOtherSide, onChangeLine}: UnitItemProps) => {
     return (
-        <TableContainer css={`margin-top:  ${theme.spacing(1)}px`} component={Paper}>
+        <TableContainer css={`margin-top:  ${theme.spacing(1)}`} component={Paper}>
             <Table size="small" aria-label="a dense table">
                 <TableHead>
                     <TableRow>

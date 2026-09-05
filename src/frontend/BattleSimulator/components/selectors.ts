@@ -1,10 +1,14 @@
 import {RootState} from '../store';
+import {createSelector} from '@reduxjs/toolkit';
 
-export const selectAttackersWithStructures = (state: RootState) => {
-    return {
-        attackers: state.attackers,
-        defenders: state.defenders,
-        attackerStructure: state.attackerStructure,
-        defenderStructure: state.defenderStructure,
-    };
-};
+export const selectAttackersWithStructures = createSelector(
+    [
+        (state: RootState) => state.attackers,
+        (state: RootState) => state.defenders,
+        (state: RootState) => state.attackerStructure,
+        (state: RootState) => state.defenderStructure,
+    ],
+    (attackers, defenders, attackerStructure, defenderStructure) => ({
+        attackers, defenders, attackerStructure, defenderStructure,
+    }),
+);

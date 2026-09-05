@@ -1,12 +1,16 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import {createRoot} from 'react-dom/client';
+import {ThemeProvider} from '@mui/material/styles';
+import {theme} from '../StyledComponents';
 
 import {GlobalStyle} from '../GlobalStyle';
 import {MartialPoints} from './MartialPoints';
-ReactDOM.render(
-    <>
+const container = document.getElementById('app');
+if (!container) throw new Error('Missing app container');
+
+createRoot(container).render(
+    <ThemeProvider theme={theme}>
         <GlobalStyle/>
         <MartialPoints/>
-    </>,
-    document.getElementById('app'),
+    </ThemeProvider>,
 );

@@ -1,4 +1,5 @@
-import React, {ChangeEvent, PureComponent, ReactNode} from 'react';
+import React, {ChangeEvent, SyntheticEvent, PureComponent, ReactNode} from 'react';
+import {SelectChangeEvent} from '@mui/material/Select';
 import {bindActionCreators, Dispatch} from 'redux';
 import {connect} from 'react-redux';
 import styled from 'styled-components';
@@ -13,13 +14,13 @@ import {
     Switch,
     TextField,
     Tooltip,
-} from '@material-ui/core';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
-import CancelIcon from '@material-ui/icons/Cancel';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import SaveIcon from '@material-ui/icons/Save';
+} from '@mui/material';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CancelIcon from '@mui/icons-material/Cancel';
+import Autocomplete from '@mui/material/Autocomplete';
+import SaveIcon from '@mui/icons-material/Save';
 
 import {StyledHeading, StyledPaper, theme} from '../../StyledComponents';
 import {ItemListSorted, SkillListSorted} from '../resources';
@@ -42,11 +43,27 @@ import {
 } from '../actions/formActions';
 
 const ButtonGroup = styled.div`
-  margin-top: ${theme.spacing(2)}px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${theme.spacing(1)};
 `;
 
-const SectionHeaderContainer = styled.div`
-  margin-bottom: ${theme.spacing(1)}px;
+const FormPaper = styled(StyledPaper)`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing(3)};
+`;
+
+const FormSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing(2)};
+`;
+
+const SliderContainer = styled.div`
+  box-sizing: border-box;
+  height: 56px;
+  padding: 4px 12px 0;
 `;
 
 type JsonSkill = {
@@ -105,7 +122,7 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
 };
 
 class MainFormClass extends PureComponent<FormProps, null> {
-    OnChangeItemAbbr = (itemId: string, event: ChangeEvent, object: JsonItem): void => {
+    OnChangeItemAbbr = (itemId: string, event: SyntheticEvent, object: JsonItem): void => {
         this.props.changeItemAbbr(itemId, object?.abbr, object?.name);
     };
 
@@ -114,11 +131,11 @@ class MainFormClass extends PureComponent<FormProps, null> {
         this.props.changeItemAmount(itemId, amount);
     };
 
-    OnChangeSkillAbbr = (itemId: string, event: ChangeEvent, object: JsonSkill): void => {
+    OnChangeSkillAbbr = (itemId: string, event: SyntheticEvent, object: JsonSkill): void => {
         this.props.changeSkillAbbr(itemId, object?.abbr, object?.name, object?.combatSpell);
     };
 
-    OnChangeSkillLevel = (itemId: string, event: ChangeEvent, value: number): void => {
+    OnChangeSkillLevel = (itemId: string, event: SyntheticEvent, value: number): void => {
         this.props.changeSkillLevel(itemId, value);
     };
 
@@ -142,7 +159,7 @@ class MainFormClass extends PureComponent<FormProps, null> {
         this.props.setUnitsName(event.target.value);
     };
 
-    OnCombatSpellSet = (event: ChangeEvent<HTMLInputElement>): void => {
+    OnCombatSpellSet = (event: SelectChangeEvent<string>): void => {
         this.props.setCombatSpell(event.target.value);
     };
 
@@ -152,15 +169,15 @@ class MainFormClass extends PureComponent<FormProps, null> {
         const combatSpells = unit.skills.filter((skill) => skill.combatSpell);
 
         return (
-            <StyledPaper square elevation={3}>
-                <StyledHeading css={'margin-top: 0'} variant="h5">
-                    <SectionHeaderContainer>
+            <FormPaper square elevation={3}>
+                <FormSection>
+                    <StyledHeading css="margin: 0;" variant="h5">
                         Men/Items/Monsters <Tooltip title="Add new item"><AddCircleIcon onClick={addItem} css={'cursor: pointer'}/></Tooltip>
-                    </SectionHeaderContainer>
+                    </StyledHeading>
                     {unit.items.map((item, key) => {
                         return (
                             <Grid key={key} container spacing={2}>
-                                <Grid item md={4} xs={6}>
+                                <Grid size={{md: 4, xs: 6}}>
                                     <InputLabel shrink>
                                         Item
                                     </InputLabel>
@@ -169,7 +186,7 @@ class MainFormClass extends PureComponent<FormProps, null> {
                                         options={ItemListSorted}
                                         onChange={this.OnChangeItemAbbr.bind(this, item.id)}
                                         getOptionLabel={(option: JsonItem): string => `${option.name} [${option.abbr}]`}
-                                        getOptionSelected={(a, b): boolean => a.abbr === b.abbr}
+                                        isOptionEqualToValue={(a, b): boolean => a.abbr === b.abbr}
                                         value={item.name ? {name: item.name, abbr: item.abbr} : null}
                                         size={'small'}
                                         renderInput={(params): ReactNode =>
@@ -177,16 +194,17 @@ class MainFormClass extends PureComponent<FormProps, null> {
                                                 {...params}
                                                 size="small"
                                                 variant="outlined"
-                                                css={`margin-bottom: ${theme.spacing(1)}px`}
                                             />
                                         }
                                     />
                                 </Grid>
-                                <Grid item md={4} xs={6}>
+                                <Grid size={{md: 4, xs: 6}}>
                                     <InputLabel shrink>
                                         Amount
                                     </InputLabel>
                                     <TextField
+                                        size="small"
+                                        variant="outlined"
                                         css={'width: 100%'}
                                         onChange={this.OnChangeItemAmount.bind(this, item.id)}
                                         name="name"
@@ -198,15 +216,15 @@ class MainFormClass extends PureComponent<FormProps, null> {
                             </Grid>
                         );
                     })}
-                </StyledHeading>
-                <StyledHeading variant="h5">
-                    <SectionHeaderContainer>
+                </FormSection>
+                <FormSection>
+                    <StyledHeading css="margin: 0;" variant="h5">
                         Skills <Tooltip title="Add new skill"><AddCircleIcon onClick={addSkill} css={'cursor: pointer'}/></Tooltip>
-                    </SectionHeaderContainer>
+                    </StyledHeading>
                     {unit.skills.map((item, key) => {
                         return (
                             <Grid key={key} container spacing={2}>
-                                <Grid item md={4} xs={6}>
+                                <Grid size={{md: 4, xs: 6}}>
                                     <InputLabel shrink>
                                         Skill
                                     </InputLabel>
@@ -215,44 +233,46 @@ class MainFormClass extends PureComponent<FormProps, null> {
                                         options={SkillListSorted}
                                         onChange={this.OnChangeSkillAbbr.bind(this, item.id)}
                                         getOptionLabel={(option: JsonSkill): string => `${option.name} [${option.abbr}]`}
-                                        getOptionSelected={(a, b): boolean => a.abbr === b.abbr}
+                                        isOptionEqualToValue={(a, b): boolean => a.abbr === b.abbr}
                                         value={item.name ? {name: item.name, abbr: item.abbr} : null}
+                                        size="small"
                                         renderInput={(params): ReactNode =>
                                             <TextField
                                                 {...params}
                                                 size="small"
                                                 variant="outlined"
-                                                css={`margin-bottom: ${theme.spacing(1)}px`}
                                             />
                                         }
                                     />
                                 </Grid>
-                                <Grid item md={4} xs={6}>
+                                <Grid size={{md: 4, xs: 6}}>
                                     <InputLabel shrink>
                                         Level
                                     </InputLabel>
-                                    <Slider
-                                        step={1}
-                                        onChange={this.OnChangeSkillLevel.bind(this, item.id)}
-                                        value={item.level}
-                                        marks={[{label: '1', value: 1}, {label: '2', value: 2}, {label: '3', value: 3}, {label: '4', value: 4}, {label: '5', value: 5}]}
-                                        min={1}
-                                        max={5}
-                                        valueLabelDisplay="auto"
-                                    />
+                                    <SliderContainer>
+                                        <Slider
+                                            step={1}
+                                            onChange={this.OnChangeSkillLevel.bind(this, item.id)}
+                                            value={item.level}
+                                            marks={[{label: '1', value: 1}, {label: '2', value: 2}, {label: '3', value: 3}, {label: '4', value: 4}, {label: '5', value: 5}]}
+                                            min={1}
+                                            max={5}
+                                            valueLabelDisplay="auto"
+                                        />
+                                    </SliderContainer>
                                 </Grid>
                             </Grid>
                         );
                     })}
-                </StyledHeading>
-                <div>
-                    {combatSpells.length > 0 &&
-                        <Grid container spacing={1}>
-                            <Grid item xs={4}>
+                </FormSection>
+                {combatSpells.length > 0 &&
+                        <Grid container spacing={2}>
+                            <Grid size={{md: 4, xs: 6}}>
                                 <InputLabel shrink>
                                     Combat spell
                                 </InputLabel>
                                 <Select
+                                    size="small"
                                     css={'width: 100%'}
                                     value={unit.combatSpell}
                                     onChange={this.OnCombatSpellSet}
@@ -263,28 +283,31 @@ class MainFormClass extends PureComponent<FormProps, null> {
                                 </Select>
                             </Grid>
                         </Grid>
-                    }
-                </div>
-                <FormControlLabel onChange={this.OnChangeBehind} control={<Switch checked={unit.behind} />} label="Behind" />
-                <div>
-                    <Grid container spacing={1}>
-                        <Grid item xs={4}>
+                }
+                <FormSection>
+                    <FormControlLabel control={<Switch checked={unit.behind} onChange={this.OnChangeBehind} />} label="Behind" />
+                    <Grid container spacing={2}>
+                        <Grid size={{md: 4, xs: 6}}>
+                            <InputLabel shrink htmlFor="unit-name">
+                                Unit name
+                            </InputLabel>
                             <TextField
+                                id="unit-name"
+                                size="small"
+                                variant="outlined"
                                 css={'width: 100%'}
                                 name="name"
                                 placeholder="Unit"
-                                label="Unit name"
                                 value={unit.name}
                                 onChange={this.OnUnitsNameChange}
                             />
                         </Grid>
                     </Grid>
 
-                </div>
+                </FormSection>
                 <ButtonGroup>
                     {unit.id && <>
                         <Button
-                            css={`margin-right: ${theme.spacing(1)}px `}
                             variant="contained"
                             color="primary"
                             startIcon={<SaveIcon/>}
@@ -306,7 +329,6 @@ class MainFormClass extends PureComponent<FormProps, null> {
 
                     {!unit.id && <>
                         <Button
-                            css={`margin-right: ${theme.spacing(1)}px `}
                             variant="contained"
                             color="primary"
                             startIcon={<AddIcon/>}
@@ -317,7 +339,6 @@ class MainFormClass extends PureComponent<FormProps, null> {
                             Add to Attackers
                         </Button>
                         <Button
-                            css={`margin-right: ${theme.spacing(1)}px `}
                             variant="contained"
                             color="primary"
                             startIcon={<AddIcon/>}
@@ -339,7 +360,7 @@ class MainFormClass extends PureComponent<FormProps, null> {
                         </Button>
                     </>}
                 </ButtonGroup>
-            </StyledPaper>
+            </FormPaper>
         );
     }
 }

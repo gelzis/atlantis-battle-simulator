@@ -1,5 +1,5 @@
 import React from 'react';
-import {Typography} from '@material-ui/core';
+import {Typography} from '@mui/material';
 
 import {theme} from '../../StyledComponents';
 import styled from 'styled-components';
@@ -11,12 +11,17 @@ type SideStatsProps = {
 
 export const Formation = styled.div`
   display: flex;
-  gap: ${theme.spacing(2)}px;
-  margin-bottom: ${theme.spacing(2)}px;
+  flex-wrap: wrap;
+  gap: ${theme.spacing(2)};
+  margin-bottom: ${theme.spacing(2)};
 `;
 
 export const FormationItem = styled.div`
-  
+  display: flex;
+  align-items: baseline;
+  gap: ${theme.spacing(0.75)};
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 `;
 
 export function SideStats({stats}: SideStatsProps) {

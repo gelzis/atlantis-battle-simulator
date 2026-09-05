@@ -1,10 +1,12 @@
 import {reducer} from './reducer';
-import {createStore} from 'redux';
+import {configureStore} from '@reduxjs/toolkit';
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
 
-export const store = createStore(reducer);
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export const createAppStore = () => configureStore({reducer});
+export const store = createAppStore();
+export type AppStore = ReturnType<typeof createAppStore>;
+export type RootState = ReturnType<AppStore['getState']>;
+export type AppDispatch = AppStore['dispatch'];
 
 type DispatchFunc = () => AppDispatch;
 export const useAppDispatch: DispatchFunc = useDispatch;

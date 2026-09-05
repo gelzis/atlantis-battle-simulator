@@ -1,14 +1,14 @@
 import React, {useCallback} from 'react';
 import styled from 'styled-components';
-import TableContainer from '@material-ui/core/TableContainer';
+import TableContainer from '@mui/material/TableContainer';
 import {theme} from '../StyledComponents';
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import TableBody from '@material-ui/core/TableBody';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import TableBody from '@mui/material/TableBody';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import {MartialPointData} from './OrderParser';
 
@@ -20,16 +20,16 @@ const ResetLink = styled.a`
 `;
 
 export function Report({martialPointData, onReset}: {martialPointData: MartialPointData, onReset: () => void}) {
-    const onResetHandler = useCallback((e) => {
+    const onResetHandler = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
 
         onReset();
-    }, []);
+    }, [onReset]);
 
     return (
         <div>
             <h3>{`Region count: ${martialPointData.count}`}</h3>
-            <TableContainer css={`margin-top:  ${theme.spacing(1)}px`} component={Paper}>
+            <TableContainer css={`margin-top:  ${theme.spacing(1)}`} component={Paper}>
                 <Table size="small" aria-label="a dense table">
                     <TableHead>
                         <TableRow>

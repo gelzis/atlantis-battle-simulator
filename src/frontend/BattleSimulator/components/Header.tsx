@@ -1,7 +1,7 @@
 /* global fetch */
 import React, {ChangeEvent, FC, useCallback, useState} from 'react';
-import {IconButton, Snackbar, Toolbar, Tooltip, Typography} from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
+import {Box, IconButton, Snackbar, Toolbar, Tooltip, Typography} from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 
 import {StyledAppBar} from '../../StyledComponents';
 import {
@@ -13,9 +13,9 @@ import {
     LegacyExportSkill,
     LegacyExportUnit,
 } from '../types';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
-import ShareIcon from '@material-ui/icons/Share';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import ShareIcon from '@mui/icons-material/Share';
 
 import {selectAttackersWithStructures} from './selectors';
 import {convertCurrentStateToJson} from './transformers';
@@ -104,10 +104,10 @@ export const Header: FC = () => {
 
     const downloadAsJson = useCallback(() => {
         const exportJson = convertCurrentStateToJson({
-            attackers: attackers,
-            defenders: defenders,
-            defenderStructure: defenderStructure,
-            attackerStructure: attackerStructure,
+            attackers,
+            defenders,
+            defenderStructure,
+            attackerStructure,
         });
 
         download(JSON.stringify(exportJson), 'battle.json');
@@ -193,23 +193,24 @@ export const Header: FC = () => {
     return (
         <>
             <StyledAppBar position="static">
-                <Toolbar>
+                <Toolbar sx={{gap: 2, flexWrap: 'wrap', py: 1}}>
                     <Typography variant="h6">
                         Atlantis Battle simulator
                     </Typography>
-                    <div style={{flexGrow: 1}}/>
-                    <input onChange={uploadJson} accept="application/JSON" style={{display: 'none'}} data-testid="json-upload-input" id="icon-button-file" type="file" />
-                    <label htmlFor="icon-button-file">
-                        <IconButton edge="end" color="inherit" component="span">
-                            <Tooltip title="Upload battle as a JSON file"><CloudUploadIcon /></Tooltip>
+                    <Box sx={{display: 'flex', alignItems: 'center', gap: 1, ml: 'auto', flexShrink: 0, '& .MuiIconButton-root': {width: 44, height: 44}}}>
+                        <input onChange={uploadJson} accept="application/JSON" style={{display: 'none'}} data-testid="json-upload-input" id="icon-button-file" type="file" />
+                        <label htmlFor="icon-button-file">
+                            <IconButton color="inherit" component="span" aria-label="Upload battle as a JSON file">
+                                <Tooltip title="Upload battle as a JSON file"><CloudUploadIcon /></Tooltip>
+                            </IconButton>
+                        </label>
+                        <IconButton color="inherit" onClick={downloadAsJson} aria-label="Download battle as a JSON file">
+                            <Tooltip title="Download battle as a JSON file"><CloudDownloadIcon data-testid="download-json"/></Tooltip>
                         </IconButton>
-                    </label>
-                    <IconButton edge="end" color="inherit">
-                        <Tooltip title="Download battle as a JSON file"><CloudDownloadIcon data-testid="download-json" onClick={downloadAsJson}/></Tooltip>
-                    </IconButton>
-                    <IconButton edge="end" color="inherit" disabled={saving} onClick={saveAndShare}>
-                        <Tooltip title="Save battle and copy share link"><ShareIcon data-testid="save-and-share"/></Tooltip>
-                    </IconButton>
+                        <IconButton color="inherit" disabled={saving} onClick={saveAndShare} aria-label="Save battle and copy share link">
+                            <Tooltip title="Save battle and copy share link"><ShareIcon data-testid="save-and-share"/></Tooltip>
+                        </IconButton>
+                    </Box>
                 </Toolbar>
             </StyledAppBar>
             <Snackbar

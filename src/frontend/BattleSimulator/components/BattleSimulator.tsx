@@ -1,5 +1,5 @@
 /* global fetch */
-import React, {ChangeEvent, PureComponent, ReactNode} from 'react';
+import React, {SyntheticEvent, PureComponent, ReactNode} from 'react';
 import {connect} from 'react-redux';
 import styled from 'styled-components';
 import {
@@ -12,13 +12,13 @@ import {
     Snackbar,
     TextField,
     Tooltip,
-} from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
-import {StylesProvider} from '@material-ui/core/styles';
-import LaunchIcon from '@material-ui/icons/Launch';
-import SettingsIcon from '@material-ui/icons/Settings';
+} from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
+import {StyledEngineProvider} from '@mui/material/styles';
+import LaunchIcon from '@mui/icons-material/Launch';
+import SettingsIcon from '@mui/icons-material/Settings';
 import {bindActionCreators, Dispatch} from 'redux';
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from '@mui/icons-material/Delete';
 import posthog from 'posthog-js';
 
 import {StyledPaper, StyledSideHeading, theme} from '../../StyledComponents';
@@ -30,7 +30,7 @@ import {
     ServerSimulationResponse,
 } from '../types';
 import {ObjectListSorted} from '../resources';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from '@mui/material/Autocomplete';
 import {SimulationResult} from './SimulationResult';
 import {SettingsModal} from './SettingsModal';
 import {PageFooter} from './PageFooter';
@@ -57,7 +57,7 @@ import {loadBattleIntoStore} from '../battleImport';
 
 const RunBattleContainer = styled.div`
   text-align: center; 
-  margin-top: ${theme.spacing(2)}px
+  margin-top: ${theme.spacing(2)}
 `;
 
 const SideClearIcon = styled(DeleteIcon)`
@@ -165,6 +165,8 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
     };
 
     runBattle = async(): Promise<void> => {
+        if (this.props.loading) return;
+
         this.setState({
             battleResult: undefined,
         });
@@ -177,40 +179,43 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
         });
 
         this.props.setLoadingStatus(true);
+        this.props.setError(false);
 
-        const response = await fetch('/battle', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                battle: exportJson,
-                battleCount: this.props.battleCount,
-            }),
-        });
+        try {
+            const response = await fetch('/battle', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    battle: exportJson,
+                    battleCount: this.props.battleCount,
+                }),
+            });
 
-        this.props.setLoadingStatus(false);
+            if (!response.ok) {
+                this.props.setError(true, 'Failed to launch battle. Check your units or reduce the number of battles, then try again.');
+                return;
+            }
 
-        if (!response.ok) {
-            this.props.setError(true, 'Failed to launch battle, check your input units or try to reduce the number of battles run!');
+            const simulationData: ServerSimulationResponse = await response.json();
+            this.setState({battleResult: simulationData});
+        } catch (error) {
+            this.props.setError(true, 'Could not complete the simulation. Check your connection and try running the battle again.');
             return;
+        } finally {
+            this.props.setLoadingStatus(false);
         }
-
-        const simulationData: ServerSimulationResponse = await response.json();
-
-        this.setState({
-            battleResult: simulationData,
-        });
 
         posthog.capture('battle_run');
     };
 
-    OnChangeAttackerStructure = (event: ChangeEvent, value: string): void => {
+    OnChangeAttackerStructure = (event: SyntheticEvent, value: string): void => {
         this.props.setAttackersStructure(value);
     };
 
-    OnChangeDefenderStructure = (event: ChangeEvent, value: string): void => {
+    OnChangeDefenderStructure = (event: SyntheticEvent, value: string): void => {
         this.props.setDefendersStructure(value);
     };
 
@@ -238,12 +243,12 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
         } = this.props;
 
         return (
-            <StylesProvider injectFirst>
+            <StyledEngineProvider injectFirst>
                 <Container css="flex-grow: 1;">
                     <Header/>
                     <MainForm/>
                     <Grid container spacing={3}>
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{xs: 12, sm: 6}}>
                             <StyledPaper square elevation={3}>
                                 <StyledSideHeading gutterBottom={true} variant="h5">
                                     Attacker units
@@ -270,7 +275,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                             {...params}
                                             size="small"
                                             variant="outlined"
-                                            css={`margin-bottom: ${theme.spacing(1)}px`}
+                                            css={`margin-bottom: ${theme.spacing(1)}`}
                                         />
                                     }
                                 />
@@ -284,7 +289,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                 />
                             </StyledPaper>
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{xs: 12, sm: 6}}>
                             <StyledPaper square elevation={3}>
                                 <StyledSideHeading variant="h5">
                                     Defender units
@@ -311,7 +316,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                             {...params}
                                             size="small"
                                             variant="outlined"
-                                            css={`margin-bottom: ${theme.spacing(1)}px`}
+                                            css={`margin-bottom: ${theme.spacing(1)}`}
                                         />
                                     }
                                 />
@@ -335,11 +340,13 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                                 variant="contained"
                                 startIcon={!loading && <LaunchIcon />}
                                 onClick={this.runBattle}
+                                disabled={loading}
+                                aria-label={loading ? 'Running battle' : 'Run battle'}
                             >
                                 {loading && <CircularProgress color="inherit" size={24}/>}
                                 {!loading && 'Run battle'}
                             </Button>
-                            <Button onClick={openSettings}>
+                            <Button onClick={openSettings} aria-label="Simulation settings">
                                 <SettingsIcon />
                             </Button>
                         </ButtonGroup>
@@ -358,7 +365,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                 </Snackbar>
 
                 {this.props.settingsWindowOpen && <SettingsModal onClose={closeSettings}/>}
-            </StylesProvider>
+            </StyledEngineProvider>
         );
     }
 }

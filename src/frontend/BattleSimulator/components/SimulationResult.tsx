@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {Grid, Typography} from '@material-ui/core';
+import {Grid, Typography} from '@mui/material';
 
 import {ServerSimulationResponse} from '../types';
 import {StyledPaper, theme, StyledSideHeading, StyledPadlessPaper} from '../../StyledComponents';
@@ -13,21 +13,21 @@ export const SimulationResult: FC<ServerSimulationResponse> = ({
     const runs = wins + loses + draws;
 
     return (
-        <StyledPaper css={`margin-top: ${theme.spacing(2)}px; white-space: pre-wrap;`} elevation={3}>
+        <StyledPaper css={`margin-top: ${theme.spacing(2)}; white-space: pre-wrap;`} elevation={3}>
             <StyledSideHeading gutterBottom={true} variant="h5">
-                {`Wins ${wins}. Draws: ${draws}. Loses ${loses}. Win ratio: ${winRatio.toFixed(2)}%`}
+                {`Wins: ${wins}. Draws: ${draws}. Losses: ${loses}. Win ratio: ${winRatio.toFixed(2)}%`}
             </StyledSideHeading>
 
             <StyledSideHeading variant="h6">
-                Looses Brekadown
+                Losses breakdown
             </StyledSideHeading>
-            <StyledPaper css={`margin-top: ${theme.spacing(2)}px; white-space: pre-wrap;`} elevation={3}>
-                <Grid container>
-                    <Grid item xs={12} sm={6}>
+            <StyledPaper css={`margin-top: ${theme.spacing(2)}; white-space: pre-wrap;`} elevation={3}>
+                <Grid container spacing={3}>
+                    <Grid size={{xs: 12, sm: 6}}>
                         <Typography variant='subtitle1'>Attacker</Typography>
                         <Stats runs={runs} {...attackerLooses} />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{xs: 12, sm: 6}}>
                         <Typography variant='subtitle1'>Defender</Typography>
                         <Stats runs={runs} {...defenderLooses} />
                     </Grid>
@@ -39,7 +39,7 @@ export const SimulationResult: FC<ServerSimulationResponse> = ({
                     <StyledSideHeading variant="h6">
                         Spoils
                     </StyledSideHeading>
-                    <StyledPadlessPaper css={`margin-top: ${theme.spacing(2)}px; `} elevation={3} >
+                    <StyledPadlessPaper css={`margin-top: ${theme.spacing(2)}; `} elevation={3} >
                         <Spoils runs={runs} items={spoils} />
                     </StyledPadlessPaper>
                 </>
@@ -50,7 +50,7 @@ export const SimulationResult: FC<ServerSimulationResponse> = ({
                     <StyledSideHeading variant="h6">
                         Victory example:
                     </StyledSideHeading>
-                    <StyledPaper css={`margin-top: ${theme.spacing(2)}px; white-space: pre-wrap;`} elevation={3}>
+                    <StyledPaper css={`margin-top: ${theme.spacing(2)}; white-space: pre-wrap;`} elevation={3}>
                         <Typography variant="body2" css='font-family: monospace;'>
                             {victoryBattleText}
                         </Typography>
@@ -63,7 +63,7 @@ export const SimulationResult: FC<ServerSimulationResponse> = ({
                     <StyledSideHeading variant="h6">
                         Draw example:
                     </StyledSideHeading>
-                    <StyledPaper css={`margin-top: ${theme.spacing(2)}px; white-space: pre-wrap;`} elevation={3}>
+                    <StyledPaper css={`margin-top: ${theme.spacing(2)}; white-space: pre-wrap;`} elevation={3}>
                         <Typography variant="body2" css='font-family: monospace;'>
                             {drawBattleText}
                         </Typography>
@@ -76,7 +76,7 @@ export const SimulationResult: FC<ServerSimulationResponse> = ({
                     <StyledSideHeading variant="h6">
                         Loss example:
                     </StyledSideHeading>
-                    <StyledPaper css={`margin-top: ${theme.spacing(2)}px; white-space: pre-wrap;`} elevation={3}>
+                    <StyledPaper css={`margin-top: ${theme.spacing(2)}; white-space: pre-wrap;`} elevation={3}>
                         <Typography variant="body2" css='font-family: monospace;'>
                             {lossBattleText}
                         </Typography>
