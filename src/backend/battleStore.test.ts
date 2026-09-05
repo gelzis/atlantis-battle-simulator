@@ -35,6 +35,25 @@ describe('BattleStore', () => {
 
         expect(second.id).not.toBe(first.id);
     });
+
+    it('returns undefined for an unknown battle', async() => {
+        await expect(store.get('missing')).resolves.toBeUndefined();
+    });
+
+    it('deduplicates concurrent saves without losing data', async() => {
+        const battle = {attackers: {units: [{name: 'Mage'}]}, defenders: {units: [] as {name: string}[]}};
+        const saved = await Promise.all(Array.from({length: 5}, () => store.save(battle)));
+        expect(new Set(saved.map(result => result.id)).size).toBe(1);
+        await expect(store.get(saved[0].id)).resolves.toEqual(saved[0]);
+    });
+
+    it('treats unit order as significant', async() => {
+        const units = [{name: 'First'}, {name: 'Second'}];
+        const first = await store.save({attackers: {units}, defenders: {units: []}});
+        const reversed = await store.save({attackers: {units: [...units].reverse()}, defenders: {units: []}});
+        expect(first.id).not.toBe(reversed.id);
+        await expect(store.get(first.id)).resolves.toEqual(first);
+    });
 });
 
 describe('canonicalBattleJson', () => {
