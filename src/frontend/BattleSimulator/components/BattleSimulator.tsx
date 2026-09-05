@@ -54,6 +54,8 @@ import {SideStats} from './SideStats';
 import {convertCurrentStateToJson} from './transformers';
 import {Header} from './Header';
 import {loadBattleIntoStore} from '../battleImport';
+import {BaselineV1, captureDraft, completedRun} from '../persistence';
+import {BaselineComparison, PersistenceWarning} from './LocalPersistence';
 
 const RunBattleContainer = styled.div`
   text-align: center; 
@@ -100,6 +102,7 @@ type BattleSimulatorProps = StateProps & DispatchProps;
 
 type BattleSimulatorClassState = {
     battleResult?: ServerSimulationResponse
+    completed?: BaselineV1
 }
 
 const mapStateToProps = (state: AppState): StateProps => {
@@ -151,6 +154,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
         const match = window.location.pathname.match(/^\/b\/([a-f0-9]{64})\/?$/);
         if (!match) return;
 
+        this.props.setLoadingStatus(true);
         try {
             const response = await fetch(`/saved-battles/${match[1]}`);
             if (!response.ok) {
@@ -161,6 +165,8 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             this.props.loadBattle(saved.battle);
         } catch (error) {
             this.props.setError(true, 'Failed to load the saved battle.');
+        } finally {
+            this.props.setLoadingStatus(false);
         }
     };
 
@@ -169,7 +175,10 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
 
         this.setState({
             battleResult: undefined,
+            completed: undefined,
         });
+
+        const submittedSetup = captureDraft(this.props);
 
         const exportJson = convertCurrentStateToJson({
             attackers: this.props.attackers,
@@ -190,7 +199,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                 },
                 body: JSON.stringify({
                     battle: exportJson,
-                    battleCount: this.props.battleCount,
+                    battleCount: submittedSetup.simulationCount,
                 }),
             });
 
@@ -200,7 +209,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             }
 
             const simulationData: ServerSimulationResponse = await response.json();
-            this.setState({battleResult: simulationData});
+            this.setState({battleResult: simulationData, completed: completedRun(submittedSetup, simulationData)});
         } catch (error) {
             this.props.setError(true, 'Could not complete the simulation. Check your connection and try running the battle again.');
             return;
@@ -246,6 +255,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             <StyledEngineProvider injectFirst>
                 <Container css="flex-grow: 1;">
                     <Header/>
+                    <PersistenceWarning/>
                     <MainForm/>
                     <Grid container spacing={3}>
                         <Grid size={{xs: 12, sm: 6}}>
@@ -352,6 +362,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                         </ButtonGroup>
                     </RunBattleContainer>
 
+                    <BaselineComparison current={this.state.completed} busy={loading} onRestore={() => this.setState({battleResult: undefined, completed: undefined})}/>
                     {this.state.battleResult &&
                         <SimulationResult {...this.state.battleResult} />
                     }

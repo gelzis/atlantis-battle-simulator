@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "savedAt": "2026-09-05T12:00:00.000Z",
+  "data": {
+    "attackers": [{"id": "army-1", "name": "Mages", "items": [{"id": "item-1", "abbr": "LEAD", "name": "leader", "amount": 3}], "skills": [{"id": "skill-1", "abbr": "FIRE", "name": "fire", "level": 3, "combatSpell": true}], "combatSpell": "FIRE", "behind": true}],
+    "defenders": [],
+    "editor": {"id": "army-1", "name": "Unfinished edit", "items": [{"id": "item-1", "abbr": "LEAD", "name": "leader", "amount": 7}, {"id": "blank-item", "abbr": "", "name": "", "amount": 1}], "skills": [{"id": "skill-1", "abbr": "FIRE", "name": "fire", "level": 4, "combatSpell": true}], "combatSpell": "FIRE", "behind": true},
+    "attackerStructure": "Tower",
+    "defenderStructure": null,
+    "simulationCount": 50
+  }
+}

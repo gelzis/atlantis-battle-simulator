@@ -23,6 +23,7 @@ import {download} from '../utils';
 import {setError} from '../actions/simulatorActions';
 import {useAppDispatch, useAppSelector} from '../store';
 import {loadBattleIntoStore} from '../battleImport';
+import {DraftStatus} from './LocalPersistence';
 
 const isLegacyExportJson = (input: ExportJson | LegacyExportJson): input is LegacyExportJson => {
     const sides = [input.attackers, input.defenders];
@@ -194,9 +195,12 @@ export const Header: FC = () => {
         <>
             <StyledAppBar position="static">
                 <Toolbar sx={{gap: 2, flexWrap: 'wrap', py: 1}}>
-                    <Typography variant="h6">
-                        Atlantis Battle simulator
-                    </Typography>
+                    <Box sx={{minWidth: 0}}>
+                        <Typography variant="h6">
+                            Atlantis Battle simulator
+                        </Typography>
+                        <DraftStatus/>
+                    </Box>
                     <Box sx={{display: 'flex', alignItems: 'center', gap: 1, ml: 'auto', flexShrink: 0, '& .MuiIconButton-root': {width: 44, height: 44}}}>
                         <input onChange={uploadJson} accept="application/JSON" style={{display: 'none'}} data-testid="json-upload-input" id="icon-button-file" type="file" />
                         <label htmlFor="icon-button-file">

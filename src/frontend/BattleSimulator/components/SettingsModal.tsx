@@ -54,7 +54,8 @@ class SettingsModalClass extends PureComponent<Props, ClassState> {
     }
 
     _onSave(): void {
-        this.props.setBattleCount(parseInt(this.state.battleCount) || 50);
+        const count = parseInt(this.state.battleCount);
+        this.props.setBattleCount(count >= 1 && count <= 100 ? count : 50);
         this.props.onClose();
     }
 

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "savedAt": "2026-09-05T12:00:00.000Z",
+  "data": {
+    "completedAt": "2026-09-05T11:59:00.000Z",
+    "setup": {
+      "attackers": [{"id": "army-1", "name": "Mages", "items": [{"id": "item-1", "abbr": "LEAD", "name": "leader", "amount": 3}], "skills": [], "combatSpell": "", "behind": false}],
+      "defenders": [],
+      "editor": {"id": "", "name": "Unit", "items": [], "skills": [], "combatSpell": "", "behind": false},
+      "attackerStructure": "Tower", "defenderStructure": null, "simulationCount": 50
+    },
+    "result": {"wins": 20, "draws": 0, "losses": 30, "winRate": 40, "attackerMean": 0.6, "defenderMean": 0.4}
+  }
+}
