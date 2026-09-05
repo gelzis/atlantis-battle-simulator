@@ -54,7 +54,7 @@ it('prevents duplicate requests and displays a successful result', async() => {
     const stats: StatRecord = {min: 0, max: 0, range: 0, occurance: 0, mean: 0, median: 0, mode: 0, percentile: [], stdDev: 0};
     resolveResponse({ok: true, json: async(): Promise<ServerSimulationResponse> => ({wins: 1, loses: 0, draws: 0, winRatio: 100, attackerLooses: stats, defenderLooses: stats, spoils: []})});
 
-    await waitFor(() => expect(screen.getByText(/Win ratio: 100.00%/)).toBeTruthy());
+    await waitFor(() => expect(screen.getByText('100.00%')).toBeTruthy());
     expect(runButton.disabled).toBe(false);
     expect(screen.queryByRole('alert')).toBeNull();
 });

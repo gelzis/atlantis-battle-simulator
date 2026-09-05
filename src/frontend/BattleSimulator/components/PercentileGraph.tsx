@@ -45,7 +45,7 @@ export default function PercentileGraph({items}: PercentileGraphProps) {
 
     return <PercentileContainer>
         { items.map((x, i) => {
-            const h = (x - min) / range * 16 + 2;
+            const h = range > 0 ? (x - min) / range * 16 + 2 : 2;
             const title = `${(i + 1) * 10}% : ${realNumber(x)}`;
             return <PercentileItem key={i} title={title}>
                 <div className='bar' style={{height: `${h}px`}} />
