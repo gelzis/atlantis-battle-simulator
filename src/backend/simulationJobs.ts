@@ -9,12 +9,14 @@ export type JobOptions = {
     executionTimeoutMs: number;
     queueTimeoutMs: number;
     maxQueued: number;
+    maxConcurrent: number;
     retentionMs: number;
 };
 export const defaultJobOptions: JobOptions = {
     executionTimeoutMs: 300000,
     queueTimeoutMs: 600000,
     maxQueued: 20,
+    maxConcurrent: 2,
     retentionMs: 60000,
 };
 
@@ -29,6 +31,7 @@ export const jobOptionsFromEnv = (): JobOptions => {
         executionTimeoutMs: read('SIMULATION_TIMEOUT_MS', defaultJobOptions.executionTimeoutMs, 3600000),
         queueTimeoutMs: read('SIMULATION_QUEUE_TIMEOUT_MS', defaultJobOptions.queueTimeoutMs, 86400000),
         maxQueued: read('SIMULATION_MAX_QUEUED', defaultJobOptions.maxQueued, 1000),
+        maxConcurrent: read('SIMULATION_MAX_CONCURRENT', defaultJobOptions.maxConcurrent, 2),
         retentionMs: read('SIMULATION_RETENTION_MS', defaultJobOptions.retentionMs, 604800000),
     };
 };
@@ -48,7 +51,7 @@ export class SimulationJobs {
     private database: sqlite3.Database;
     private serial: Promise<unknown> = Promise.resolve();
     private timer: ReturnType<typeof setInterval>;
-    private active?: {id: string; controller: AbortController; finished: Promise<void>};
+    private active = new Map<string, {controller: AbortController; finished: Promise<void>}>();
     private stopped = false;
 
     constructor(
@@ -159,8 +162,8 @@ export class SimulationJobs {
                     "UPDATE simulation_jobs SET status = 'cancelled', finishedAt = ?, error = ? WHERE id = ?",
                     [Date.now(), 'Simulation cancelled.', id],
                 );
-            } else if (job.status === 'running' && this.active?.id === id) {
-                this.active.controller.abort();
+            } else if (job.status === 'running') {
+                this.active.get(id)?.controller.abort();
             }
             return this.get(id);
         });
@@ -182,37 +185,45 @@ export class SimulationJobs {
             ],
         );
         await this.run('DELETE FROM simulation_jobs WHERE finishedAt <= ?', [now - this.options.retentionMs]);
-        if (this.active) return;
-        const next = (
-            await this.rows("SELECT * FROM simulation_jobs WHERE status = 'queued' ORDER BY createdAt, rowid LIMIT 1")
-        )[0];
-        if (!next) return;
-        await this.run("UPDATE simulation_jobs SET status = 'running', startedAt = ? WHERE id = ?", [now, next.id]);
-        const controller = new AbortController();
-        // Invoke through a promise so synchronous runner failures also release the slot.
-        const finished = Promise.resolve()
-            .then(() =>
-                this.runner(JSON.parse(next.battleJson), next.battleCount, controller.signal, next.executionTimeoutMs),
-            )
-            .then(
-                (result) => this.finish(next.id, 'completed', JSON.stringify(result), null),
-                (error) => {
-                    const failure =
-                        error instanceof EngineFailure
-                            ? error
-                            : new EngineFailure('failed', 'Simulation could not be completed.');
-                    if (failure.status === 'failed') {
-                        console.error('Simulation engine failure', {
-                            jobId: next.id,
-                            message: failure.message,
-                            diagnostics: failure.diagnostics || String(error),
-                        });
-                    }
-                    return this.finish(next.id, failure.status, null, failure.message);
-                },
-            )
-            .catch(console.error);
-        this.active = {id: next.id, controller, finished};
+        while (!this.stopped && this.active.size < this.options.maxConcurrent) {
+            const next = (
+                await this.rows(
+                    "SELECT * FROM simulation_jobs WHERE status = 'queued' ORDER BY createdAt, rowid LIMIT 1",
+                )
+            )[0];
+            if (!next) return;
+            await this.run("UPDATE simulation_jobs SET status = 'running', startedAt = ? WHERE id = ?", [now, next.id]);
+            const controller = new AbortController();
+            // Invoke through a promise so synchronous runner failures also release the slot.
+            const finished = Promise.resolve()
+                .then(() =>
+                    this.runner(
+                        JSON.parse(next.battleJson),
+                        next.battleCount,
+                        controller.signal,
+                        next.executionTimeoutMs,
+                    ),
+                )
+                .then(
+                    (result) => this.finish(next.id, 'completed', JSON.stringify(result), null),
+                    (error) => {
+                        const failure =
+                            error instanceof EngineFailure
+                                ? error
+                                : new EngineFailure('failed', 'Simulation could not be completed.');
+                        if (failure.status === 'failed') {
+                            console.error('Simulation engine failure', {
+                                jobId: next.id,
+                                message: failure.message,
+                                diagnostics: failure.diagnostics || String(error),
+                            });
+                        }
+                        return this.finish(next.id, failure.status, null, failure.message);
+                    },
+                )
+                .catch(console.error);
+            this.active.set(next.id, {controller, finished});
+        }
     }
 
     private finish(
@@ -231,7 +242,7 @@ export class SimulationJobs {
                 'UPDATE simulation_jobs SET status = ?, finishedAt = ?, resultJson = ?, error = ? WHERE id = ?',
                 [status, Date.now(), result, error, id],
             );
-            this.active = undefined;
+            this.active.delete(id);
             await this.schedule();
         });
     }
@@ -240,9 +251,9 @@ export class SimulationJobs {
         this.stopped = true;
         clearInterval(this.timer);
         await this.serial;
-        const active = this.active;
-        active?.controller.abort();
-        await active?.finished;
+        const active = [...this.active.values()];
+        active.forEach((job) => job.controller.abort());
+        await Promise.all(active.map((job) => job.finished));
         await this.serial;
         await new Promise<void>((resolve, reject) =>
             this.database.close((error) => (error ? reject(error) : resolve())),

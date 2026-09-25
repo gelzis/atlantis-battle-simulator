@@ -4,7 +4,7 @@ import {mkdtemp, rm} from 'fs/promises';
 import {tmpdir} from 'os';
 import path from 'path';
 import sqlite3 from 'sqlite3';
-import {defaultJobOptions, SimulationJobs} from './simulationJobs';
+import {defaultJobOptions, jobOptionsFromEnv, SimulationJobs} from './simulationJobs';
 import {EngineFailure, EngineRunner} from './engineRunner';
 import type {ServerSimulationResponse} from '../frontend/BattleSimulator/types';
 
@@ -33,7 +33,7 @@ beforeEach(async () => {
                 signal.addEventListener('abort', () => reject(new EngineFailure('cancelled', 'Simulation cancelled.')));
             }),
     );
-    jobs = new SimulationJobs(':memory:', runner, {...defaultJobOptions, maxQueued: 1});
+    jobs = new SimulationJobs(':memory:', runner, {...defaultJobOptions, maxQueued: 1, maxConcurrent: 1});
     await jobs.initialize();
 });
 afterEach(async () => {
@@ -144,7 +144,7 @@ it('persists results and marks interrupted jobs failed across server restarts', 
     const directory = await mkdtemp(path.join(tmpdir(), 'atlantis-jobs-'));
     const file = path.join(directory, 'jobs.sqlite');
     try {
-        jobs = new SimulationJobs(file, runner);
+        jobs = new SimulationJobs(file, runner, {...defaultJobOptions, maxConcurrent: 1});
         await jobs.initialize();
         const finished = await jobs.submit(randomUUID(), battle, 50);
         complete(result);
@@ -162,7 +162,7 @@ it('persists results and marks interrupted jobs failed across server restarts', 
             ),
         );
         await new Promise<void>((resolve, reject) => database.close((error) => (error ? reject(error) : resolve())));
-        jobs = new SimulationJobs(file, runner);
+        jobs = new SimulationJobs(file, runner, {...defaultJobOptions, maxConcurrent: 1});
         await jobs.initialize();
         await expect(jobs.result(finished.id)).resolves.toEqual(result);
         expect(await jobs.get(interrupted.id)).toMatchObject({
@@ -175,5 +175,86 @@ it('persists results and marks interrupted jobs failed across server restarts', 
         await rm(directory, {recursive: true, force: true});
         jobs = new SimulationJobs(':memory:', runner);
         await jobs.initialize();
+    }
+});
+
+describe('two concurrent engines', () => {
+    const executions = new Map<
+        number,
+        {
+            complete: (result: ServerSimulationResponse) => void;
+            fail: (error: Error) => void;
+            signal: AbortSignal;
+        }
+    >();
+
+    beforeEach(async () => {
+        await jobs.close();
+        executions.clear();
+        runner = jest.fn<ReturnType<EngineRunner>, Parameters<EngineRunner>>(
+            (_battle, count, signal) =>
+                new Promise((resolve, reject) => {
+                    executions.set(count, {complete: resolve, fail: reject, signal});
+                    signal.addEventListener('abort', () =>
+                        reject(new EngineFailure('cancelled', 'Simulation cancelled.')),
+                    );
+                }),
+        );
+        jobs = new SimulationJobs(':memory:', runner, {...defaultJobOptions, maxQueued: 2});
+        await jobs.initialize();
+    });
+
+    it('starts at most two engines under concurrent submissions and fills released slots in FIFO order', async () => {
+        const submitted = await Promise.all([1, 2, 3, 4].map((count) => jobs.submit(randomUUID(), battle, count)));
+        expect(submitted.map((job) => job.status)).toEqual(['running', 'running', 'queued', 'queued']);
+        expect(runner).toHaveBeenCalledTimes(2);
+        await expect(jobs.submit(randomUUID(), battle, 5)).rejects.toMatchObject({statusCode: 429});
+        executions.get(2).complete(result);
+        await waitForStatus(submitted[2].id, 'running');
+        expect(runner.mock.calls.map((call) => call[1])).toEqual([1, 2, 3]);
+        expect((await jobs.get(submitted[3].id)).status).toBe('queued');
+        executions.get(1).fail(new EngineFailure('timed_out', 'Execution time limit exceeded.'));
+        await waitForStatus(submitted[3].id, 'running');
+        expect((await jobs.get(submitted[0].id)).status).toBe('timed_out');
+        expect((await jobs.get(submitted[2].id)).status).toBe('running');
+        expect(runner.mock.calls.map((call) => call[1])).toEqual([1, 2, 3, 4]);
+    });
+
+    it('cancels only the selected execution and starts a waiting job in its slot', async () => {
+        const submitted = await Promise.all([1, 2, 3, 4].map((count) => jobs.submit(randomUUID(), battle, count)));
+        await jobs.cancel(submitted[1].id);
+        await waitForStatus(submitted[2].id, 'running');
+        expect((await jobs.get(submitted[1].id)).status).toBe('cancelled');
+        expect(executions.get(1).signal.aborted).toBe(false);
+        expect(executions.get(2).signal.aborted).toBe(true);
+        expect(executions.get(3).signal.aborted).toBe(false);
+        expect(executions.has(4)).toBe(false);
+    });
+
+    it('terminates all active executions on shutdown without starting queued work', async () => {
+        await Promise.all([1, 2, 3, 4].map((count) => jobs.submit(randomUUID(), battle, count)));
+        await jobs.close();
+        expect([...executions.values()].map((execution) => execution.signal.aborted)).toEqual([true, true]);
+        expect(runner).toHaveBeenCalledTimes(2);
+        // Restore an open store for the outer cleanup.
+        jobs = new SimulationJobs(':memory:', runner);
+        await jobs.initialize();
+    });
+});
+
+it('defaults concurrency to two and rejects environment overrides above that limit', () => {
+    const previous = process.env.SIMULATION_MAX_CONCURRENT;
+    try {
+        delete process.env.SIMULATION_MAX_CONCURRENT;
+        expect(jobOptionsFromEnv().maxConcurrent).toBe(2);
+        process.env.SIMULATION_MAX_CONCURRENT = '1';
+        expect(jobOptionsFromEnv().maxConcurrent).toBe(1);
+        for (const value of ['0', '3', '4', '1.5', 'invalid']) {
+            process.env.SIMULATION_MAX_CONCURRENT = value;
+            expect(() => jobOptionsFromEnv()).toThrow('Invalid SIMULATION_MAX_CONCURRENT');
+        }
+    } finally {
+        if (previous === undefined) delete process.env.SIMULATION_MAX_CONCURRENT;
+        else process.env.SIMULATION_MAX_CONCURRENT = previous;
     }
 });

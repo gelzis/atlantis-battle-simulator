@@ -95,3 +95,7 @@ are excluded. LF line endings are enforced by `.gitattributes`.
 
 Run `npm run prepare` to reinstall hooks in an existing checkout if necessary.
 Docker installs use `HUSKY=0 npm ci` because the build context has no Git metadata.
+
+The backend runs up to two simulations concurrently. Additional jobs wait in the
+bounded queue. Set `SIMULATION_MAX_CONCURRENT` to `1` to lower concurrency;
+values above `2` are rejected. Run only one backend instance per database.
