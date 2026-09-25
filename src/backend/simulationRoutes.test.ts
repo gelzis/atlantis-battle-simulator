@@ -12,10 +12,14 @@ let jobs: SimulationJobs;
 let base: string;
 const battle = {attackers: {units: [] as unknown[]}, defenders: {units: [] as unknown[]}};
 
-beforeEach(async() => {
-    jobs = new SimulationJobs(':memory:', (_battle, _count, signal) => new Promise((_resolve, reject) => {
-        signal.addEventListener('abort', () => reject(new EngineFailure('cancelled', 'Simulation cancelled.')));
-    }));
+beforeEach(async () => {
+    jobs = new SimulationJobs(
+        ':memory:',
+        (_battle, _count, signal) =>
+            new Promise((_resolve, reject) => {
+                signal.addEventListener('abort', () => reject(new EngineFailure('cancelled', 'Simulation cancelled.')));
+            }),
+    );
     await jobs.initialize();
     const app = express();
     app.use(express.json());
@@ -26,16 +30,20 @@ beforeEach(async() => {
     });
     base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
 });
-afterEach(async() => {
+afterEach(async () => {
     await jobs.close();
-    if (server?.listening) await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
+    if (server?.listening)
+        await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
 });
 
-const post = (route: string, body: unknown) => fetch(`${base}${route}`, {
-    method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body),
-});
+const post = (route: string, body: unknown) =>
+    fetch(`${base}${route}`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body),
+    });
 
-it('accepts a job immediately, reports status, and supports cancellation', async() => {
+it('accepts a job immediately, reports status, and supports cancellation', async () => {
     const id = randomUUID();
     const response = await post('/simulation-jobs', {requestId: id, battle, battleCount: 50});
     expect(response.status).toBe(202);
@@ -49,7 +57,7 @@ it('accepts a job immediately, reports status, and supports cancellation', async
     expect((await post('/simulation-jobs', {requestId: id, battle, battleCount: 50})).status).toBe(202);
 });
 
-it('rejects invalid requests and missing IDs', async() => {
+it('rejects invalid requests and missing IDs', async () => {
     expect((await post('/simulation-jobs', {requestId: randomUUID(), battle: {}})).status).toBe(400);
     expect((await post('/simulation-jobs', {requestId: '../bad', battle})).status).toBe(400);
     expect((await fetch(`${base}/simulation-jobs/bad`)).status).toBe(404);

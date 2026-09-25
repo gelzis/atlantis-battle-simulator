@@ -4,25 +4,25 @@ import {reducer} from './reducer';
 import {addUnit, resetState} from './actions/simulatorActions';
 
 export type UnitV1 = {
-    id: string
-    name: string
-    items: {id: string, abbr: string, name: string, amount: number}[]
-    skills: {id: string, abbr: string, name: string, level: number, combatSpell: boolean}[]
-    combatSpell: string
-    behind: boolean
+    id: string;
+    name: string;
+    items: {id: string; abbr: string; name: string; amount: number}[];
+    skills: {id: string; abbr: string; name: string; level: number; combatSpell: boolean}[];
+    combatSpell: string;
+    behind: boolean;
 };
 export type DraftV1 = {
-    attackers: UnitV1[]
-    defenders: UnitV1[]
-    editor: UnitV1
-    attackerStructure: string | null
-    defenderStructure: string | null
-    simulationCount: number
+    attackers: UnitV1[];
+    defenders: UnitV1[];
+    editor: UnitV1;
+    attackerStructure: string | null;
+    defenderStructure: string | null;
+    simulationCount: number;
 };
 export type BaselineV1 = {
-    setup: DraftV1
-    completedAt: string
-    result: {wins: number, draws: number, losses: number, winRate: number, attackerMean: number, defenderMean: number}
+    setup: DraftV1;
+    completedAt: string;
+    result: {wins: number; draws: number; losses: number; winRate: number; attackerMean: number; defenderMean: number};
 };
 export const STORAGE_KEYS = {draft: 'atlantis.draft', baseline: 'atlantis.baseline'};
 export type StoragePort = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
@@ -30,41 +30,80 @@ const object = (v: unknown): v is Record<string, unknown> => !!v && typeof v ===
 const number = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v) && v >= 0;
 const count = (v: unknown): v is number => number(v) && Number.isInteger(v);
 const string = (v: unknown): v is string => typeof v === 'string';
-const strings = (v: Record<string, unknown>, keys: string[]) => keys.every(key => string(v[key]));
-const uniqueIds = (values: {id: string}[]) => new Set(values.map(value => value.id)).size === values.length;
+const strings = (v: Record<string, unknown>, keys: string[]) => keys.every((key) => string(v[key]));
+const uniqueIds = (values: {id: string}[]) => new Set(values.map((value) => value.id)).size === values.length;
 const date = (v: unknown): v is string => string(v) && Number.isFinite(Date.parse(v));
 
-const isUnit = (v: unknown): v is UnitV1 => object(v) && strings(v, ['id', 'name', 'combatSpell']) &&
+const isUnit = (v: unknown): v is UnitV1 =>
+    object(v) &&
+    strings(v, ['id', 'name', 'combatSpell']) &&
     !['__proto__', 'constructor', 'prototype'].includes(String(v.id)) &&
-    typeof v.behind === 'boolean' && Array.isArray(v.items) && Array.isArray(v.skills) &&
-    v.items.every(item => object(item) && strings(item, ['id', 'abbr', 'name']) && count(item.amount)) &&
-    v.skills.every(skill => object(skill) && strings(skill, ['id', 'abbr', 'name']) && count(skill.level) &&
-        typeof skill.combatSpell === 'boolean') && uniqueIds(v.items) && uniqueIds(v.skills);
+    typeof v.behind === 'boolean' &&
+    Array.isArray(v.items) &&
+    Array.isArray(v.skills) &&
+    v.items.every((item) => object(item) && strings(item, ['id', 'abbr', 'name']) && count(item.amount)) &&
+    v.skills.every(
+        (skill) =>
+            object(skill) &&
+            strings(skill, ['id', 'abbr', 'name']) &&
+            count(skill.level) &&
+            typeof skill.combatSpell === 'boolean',
+    ) &&
+    uniqueIds(v.items) &&
+    uniqueIds(v.skills);
 
-export const isDraft = (v: unknown): v is DraftV1 => object(v) &&
-    Array.isArray(v.attackers) && v.attackers.every(isUnit) && Array.isArray(v.defenders) && v.defenders.every(isUnit) &&
-    [...v.attackers, ...v.defenders].every(unit => !!unit.id && !['__proto__', 'constructor', 'prototype'].includes(unit.id)) &&
-    uniqueIds([...v.attackers, ...v.defenders]) && isUnit(v.editor) &&
+export const isDraft = (v: unknown): v is DraftV1 =>
+    object(v) &&
+    Array.isArray(v.attackers) &&
+    v.attackers.every(isUnit) &&
+    Array.isArray(v.defenders) &&
+    v.defenders.every(isUnit) &&
+    [...v.attackers, ...v.defenders].every(
+        (unit) => !!unit.id && !['__proto__', 'constructor', 'prototype'].includes(unit.id),
+    ) &&
+    uniqueIds([...v.attackers, ...v.defenders]) &&
+    isUnit(v.editor) &&
     (v.attackerStructure === null || string(v.attackerStructure)) &&
-    (v.defenderStructure === null || string(v.defenderStructure)) && count(v.simulationCount) &&
-    v.simulationCount >= 1 && v.simulationCount <= 100;
+    (v.defenderStructure === null || string(v.defenderStructure)) &&
+    count(v.simulationCount) &&
+    v.simulationCount >= 1 &&
+    v.simulationCount <= 100;
 
 export const isBaseline = (v: unknown): v is BaselineV1 => {
     if (!object(v) || !isDraft(v.setup) || !date(v.completedAt) || !object(v.result)) return false;
     const result = v.result;
-    return ['wins', 'draws', 'losses'].every(key => count(result[key])) &&
-        ['winRate', 'attackerMean', 'defenderMean'].every(key => number(result[key])) &&
-        Number(result.winRate) <= 100 && Number(result.wins) + Number(result.draws) + Number(result.losses) > 0;
+    return (
+        ['wins', 'draws', 'losses'].every((key) => count(result[key])) &&
+        ['winRate', 'attackerMean', 'defenderMean'].every((key) => number(result[key])) &&
+        Number(result.winRate) <= 100 &&
+        Number(result.wins) + Number(result.draws) + Number(result.losses) > 0
+    );
 };
 
-export const captureDraft = (state: Pick<AppState, 'attackers' | 'defenders' | 'unit' | 'attackerStructure' | 'defenderStructure' | 'battleCount'>): DraftV1 => {
+export const captureDraft = (
+    state: Pick<
+        AppState,
+        'attackers' | 'defenders' | 'unit' | 'attackerStructure' | 'defenderStructure' | 'battleCount'
+    >,
+): DraftV1 => {
     const unit = (value: AppState['unit']): UnitV1 => ({
         id: value.id,
         name: value.name,
         combatSpell: value.combatSpell || '',
         behind: value.behind,
-        items: value.items.map(item => ({id: item.id, abbr: item.abbr || '', name: item.name || '', amount: item.amount})),
-        skills: value.skills.map(skill => ({id: skill.id, abbr: skill.abbr || '', name: skill.name || '', level: skill.level, combatSpell: !!skill.combatSpell})),
+        items: value.items.map((item) => ({
+            id: item.id,
+            abbr: item.abbr || '',
+            name: item.name || '',
+            amount: item.amount,
+        })),
+        skills: value.skills.map((skill) => ({
+            id: skill.id,
+            abbr: skill.abbr || '',
+            name: skill.name || '',
+            level: skill.level,
+            combatSpell: !!skill.combatSpell,
+        })),
     });
     return {
         attackers: Object.values(state.attackers).map(unit),
@@ -78,8 +117,12 @@ export const captureDraft = (state: Pick<AppState, 'attackers' | 'defenders' | '
 
 export const restoreDraft = (draft: DraftV1): AppState => {
     let state = reducer(undefined, resetState());
-    draft.attackers.forEach(unit => { state = reducer(state, addUnit('attackers', unit)); });
-    draft.defenders.forEach(unit => { state = reducer(state, addUnit('defenders', unit)); });
+    draft.attackers.forEach((unit) => {
+        state = reducer(state, addUnit('attackers', unit));
+    });
+    draft.defenders.forEach((unit) => {
+        state = reducer(state, addUnit('defenders', unit));
+    });
     return {
         ...state,
         unit: draft.editor,
@@ -117,7 +160,11 @@ export class StoredRecord<T> {
     value?: T;
     warning = '';
 
-    constructor(private storage: () => StoragePort, private key: string, private validate: (value: unknown) => value is T) {
+    constructor(
+        private storage: () => StoragePort,
+        private key: string,
+        private validate: (value: unknown) => value is T,
+    ) {
         try {
             this.previous = storage().getItem(key);
             if (this.previous !== null) this.value = decodeRecord(this.previous, validate);
@@ -142,7 +189,8 @@ export class StoredRecord<T> {
             this.warning = '';
             return true;
         } catch (error) {
-            this.warning = 'Could not save in this browser. Existing saved data is untouched. Check browser storage or reload if another tab changed it.';
+            this.warning =
+                'Could not save in this browser. Existing saved data is untouched. Check browser storage or reload if another tab changed it.';
             return false;
         }
     }
@@ -160,7 +208,8 @@ export class StoredRecord<T> {
             this.warning = '';
             return true;
         } catch (error) {
-            this.warning = 'Could not remove the saved baseline. It has been kept; check browser storage or reload if another tab changed it.';
+            this.warning =
+                'Could not remove the saved baseline. It has been kept; check browser storage or reload if another tab changed it.';
             return false;
         }
     }

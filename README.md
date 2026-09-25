@@ -4,9 +4,10 @@ This repository contains battle simulator UI written in TypeScript.
 
 ## How does it work?
 
-It uses modified version of the [Atlantis](https://github.com/Atlantis-PBEM/Atlantis) which is available 
+It uses modified version of the [Atlantis](https://github.com/Atlantis-PBEM/Atlantis) which is available
 [here](https://github.com/gelzis/Atlantis/tree/merge-master).
 Modified version includes two features that are used by this UI:
+
 - created `battle` cli command, that can read specificly structured JSON file and run the battle based on the file content, example of the json file [available here](https://atlantis.pekle.lv/example.json). example run `engine battle example.json`.
 - created `exportdata` command, which exports two json files with all available current games items and combat related skills. `engine exportdata`, this is used to keep available skills/items up to date when game changes are made.
 
@@ -22,7 +23,7 @@ To run locally:
 npm ci
 npm run dev
 npm run dev-server
-``` 
+```
 
 Type checking isn't setup automatically (for performance reasons) for checking typescripts types you need to run
 
@@ -70,3 +71,22 @@ docker stop atlantis-battle-simulator
 Rebuild the image and recreate the container after changing source code. The
 `.dockerignore` excludes host dependencies, generated bundles, and local SQLite
 files so the image uses its own Linux dependencies and clean build output.
+
+## Formatting and commit hooks
+
+`npm ci` installs a Husky pre-commit hook. Each commit runs Prettier on the staged
+files through lint-staged and automatically stages formatting changes. Unstaged
+edits are preserved, including edits in partially staged files. Formatting failures
+stop the commit.
+
+```bash
+npm run format
+npm run format:check
+```
+
+Prettier owns formatting; ESLint continues checking code quality. Generated files,
+engine data, SQLite files, the dependency lockfile, and frozen persistence fixtures
+are excluded. LF line endings are enforced by `.gitattributes`.
+
+Run `npm run prepare` to reinstall hooks in an existing checkout if necessary.
+Docker installs use `HUSKY=0 npm ci` because the build context has no Git metadata.

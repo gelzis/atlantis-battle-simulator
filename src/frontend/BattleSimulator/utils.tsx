@@ -6,12 +6,9 @@ import {createAppStore} from './store';
 import {theme} from '../StyledComponents';
 
 export function download(text: string, filename: string): void {
-    const blob = new Blob(
-        [text],
-        {
-            type: 'application/json',
-        },
-    );
+    const blob = new Blob([text], {
+        type: 'application/json',
+    });
 
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -24,7 +21,11 @@ export class WrapperForTests extends PureComponent<PropsWithChildren> {
     private readonly store = createAppStore();
 
     render() {
-        return <Provider store={this.store}><ThemeProvider theme={theme}>{this.props.children}</ThemeProvider></Provider>;
+        return (
+            <Provider store={this.store}>
+                <ThemeProvider theme={theme}>{this.props.children}</ThemeProvider>
+            </Provider>
+        );
     }
 }
 

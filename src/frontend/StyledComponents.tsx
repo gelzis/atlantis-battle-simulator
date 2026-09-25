@@ -5,7 +5,7 @@ declare module 'react' {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace JSX {
         interface IntrinsicAttributes {
-            css?: CSSProp
+            css?: CSSProp;
         }
     }
 }
@@ -32,23 +32,23 @@ export const theme = createTheme({
 });
 
 export const StyledAppBar = styled(AppBar)`
-  margin-bottom: ${theme.spacing(4)};
+    margin-bottom: ${theme.spacing(4)};
 `;
 
 export const StyledPaper = styled(Paper)`
-  padding: 10px;
-  margin-bottom: ${theme.spacing(2)};
-  position: relative;
+    padding: 10px;
+    margin-bottom: ${theme.spacing(2)};
+    position: relative;
 `;
 
 export const StyledPadlessPaper = styled(StyledPaper)`
-  padding: 0;
+    padding: 0;
 `;
 
 export const StyledHeading = styled(Typography)`
-  margin: ${theme.spacing(2)} 0;
+    margin: ${theme.spacing(2)} 0;
 `;
 
 export const StyledSideHeading = styled(Typography)`
-  margin-bottom: ${theme.spacing(1)};
+    margin-bottom: ${theme.spacing(1)};
 `;

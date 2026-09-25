@@ -19,9 +19,7 @@
             "amount": 1
           }
         ],
-        "flags": [
-          "behind"
-        ],
+        "flags": ["behind"],
         "combatSpell": "FIRE"
       }
     ]

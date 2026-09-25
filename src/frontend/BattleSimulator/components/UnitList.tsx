@@ -16,17 +16,29 @@ import {Unit} from '../types';
 import {theme} from '../../StyledComponents';
 
 type UnitItemProps = {
-    units: Unit[]
-    onEdit: (id: string) => void
-    onDelete: (id: string) => void
-    onDuplicate: (id: string) => void
-    onDuplicateUnitToOtherSide: (id: string) => void
-    onChangeLine: (id: string, behind: boolean) => void
+    units: Unit[];
+    onEdit: (id: string) => void;
+    onDelete: (id: string) => void;
+    onDuplicate: (id: string) => void;
+    onDuplicateUnitToOtherSide: (id: string) => void;
+    onChangeLine: (id: string, behind: boolean) => void;
 };
 
-export const UnitList: FC<UnitItemProps> = ({units, onDuplicate, onEdit, onDelete, onDuplicateUnitToOtherSide, onChangeLine}: UnitItemProps) => {
+export const UnitList: FC<UnitItemProps> = ({
+    units,
+    onDuplicate,
+    onEdit,
+    onDelete,
+    onDuplicateUnitToOtherSide,
+    onChangeLine,
+}: UnitItemProps) => {
     return (
-        <TableContainer css={`margin-top:  ${theme.spacing(1)}`} component={Paper}>
+        <TableContainer
+            css={`
+                margin-top: ${theme.spacing(1)};
+            `}
+            component={Paper}
+        >
             <Table size="small" aria-label="a dense table">
                 <TableHead>
                     <TableRow>
@@ -50,7 +62,11 @@ export const UnitList: FC<UnitItemProps> = ({units, onDuplicate, onEdit, onDelet
                             </TableCell>
                             <TableCell align="left">
                                 {unit.skills.map((skill) => {
-                                    return <div key={skill.id}>{`${skill.abbr} ${skill.level} ${skill.abbr === unit.combatSpell ? '(C)' : ''}`}</div>;
+                                    return (
+                                        <div
+                                            key={skill.id}
+                                        >{`${skill.abbr} ${skill.level} ${skill.abbr === unit.combatSpell ? '(C)' : ''}`}</div>
+                                    );
                                 })}
                             </TableCell>
                             <TableCell align="left">
@@ -60,7 +76,6 @@ export const UnitList: FC<UnitItemProps> = ({units, onDuplicate, onEdit, onDelet
                                     checked={unit.behind}
                                     onChange={(e, checked) => onChangeLine(unit.id, checked)}
                                 />
-
                             </TableCell>
                             <TableCell align="right">
                                 <Tooltip title="Edit">

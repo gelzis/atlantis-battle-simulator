@@ -20,23 +20,34 @@ jest.mock('../utils', () => {
 });
 
 it('allows to get json download of the units', () => {
-    render(<WrapperForTests><BattleSimulator/></WrapperForTests>);
+    render(
+        <WrapperForTests>
+            <BattleSimulator />
+        </WrapperForTests>,
+    );
 
     fireEvent.click(screen.getByTestId('add-to-attackers'));
     fireEvent.click(screen.getByTestId('add-to-defenders'));
     fireEvent.click(screen.getByTestId('download-json'));
 
     expect((download as Mock).mock.calls.length).toBe(1);
-    expect((download as Mock).mock.calls[0][0]).toBe('{"attackers":{"units":[{"name":"Unit","items":[{"tag":"LEAD","amount":1}]}]},"defenders":{"units":[{"name":"Unit","items":[{"tag":"LEAD","amount":1}]}]}}');
+    expect((download as Mock).mock.calls[0][0]).toBe(
+        '{"attackers":{"units":[{"name":"Unit","items":[{"tag":"LEAD","amount":1}]}]},"defenders":{"units":[{"name":"Unit","items":[{"tag":"LEAD","amount":1}]}]}}',
+    );
 });
 
-it('allows json upload of the units', async() => {
+it('allows json upload of the units', async () => {
     const user = userEvent.setup({
         applyAccept: false,
     });
-    render(<WrapperForTests><BattleSimulator/></WrapperForTests>);
+    render(
+        <WrapperForTests>
+            <BattleSimulator />
+        </WrapperForTests>,
+    );
 
-    const str = '{"attackers":{"units":[{"name":"hell yeah","items":[{"tag":"LEAD","amount":2}]}]},"defenders":{"units":[{"name":"Unit","items":[{"tag":"LEAD","amount":1}]}]}}';
+    const str =
+        '{"attackers":{"units":[{"name":"hell yeah","items":[{"tag":"LEAD","amount":2}]}]},"defenders":{"units":[{"name":"Unit","items":[{"tag":"LEAD","amount":1}]}]}}';
     const blob = new Blob([str]);
     const file = new File([blob], 'battle.json', {
         type: 'application/JSON',
@@ -48,13 +59,18 @@ it('allows json upload of the units', async() => {
     expect(JSON.parse((download as Mock).mock.calls[0][0])).toEqual(JSON.parse(str));
 });
 
-it('accepts legacy json upload format', async() => {
+it('accepts legacy json upload format', async () => {
     const user = userEvent.setup({
         applyAccept: false,
     });
-    render(<WrapperForTests><BattleSimulator/></WrapperForTests>);
+    render(
+        <WrapperForTests>
+            <BattleSimulator />
+        </WrapperForTests>,
+    );
 
-    const str = '{"attackers":{"units":[{"name":"hell yeah","skills":[],"items":[{"abbr":"LEAD","amount":2}]}]},"defenders":{"units":[{"name":"Unit","skills":[],"items":[{"abbr":"LEAD","amount":1}]}]}}';
+    const str =
+        '{"attackers":{"units":[{"name":"hell yeah","skills":[],"items":[{"abbr":"LEAD","amount":2}]}]},"defenders":{"units":[{"name":"Unit","skills":[],"items":[{"abbr":"LEAD","amount":1}]}]}}';
     const blob = new Blob([str]);
     const file = new File([blob], 'battle.json', {
         type: 'application/JSON',
@@ -69,16 +85,20 @@ it('accepts legacy json upload format', async() => {
     });
 });
 
-it('confirms when a share link is copied', async() => {
+it('confirms when a share link is copied', async () => {
     const originalFetch = global.fetch;
     const writeText = jest.fn().mockResolvedValue(undefined);
     global.fetch = jest.fn().mockResolvedValue({
         ok: true,
-        json: async() => ({url: '/b/abc'}),
+        json: async () => ({url: '/b/abc'}),
     } as Response);
     Object.defineProperty(navigator, 'clipboard', {configurable: true, value: {writeText}});
 
-    render(<WrapperForTests><BattleSimulator/></WrapperForTests>);
+    render(
+        <WrapperForTests>
+            <BattleSimulator />
+        </WrapperForTests>,
+    );
     fireEvent.click(screen.getByTestId('save-and-share'));
 
     await waitFor(() => expect(screen.getByText('Battle saved. Share link copied!')).toBeTruthy());

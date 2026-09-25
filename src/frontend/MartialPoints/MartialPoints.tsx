@@ -32,9 +32,7 @@ const DropArea = styled.div<{$active: boolean}>`
     display: flex;
     position: relative;
     padding: 10px;
-    cursor: ${(props): string => (
-        props.$active ? 'pointer' : 'default'
-    )};
+    cursor: ${(props): string => (props.$active ? 'pointer' : 'default')};
 `;
 
 export function MartialPoints() {
@@ -56,12 +54,21 @@ export function MartialPoints() {
     const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop, multiple: false, disabled: !!regions});
 
     return (
-        <Container >
+        <Container>
             <Main>
                 <DropArea $active={!regions} {...getRootProps()}>
                     <input {...getInputProps()} />
-                    {!regions && <> { isDragActive ? <p>Drop orders here ...</p> : <p>Drag 'n' drop orders here, or click to browse</p>}</>}
-                    {regions && <Report martialPointData={regions} onReset={onReset}/>}
+                    {!regions && (
+                        <>
+                            {' '}
+                            {isDragActive ? (
+                                <p>Drop orders here ...</p>
+                            ) : (
+                                <p>Drag 'n' drop orders here, or click to browse</p>
+                            )}
+                        </>
+                    )}
+                    {regions && <Report martialPointData={regions} onReset={onReset} />}
                 </DropArea>
             </Main>
         </Container>

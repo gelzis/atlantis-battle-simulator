@@ -1,16 +1,19 @@
 type MartialHex = {
-    coords: string
-    produce: boolean
-    tax: boolean
-}
+    coords: string;
+    produce: boolean;
+    tax: boolean;
+};
 
 export type MartialPointData = {
-    count: number
-    regions: MartialHex[]
-}
+    count: number;
+    regions: MartialHex[];
+};
 
 export function getMartialPointsFromOrders(orders: string): MartialPointData {
-    const lines = orders.split(/\r?\n/).filter(el => el).map(el => el.toLowerCase().trim());
+    const lines = orders
+        .split(/\r?\n/)
+        .filter((el) => el)
+        .map((el) => el.toLowerCase().trim());
 
     let currentRegion = '';
     const regions = {} as Record<string, MartialHex>;

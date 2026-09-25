@@ -10,7 +10,7 @@ if (!container) throw new Error('Missing app container');
 
 createRoot(container).render(
     <ThemeProvider theme={theme}>
-        <GlobalStyle/>
-        <MartialPoints/>
+        <GlobalStyle />
+        <MartialPoints />
     </ThemeProvider>,
 );

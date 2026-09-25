@@ -114,7 +114,7 @@ export const Header: FC = () => {
         download(JSON.stringify(exportJson), 'battle.json');
     }, [attackers, defenders, defenderStructure, attackerStructure]);
 
-    const saveAndShare = useCallback(async(): Promise<void> => {
+    const saveAndShare = useCallback(async (): Promise<void> => {
         const battle = convertCurrentStateToJson({
             attackers,
             defenders,
@@ -146,9 +146,9 @@ export const Header: FC = () => {
                     copied = false;
                 }
             }
-            setShareConfirmation(copied
-                ? 'Battle saved. Share link copied!'
-                : 'Battle saved. Copy the share link from the address bar.');
+            setShareConfirmation(
+                copied ? 'Battle saved. Share link copied!' : 'Battle saved. Copy the share link from the address bar.',
+            );
         } catch (error) {
             dispatch(setError(true, 'Failed to save the battle.'));
         } finally {
@@ -156,63 +156,95 @@ export const Header: FC = () => {
         }
     }, [attackers, defenders, defenderStructure, attackerStructure, dispatch]);
 
-    const uploadJson = useCallback((event: ChangeEvent<HTMLInputElement>): void => {
-        if (!event.target.files.length) {
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.readAsText(event.target.files[0]);
-        reader.onload = (e): void => {
-            let parsed: ExportJson | LegacyExportJson;
-            try {
-                parsed = JSON.parse(String(e.target.result));
-            } catch (e) {
-                console.log('failed parsing', e);
-                dispatch(setError(true, 'Failed to parse the json, check json formatting!'));
+    const uploadJson = useCallback(
+        (event: ChangeEvent<HTMLInputElement>): void => {
+            if (!event.target.files.length) {
                 return;
             }
 
-            if (!parsed || typeof parsed !== 'object' || !parsed.attackers || !parsed.defenders) {
-                dispatch(setError(true, 'Invalid json format, missing attackers or defenders!'));
-                return;
-            }
+            const reader = new FileReader();
+            reader.readAsText(event.target.files[0]);
+            reader.onload = (e): void => {
+                let parsed: ExportJson | LegacyExportJson;
+                try {
+                    parsed = JSON.parse(String(e.target.result));
+                } catch (e) {
+                    console.log('failed parsing', e);
+                    dispatch(setError(true, 'Failed to parse the json, check json formatting!'));
+                    return;
+                }
 
-            const normalized: ExportJson = isLegacyExportJson(parsed)
-                ? normalizeLegacy(parsed as LegacyExportJson)
-                : (parsed as ExportJson);
+                if (!parsed || typeof parsed !== 'object' || !parsed.attackers || !parsed.defenders) {
+                    dispatch(setError(true, 'Invalid json format, missing attackers or defenders!'));
+                    return;
+                }
 
-            if (!validateExportJson(normalized)) {
-                dispatch(setError(true, 'Invalid json format, each side must define units or structures!'));
-                return;
-            }
+                const normalized: ExportJson = isLegacyExportJson(parsed)
+                    ? normalizeLegacy(parsed as LegacyExportJson)
+                    : (parsed as ExportJson);
 
-            loadBattleIntoStore(normalized, dispatch);
-        };
-    }, [dispatch]);
+                if (!validateExportJson(normalized)) {
+                    dispatch(setError(true, 'Invalid json format, each side must define units or structures!'));
+                    return;
+                }
+
+                loadBattleIntoStore(normalized, dispatch);
+            };
+        },
+        [dispatch],
+    );
 
     return (
         <>
             <StyledAppBar position="static">
                 <Toolbar sx={{gap: 2, flexWrap: 'wrap', py: 1}}>
                     <Box sx={{minWidth: 0}}>
-                        <Typography variant="h6">
-                            Atlantis Battle simulator
-                        </Typography>
-                        <DraftStatus/>
+                        <Typography variant="h6">Atlantis Battle simulator</Typography>
+                        <DraftStatus />
                     </Box>
-                    <Box sx={{display: 'flex', alignItems: 'center', gap: 1, ml: 'auto', flexShrink: 0, '& .MuiIconButton-root': {width: 44, height: 44}}}>
-                        <input onChange={uploadJson} accept="application/JSON" style={{display: 'none'}} data-testid="json-upload-input" id="icon-button-file" type="file" />
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1,
+                            ml: 'auto',
+                            flexShrink: 0,
+                            '& .MuiIconButton-root': {width: 44, height: 44},
+                        }}
+                    >
+                        <input
+                            onChange={uploadJson}
+                            accept="application/JSON"
+                            style={{display: 'none'}}
+                            data-testid="json-upload-input"
+                            id="icon-button-file"
+                            type="file"
+                        />
                         <label htmlFor="icon-button-file">
                             <IconButton color="inherit" component="span" aria-label="Upload battle as a JSON file">
-                                <Tooltip title="Upload battle as a JSON file"><CloudUploadIcon /></Tooltip>
+                                <Tooltip title="Upload battle as a JSON file">
+                                    <CloudUploadIcon />
+                                </Tooltip>
                             </IconButton>
                         </label>
-                        <IconButton color="inherit" onClick={downloadAsJson} aria-label="Download battle as a JSON file">
-                            <Tooltip title="Download battle as a JSON file"><CloudDownloadIcon data-testid="download-json"/></Tooltip>
+                        <IconButton
+                            color="inherit"
+                            onClick={downloadAsJson}
+                            aria-label="Download battle as a JSON file"
+                        >
+                            <Tooltip title="Download battle as a JSON file">
+                                <CloudDownloadIcon data-testid="download-json" />
+                            </Tooltip>
                         </IconButton>
-                        <IconButton color="inherit" disabled={saving} onClick={saveAndShare} aria-label="Save battle and copy share link">
-                            <Tooltip title="Save battle and copy share link"><ShareIcon data-testid="save-and-share"/></Tooltip>
+                        <IconButton
+                            color="inherit"
+                            disabled={saving}
+                            onClick={saveAndShare}
+                            aria-label="Save battle and copy share link"
+                        >
+                            <Tooltip title="Save battle and copy share link">
+                                <ShareIcon data-testid="save-and-share" />
+                            </Tooltip>
                         </IconButton>
                     </Box>
                 </Toolbar>
@@ -223,7 +255,12 @@ export const Header: FC = () => {
                 autoHideDuration={4000}
                 onClose={(): void => setShareConfirmation(undefined)}
             >
-                <MuiAlert elevation={6} variant="filled" severity="success" onClose={(): void => setShareConfirmation(undefined)}>
+                <MuiAlert
+                    elevation={6}
+                    variant="filled"
+                    severity="success"
+                    onClose={(): void => setShareConfirmation(undefined)}
+                >
                     {shareConfirmation}
                 </MuiAlert>
             </Snackbar>

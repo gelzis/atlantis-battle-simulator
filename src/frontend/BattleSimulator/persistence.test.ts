@@ -40,10 +40,16 @@ it('loads the frozen V1 baseline contract independently of the draft', () => {
 it.each([
     'broken json',
     JSON.stringify({...draftFixture, schemaVersion: 999}),
-    JSON.stringify({...draftFixture, data: {...draftFixture.data, editor: {...draftFixture.data.editor, id: '__proto__'}}}),
+    JSON.stringify({
+        ...draftFixture,
+        data: {...draftFixture.data, editor: {...draftFixture.data.editor, id: '__proto__'}},
+    }),
     JSON.stringify({...draftFixture, data: {...draftFixture.data, simulationCount: '50'}}),
-    JSON.stringify({...draftFixture, data: {...draftFixture.data, attackers: [draftFixture.data.attackers[0], draftFixture.data.attackers[0]]}}),
-])('preserves unreadable data and refuses to overwrite it', raw => {
+    JSON.stringify({
+        ...draftFixture,
+        data: {...draftFixture.data, attackers: [draftFixture.data.attackers[0], draftFixture.data.attackers[0]]},
+    }),
+])('preserves unreadable data and refuses to overwrite it', (raw) => {
     localStorage.setItem(STORAGE_KEYS.draft, raw);
     const record = new StoredRecord(() => localStorage, STORAGE_KEYS.draft, isDraft);
     expect(record.value).toBeUndefined();
@@ -53,9 +59,21 @@ it.each([
 });
 
 it('survives unavailable storage and quota errors', () => {
-    const denied = new StoredRecord(() => { throw new Error('Denied'); }, STORAGE_KEYS.draft, isDraft);
+    const denied = new StoredRecord(
+        () => {
+            throw new Error('Denied');
+        },
+        STORAGE_KEYS.draft,
+        isDraft,
+    );
     expect(denied.save(draftFixture.data)).toBe(false);
-    const storage = {getItem: (): string | null => null, removeItem: jest.fn(), setItem: () => { throw new Error('Quota'); }};
+    const storage = {
+        getItem: (): string | null => null,
+        removeItem: jest.fn(),
+        setItem: () => {
+            throw new Error('Quota');
+        },
+    };
     const full = new StoredRecord(() => storage, STORAGE_KEYS.draft, isDraft);
     expect(full.save(draftFixture.data)).toBe(false);
     expect(full.warning).not.toBe('');

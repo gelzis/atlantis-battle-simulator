@@ -6,22 +6,22 @@ import styled from 'styled-components';
 import {SideStats as SideStatsType} from '../types';
 
 type SideStatsProps = {
-    stats: SideStatsType
-}
+    stats: SideStatsType;
+};
 
 export const Formation = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: ${theme.spacing(2)};
-  margin-bottom: ${theme.spacing(2)};
+    display: flex;
+    flex-wrap: wrap;
+    gap: ${theme.spacing(2)};
+    margin-bottom: ${theme.spacing(2)};
 `;
 
 export const FormationItem = styled.div`
-  display: flex;
-  align-items: baseline;
-  gap: ${theme.spacing(0.75)};
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
+    display: flex;
+    align-items: baseline;
+    gap: ${theme.spacing(0.75)};
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
 `;
 
 export function SideStats({stats}: SideStatsProps) {

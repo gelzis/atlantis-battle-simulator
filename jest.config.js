@@ -4,9 +4,7 @@ module.exports = {
     transform: {
         '^.+\\.(ts|tsx|js|jsx)$': 'babel-jest',
     },
-    transformIgnorePatterns: [
-        '/node_modules/(?!(uuid)/)',
-    ],
+    transformIgnorePatterns: ['/node_modules/(?!(uuid)/)'],
     modulePathIgnorePatterns: ['<rootDir>/dist/'],
     testPathIgnorePatterns: ['<rootDir>/dist/'],
 };

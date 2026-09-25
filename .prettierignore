@@ -1,0 +1,9 @@
+node_modules/
+**/dist/
+data/
+**/*.sqlite
+**/*.sqlite-*
+src/engine/
+src/**/__fixtures__/
+package-lock.json
+.husky/_/

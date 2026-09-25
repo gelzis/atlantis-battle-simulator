@@ -8,7 +8,11 @@
     "dev-server": "ts-node-dev ./src/backend/app.ts",
     "dev-types": "tsc",
     "build": "webpack --mode production && tsc",
-    "test": "jest"
+    "test": "jest",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "format:staged": "lint-staged",
+    "prepare": "husky"
   },
   "author": "Raivis Gelsbergs",
   "license": "MIT",
@@ -76,6 +80,13 @@
     "webpack-manifest-plugin": "3.1.1"
   },
   "devDependencies": {
-    "jest-styled-components": "7.4.0"
+    "eslint-config-prettier": "10.1.8",
+    "husky": "9.1.7",
+    "jest-styled-components": "7.4.0",
+    "lint-staged": "16.2.7",
+    "prettier": "3.9.9"
+  },
+  "lint-staged": {
+    "*": "prettier --write --ignore-unknown"
   }
 }

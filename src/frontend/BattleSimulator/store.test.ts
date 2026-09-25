@@ -1,6 +1,22 @@
 import {createAppStore} from './store';
-import {addItem, changeItemAbbr, changeItemAmount, changeSkillAbbr, resetForm, saveUnit, setUnitsName} from './actions/formActions';
-import {deleteUnit, duplicateUnit, duplicateUnitToTheOtherSide, editUnit, resetSide, resetState, setLine} from './actions/simulatorActions';
+import {
+    addItem,
+    changeItemAbbr,
+    changeItemAmount,
+    changeSkillAbbr,
+    resetForm,
+    saveUnit,
+    setUnitsName,
+} from './actions/formActions';
+import {
+    deleteUnit,
+    duplicateUnit,
+    duplicateUnitToTheOtherSide,
+    editUnit,
+    resetSide,
+    resetState,
+    setLine,
+} from './actions/simulatorActions';
 import {Side} from './types';
 
 it('keeps independent stores and preserves unit editing and reset behavior', () => {
@@ -19,7 +35,7 @@ it('keeps independent stores and preserves unit editing and reset behavior', () 
     expect(Object.keys(first.getState().attackers)).toHaveLength(0);
 });
 
-describe.each<Side>(['attackers', 'defenders'])('%s army editing', side => {
+describe.each<Side>(['attackers', 'defenders'])('%s army editing', (side) => {
     it('keeps edits isolated until save, and cancels without changing the army', () => {
         const store = createAppStore();
         store.dispatch(saveUnit(side));
@@ -46,7 +62,7 @@ describe.each<Side>(['attackers', 'defenders'])('%s army editing', side => {
         const original = Object.values(store.getState()[side])[0];
         store.dispatch(duplicateUnit(original.id));
         store.dispatch(duplicateUnitToTheOtherSide(original.id));
-        const copy = Object.values(store.getState()[side]).find(unit => unit.id !== original.id);
+        const copy = Object.values(store.getState()[side]).find((unit) => unit.id !== original.id);
         const opposite = Object.values(store.getState()[other])[0];
         expect(new Set([original.id, copy.id, opposite.id]).size).toBe(3);
 
@@ -67,7 +83,7 @@ describe.each<Side>(['attackers', 'defenders'])('%s army editing', side => {
         store.dispatch(changeItemAmount(equipmentId, 100));
         store.dispatch(saveUnit(side));
         const id = Object.keys(store.getState()[side])[0];
-        const stats = () => side === 'attackers' ? store.getState().attackerStats : store.getState().defenderStats;
+        const stats = () => (side === 'attackers' ? store.getState().attackerStats : store.getState().defenderStats);
         expect(stats()).toEqual({front: 4, back: 0, total: 4});
         store.dispatch(setLine(id, true));
         expect(stats()).toEqual({front: 0, back: 4, total: 4});

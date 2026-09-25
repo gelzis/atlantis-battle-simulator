@@ -13,34 +13,44 @@ const jobs = new SimulationJobs(databasePath, undefined, jobOptionsFromEnv());
 
 app.use(bodyParser.json());
 
-app.use('/dist/main.js', express.static(path.join(__dirname, '../../src/public/dist/main.js'), {
-    cacheControl: false,
-    etag: false,
-    setHeaders: (res) => {
-        res.setHeader('Cache-Control', 'no-store');
-    },
-}));
-app.use('/dist/martial_points.js', express.static(path.join(__dirname, '../../src/public/dist/martial_points.js'), {
-    cacheControl: false,
-    etag: false,
-    setHeaders: (res) => {
-        res.setHeader('Cache-Control', 'no-store');
-    },
-}));
+app.use(
+    '/dist/main.js',
+    express.static(path.join(__dirname, '../../src/public/dist/main.js'), {
+        cacheControl: false,
+        etag: false,
+        setHeaders: (res) => {
+            res.setHeader('Cache-Control', 'no-store');
+        },
+    }),
+);
+app.use(
+    '/dist/martial_points.js',
+    express.static(path.join(__dirname, '../../src/public/dist/martial_points.js'), {
+        cacheControl: false,
+        etag: false,
+        setHeaders: (res) => {
+            res.setHeader('Cache-Control', 'no-store');
+        },
+    }),
+);
 app.use('/', express.static(path.join(__dirname, '../../src/public')));
 
-app.get('/martial-points', async(req, res) => {
+app.get('/martial-points', async (req, res) => {
     res.sendFile(path.join(__dirname, '../../src/public/martial_points.html'));
 });
 
-const isBattle = (battle: unknown): battle is {attackers: unknown, defenders: unknown} => {
+const isBattle = (battle: unknown): battle is {attackers: unknown; defenders: unknown} => {
     if (!battle || typeof battle !== 'object') return false;
-    const value = battle as {attackers?: unknown, defenders?: unknown};
-    return !!value.attackers && typeof value.attackers === 'object' &&
-        !!value.defenders && typeof value.defenders === 'object';
+    const value = battle as {attackers?: unknown; defenders?: unknown};
+    return (
+        !!value.attackers &&
+        typeof value.attackers === 'object' &&
+        !!value.defenders &&
+        typeof value.defenders === 'object'
+    );
 };
 
-app.post('/saved-battles', async(req, res) => {
+app.post('/saved-battles', async (req, res) => {
     if (!isBattle(req.body.battle)) return res.sendStatus(400);
 
     try {
@@ -52,7 +62,7 @@ app.post('/saved-battles', async(req, res) => {
     }
 });
 
-app.get('/saved-battles/:id', async(req, res) => {
+app.get('/saved-battles/:id', async (req, res) => {
     if (!/^[a-f0-9]{64}$/.test(req.params.id)) return res.sendStatus(404);
 
     try {
@@ -72,22 +82,29 @@ app.get('/b/:id', (req, res) => {
 });
 
 // Start accepting requests only after the database schema is ready.
-Promise.all([battleStore.initialize(), jobs.initialize()]).then(() => {
-    const server = app.listen(port, () => {
-        console.log(`server started on port ${port}`);
+Promise.all([battleStore.initialize(), jobs.initialize()])
+    .then(() => {
+        const server = app.listen(port, () => {
+            console.log(`server started on port ${port}`);
+        });
+        let stopping = false;
+        const shutdown = async () => {
+            if (stopping) return;
+            stopping = true;
+            server.close();
+            await jobs.close();
+            await battleStore.close();
+        };
+        ['SIGTERM', 'SIGINT'].forEach((signal) =>
+            process.on(signal, () => {
+                shutdown().catch((error) => {
+                    console.error(error);
+                    process.exitCode = 1;
+                });
+            }),
+        );
+    })
+    .catch((error) => {
+        console.error('Failed to initialize battle database', error);
+        process.exit(1);
     });
-    let stopping = false;
-    const shutdown = async() => {
-        if (stopping) return;
-        stopping = true;
-        server.close();
-        await jobs.close();
-        await battleStore.close();
-    };
-    ['SIGTERM', 'SIGINT'].forEach(signal => process.on(signal, () => {
-        shutdown().catch(error => { console.error(error); process.exitCode = 1; });
-    }));
-}).catch((error) => {
-    console.error('Failed to initialize battle database', error);
-    process.exit(1);
-});

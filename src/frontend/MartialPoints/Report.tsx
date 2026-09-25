@@ -19,17 +19,25 @@ const ResetLink = styled.a`
     color: #000000;
 `;
 
-export function Report({martialPointData, onReset}: {martialPointData: MartialPointData, onReset: () => void}) {
-    const onResetHandler = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
-        e.preventDefault();
+export function Report({martialPointData, onReset}: {martialPointData: MartialPointData; onReset: () => void}) {
+    const onResetHandler = useCallback(
+        (e: React.MouseEvent<HTMLAnchorElement>) => {
+            e.preventDefault();
 
-        onReset();
-    }, [onReset]);
+            onReset();
+        },
+        [onReset],
+    );
 
     return (
         <div>
             <h3>{`Region count: ${martialPointData.count}`}</h3>
-            <TableContainer css={`margin-top:  ${theme.spacing(1)}`} component={Paper}>
+            <TableContainer
+                css={`
+                    margin-top: ${theme.spacing(1)};
+                `}
+                component={Paper}
+            >
                 <Table size="small" aria-label="a dense table">
                     <TableHead>
                         <TableRow>
@@ -41,22 +49,18 @@ export function Report({martialPointData, onReset}: {martialPointData: MartialPo
                     <TableBody>
                         {martialPointData.regions.map((hex) => (
                             <TableRow key={hex.coords}>
-                                <TableCell align="left">
-                                    {hex.coords}
-                                </TableCell>
-                                <TableCell align="left">
-                                    {hex.tax ? 'yes' : 'no'}
-                                </TableCell>
-                                <TableCell align="left">
-                                    {hex.produce ? 'yes' : 'no'}
-                                </TableCell>
+                                <TableCell align="left">{hex.coords}</TableCell>
+                                <TableCell align="left">{hex.tax ? 'yes' : 'no'}</TableCell>
+                                <TableCell align="left">{hex.produce ? 'yes' : 'no'}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
 
-            <ResetLink href="" onClick={onResetHandler}><ArrowBackIcon/></ResetLink>
+            <ResetLink href="" onClick={onResetHandler}>
+                <ArrowBackIcon />
+            </ResetLink>
         </div>
     );
 }

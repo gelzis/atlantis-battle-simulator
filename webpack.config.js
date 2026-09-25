@@ -33,7 +33,7 @@ module.exports = {
         new CleanWebpackPlugin(),
         {
             apply: (compiler) => {
-                compiler.hooks.emit.tap('file-reference-plugin', compilation => {
+                compiler.hooks.emit.tap('file-reference-plugin', (compilation) => {
                     const stats = compilation.getStats().toJson();
                     if (!fs.existsSync('src/public/dist/')) {
                         fs.mkdirSync('src/public/dist/');

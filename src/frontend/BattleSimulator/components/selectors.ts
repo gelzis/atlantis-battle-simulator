@@ -9,6 +9,9 @@ export const selectAttackersWithStructures = createSelector(
         (state: RootState) => state.defenderStructure,
     ],
     (attackers, defenders, attackerStructure, defenderStructure) => ({
-        attackers, defenders, attackerStructure, defenderStructure,
+        attackers,
+        defenders,
+        attackerStructure,
+        defenderStructure,
     }),
 );

@@ -5,6 +5,7 @@
 This repository contains an Atlantis PBEM battle simulator and a separate martial-points activity checker. Keep this guide synchronized with changes to user flows, routes, storage contracts, and development commands.
 
 - Preserve battle JSON compatibility, including legacy imports. Internal TypeScript or Redux refactors must not silently change persisted/exported formats.
+- Prettier owns formatting; ESLint checks code quality with `eslint-config-prettier` disabling conflicting style rules. `npm ci` installs the Husky pre-commit hook, which runs lint-staged to format supported staged files and re-stage the formatting while preserving unstaged changes. Do not bypass the hook for routine commits.
 - All direct dependency versions in `package.json` are exact. Update `package-lock.json` alongside package changes; use `npm ci` for reproducible installs.
 - Prefer behavior tests using real isolated stores. Test request failures, import/export preservation, and storage compatibility; avoid large generated UI snapshots.
 - Maintain compact field sizes, consistent gaps, responsive layouts, accessible action names, and readable label/value separation. MUI Typography can render inline spans through the shared theme; layout must be explicit.
@@ -34,11 +35,14 @@ For development, run `npm run dev` (Webpack watch) and `npm run dev-server` (Exp
 Validation commands:
 
 ```bash
+npm run format:check
 npm run lint
 npm test -- --runInBand
 npx tsc --noEmit
 npm run build
 ```
+
+`npm run format` formats supported source, configuration, and documentation files; `npm run format:check` checks them without modifying files. `.prettierignore` excludes generated bundles, engine exports/binary, SQLite data, dependency lockfiles, and frozen storage fixtures. `.gitattributes` enforces LF line endings across platforms. Husky is skipped in Docker with `HUSKY=0 npm ci`; if hooks are disabled in a local checkout, run `npm run prepare` to install them again.
 
 The production process is `node dist/backend/app.js`. `PORT` defaults to `4020`; `BATTLE_DATABASE_PATH` defaults to `data/battles.sqlite`. Startup waits for both battle and simulation-job database initialization before listening. The engine runner creates isolated temporary request directories under the OS temporary directory and removes them after process exit.
 

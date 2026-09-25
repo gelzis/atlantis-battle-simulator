@@ -4,9 +4,9 @@ import path from 'path';
 import sqlite3 from 'sqlite3';
 
 export type StoredBattle = {
-    id: string
-    battle: unknown
-}
+    id: string;
+    battle: unknown;
+};
 
 const canonicalize = (value: unknown): string => {
     if (value === null || typeof value !== 'object') {
@@ -18,7 +18,10 @@ const canonicalize = (value: unknown): string => {
     }
 
     const object = value as {[key: string]: unknown};
-    return `{${Object.keys(object).sort().map((key) => `${JSON.stringify(key)}:${canonicalize(object[key])}`).join(',')}}`;
+    return `{${Object.keys(object)
+        .sort()
+        .map((key) => `${JSON.stringify(key)}:${canonicalize(object[key])}`)
+        .join(',')}}`;
 };
 
 export class BattleStore {
@@ -51,7 +54,7 @@ export class BattleStore {
             this.database.get(
                 'SELECT id, battle_json FROM battles WHERE id = ?',
                 [id],
-                (error: Error | null, row?: {id: string, battle_json: string}) => {
+                (error: Error | null, row?: {id: string; battle_json: string}) => {
                     if (error) return reject(error);
                     resolve(row ? {id: row.id, battle: JSON.parse(row.battle_json)} : undefined);
                 },
@@ -61,13 +64,13 @@ export class BattleStore {
 
     close(): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.database.close((error) => error ? reject(error) : resolve());
+            this.database.close((error) => (error ? reject(error) : resolve()));
         });
     }
 
     private run(sql: string, params: unknown[] = []): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.database.run(sql, params, (error) => error ? reject(error) : resolve());
+            this.database.run(sql, params, (error) => (error ? reject(error) : resolve()));
         });
     }
 }

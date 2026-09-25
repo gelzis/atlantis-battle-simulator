@@ -1,11 +1,9 @@
 import {AppState, ExportJson, ExportSide, ExportUnit, Unit} from '../types';
 
-type ConvertCurrentStateToJsonParams = Pick<AppState,
-    'attackers' |
-    'defenders' |
-    'attackerStructure' |
-    'defenderStructure'
->
+type ConvertCurrentStateToJsonParams = Pick<
+    AppState,
+    'attackers' | 'defenders' | 'attackerStructure' | 'defenderStructure'
+>;
 
 const buildExportUnit = (unit: Unit): ExportUnit => {
     const exportUnit: ExportUnit = {
@@ -41,10 +39,12 @@ const buildSide = (units: Unit[], structureType: string): ExportSide => {
 
     if (structureType) {
         return {
-            structures: [{
-                type: structureType,
-                units: exportUnits,
-            }],
+            structures: [
+                {
+                    type: structureType,
+                    units: exportUnits,
+                },
+            ],
         };
     }
 
@@ -53,7 +53,12 @@ const buildSide = (units: Unit[], structureType: string): ExportSide => {
     };
 };
 
-export const convertCurrentStateToJson = ({attackers, defenders, defenderStructure, attackerStructure}: ConvertCurrentStateToJsonParams): ExportJson => {
+export const convertCurrentStateToJson = ({
+    attackers,
+    defenders,
+    defenderStructure,
+    attackerStructure,
+}: ConvertCurrentStateToJsonParams): ExportJson => {
     const attackerUnits = Object.keys(attackers).map((id) => attackers[id]);
     const defenderUnits = Object.keys(defenders).map((id) => defenders[id]);
 

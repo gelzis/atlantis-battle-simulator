@@ -4,9 +4,20 @@ import {v4 as uuidv4} from 'uuid';
 import {addUnit, resetState, setAttackersStructure, setDefendersStructure} from './actions/simulatorActions';
 import {defaultUnit} from './reducer';
 import {getItemByAbbr, getSkillByAbbr} from './resources';
-import {ExportItem, ExportJson, ExportSide, ExportSkill, ExportStructure, ExportUnit, Item, Side, Skill, Unit} from './types';
+import {
+    ExportItem,
+    ExportJson,
+    ExportSide,
+    ExportSkill,
+    ExportStructure,
+    ExportUnit,
+    Item,
+    Side,
+    Skill,
+    Unit,
+} from './types';
 
-export const collectSideUnits = (side: ExportSide): {units: ExportUnit[], structureType?: string} => {
+export const collectSideUnits = (side: ExportSide): {units: ExportUnit[]; structureType?: string} => {
     const units: ExportUnit[] = [];
     let structureType: string | undefined;
 

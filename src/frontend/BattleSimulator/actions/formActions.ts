@@ -15,8 +15,12 @@ import {
     ResetForm,
     SAVE_UNIT,
     SaveUnit,
-    SET_BEHIND, SET_COMBAT_SPELL, SET_UNITS_NAME,
-    SetBehind, SetCombatSpell, SetUnitsName,
+    SET_BEHIND,
+    SET_COMBAT_SPELL,
+    SET_UNITS_NAME,
+    SetBehind,
+    SetCombatSpell,
+    SetUnitsName,
     Side,
 } from '../types';
 

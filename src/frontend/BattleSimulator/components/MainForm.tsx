@@ -24,10 +24,7 @@ import SaveIcon from '@mui/icons-material/Save';
 
 import {StyledHeading, StyledPaper, theme} from '../../StyledComponents';
 import {ItemListSorted, SkillListSorted} from '../resources';
-import {
-    AppState,
-    Unit,
-} from '../types';
+import {AppState, Unit} from '../types';
 import {
     addItem,
     addSkill,
@@ -43,61 +40,61 @@ import {
 } from '../actions/formActions';
 
 const ButtonGroup = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: ${theme.spacing(1)};
+    display: flex;
+    flex-wrap: wrap;
+    gap: ${theme.spacing(1)};
 `;
 
 const FormPaper = styled(StyledPaper)`
-  display: flex;
-  flex-direction: column;
-  gap: ${theme.spacing(3)};
+    display: flex;
+    flex-direction: column;
+    gap: ${theme.spacing(3)};
 `;
 
 const FormSection = styled.section`
-  display: flex;
-  flex-direction: column;
-  gap: ${theme.spacing(2)};
+    display: flex;
+    flex-direction: column;
+    gap: ${theme.spacing(2)};
 `;
 
 const SliderContainer = styled.div`
-  box-sizing: border-box;
-  height: 56px;
-  padding: 4px 12px 0;
+    box-sizing: border-box;
+    height: 56px;
+    padding: 4px 12px 0;
 `;
 
 type JsonSkill = {
-    abbr: string
-    name: string
-    combatSpell?: boolean
-}
+    abbr: string;
+    name: string;
+    combatSpell?: boolean;
+};
 
 type JsonItem = {
-    abbr: string
-    name: string
-    category?: 'man' | 'monster' | 'illusion' | 'weapon' | 'armour' | 'mount' | 'tool'
-}
+    abbr: string;
+    name: string;
+    category?: 'man' | 'monster' | 'illusion' | 'weapon' | 'armour' | 'mount' | 'tool';
+};
 
 type StateProps = {
-    unit: Unit
+    unit: Unit;
 };
 
 type DispatchProps = {
-    saveUnit: typeof saveUnit
-    addSkill: typeof addSkill
-    addItem: typeof addItem
+    saveUnit: typeof saveUnit;
+    addSkill: typeof addSkill;
+    addItem: typeof addItem;
 
-    changeItemAbbr: typeof changeItemAbbr
-    changeItemAmount: typeof changeItemAmount
+    changeItemAbbr: typeof changeItemAbbr;
+    changeItemAmount: typeof changeItemAmount;
 
-    changeSkillAbbr: typeof changeSkillAbbr
-    changeSkillLevel: typeof changeSkillLevel
+    changeSkillAbbr: typeof changeSkillAbbr;
+    changeSkillLevel: typeof changeSkillLevel;
 
-    setBehind: typeof setBehind
-    setUnitsName: typeof setUnitsName
-    setCombatSpell: typeof setCombatSpell
+    setBehind: typeof setBehind;
+    setUnitsName: typeof setUnitsName;
+    setCombatSpell: typeof setCombatSpell;
 
-    resetForm: typeof resetForm
+    resetForm: typeof resetForm;
 };
 type FormProps = StateProps & DispatchProps;
 
@@ -106,19 +103,22 @@ const mapStateToProps = (state: AppState): StateProps => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
-    return bindActionCreators({
-        addItem,
-        addSkill,
-        changeItemAbbr,
-        changeItemAmount,
-        changeSkillAbbr,
-        changeSkillLevel,
-        resetForm,
-        saveUnit,
-        setBehind,
-        setCombatSpell,
-        setUnitsName,
-    }, dispatch);
+    return bindActionCreators(
+        {
+            addItem,
+            addSkill,
+            changeItemAbbr,
+            changeItemAmount,
+            changeSkillAbbr,
+            changeSkillLevel,
+            resetForm,
+            saveUnit,
+            setBehind,
+            setCombatSpell,
+            setUnitsName,
+        },
+        dispatch,
+    );
 };
 
 class MainFormClass extends PureComponent<FormProps, null> {
@@ -172,15 +172,16 @@ class MainFormClass extends PureComponent<FormProps, null> {
             <FormPaper square elevation={3}>
                 <FormSection>
                     <StyledHeading css="margin: 0;" variant="h5">
-                        Men/Items/Monsters <Tooltip title="Add new item"><AddCircleIcon onClick={addItem} css={'cursor: pointer'}/></Tooltip>
+                        Men/Items/Monsters{' '}
+                        <Tooltip title="Add new item">
+                            <AddCircleIcon onClick={addItem} css={'cursor: pointer'} />
+                        </Tooltip>
                     </StyledHeading>
                     {unit.items.map((item, key) => {
                         return (
                             <Grid key={key} container spacing={2}>
                                 <Grid size={{md: 4, xs: 6}}>
-                                    <InputLabel shrink>
-                                        Item
-                                    </InputLabel>
+                                    <InputLabel shrink>Item</InputLabel>
                                     <Autocomplete
                                         id={`item-autocomplete-${key}`}
                                         options={ItemListSorted}
@@ -189,19 +190,13 @@ class MainFormClass extends PureComponent<FormProps, null> {
                                         isOptionEqualToValue={(a, b): boolean => a.abbr === b.abbr}
                                         value={item.name ? {name: item.name, abbr: item.abbr} : null}
                                         size={'small'}
-                                        renderInput={(params): ReactNode =>
-                                            <TextField
-                                                {...params}
-                                                size="small"
-                                                variant="outlined"
-                                            />
-                                        }
+                                        renderInput={(params): ReactNode => (
+                                            <TextField {...params} size="small" variant="outlined" />
+                                        )}
                                     />
                                 </Grid>
                                 <Grid size={{md: 4, xs: 6}}>
-                                    <InputLabel shrink>
-                                        Amount
-                                    </InputLabel>
+                                    <InputLabel shrink>Amount</InputLabel>
                                     <TextField
                                         size="small"
                                         variant="outlined"
@@ -219,42 +214,45 @@ class MainFormClass extends PureComponent<FormProps, null> {
                 </FormSection>
                 <FormSection>
                     <StyledHeading css="margin: 0;" variant="h5">
-                        Skills <Tooltip title="Add new skill"><AddCircleIcon onClick={addSkill} css={'cursor: pointer'}/></Tooltip>
+                        Skills{' '}
+                        <Tooltip title="Add new skill">
+                            <AddCircleIcon onClick={addSkill} css={'cursor: pointer'} />
+                        </Tooltip>
                     </StyledHeading>
                     {unit.skills.map((item, key) => {
                         return (
                             <Grid key={key} container spacing={2}>
                                 <Grid size={{md: 4, xs: 6}}>
-                                    <InputLabel shrink>
-                                        Skill
-                                    </InputLabel>
+                                    <InputLabel shrink>Skill</InputLabel>
                                     <Autocomplete
                                         id={`skill-autocomplete-${key}`}
                                         options={SkillListSorted}
                                         onChange={this.OnChangeSkillAbbr.bind(this, item.id)}
-                                        getOptionLabel={(option: JsonSkill): string => `${option.name} [${option.abbr}]`}
+                                        getOptionLabel={(option: JsonSkill): string =>
+                                            `${option.name} [${option.abbr}]`
+                                        }
                                         isOptionEqualToValue={(a, b): boolean => a.abbr === b.abbr}
                                         value={item.name ? {name: item.name, abbr: item.abbr} : null}
                                         size="small"
-                                        renderInput={(params): ReactNode =>
-                                            <TextField
-                                                {...params}
-                                                size="small"
-                                                variant="outlined"
-                                            />
-                                        }
+                                        renderInput={(params): ReactNode => (
+                                            <TextField {...params} size="small" variant="outlined" />
+                                        )}
                                     />
                                 </Grid>
                                 <Grid size={{md: 4, xs: 6}}>
-                                    <InputLabel shrink>
-                                        Level
-                                    </InputLabel>
+                                    <InputLabel shrink>Level</InputLabel>
                                     <SliderContainer>
                                         <Slider
                                             step={1}
                                             onChange={this.OnChangeSkillLevel.bind(this, item.id)}
                                             value={item.level}
-                                            marks={[{label: '1', value: 1}, {label: '2', value: 2}, {label: '3', value: 3}, {label: '4', value: 4}, {label: '5', value: 5}]}
+                                            marks={[
+                                                {label: '1', value: 1},
+                                                {label: '2', value: 2},
+                                                {label: '3', value: 3},
+                                                {label: '4', value: 4},
+                                                {label: '5', value: 5},
+                                            ]}
                                             min={1}
                                             max={5}
                                             valueLabelDisplay="auto"
@@ -265,27 +263,31 @@ class MainFormClass extends PureComponent<FormProps, null> {
                         );
                     })}
                 </FormSection>
-                {combatSpells.length > 0 &&
-                        <Grid container spacing={2}>
-                            <Grid size={{md: 4, xs: 6}}>
-                                <InputLabel shrink>
-                                    Combat spell
-                                </InputLabel>
-                                <Select
-                                    size="small"
-                                    css={'width: 100%'}
-                                    value={unit.combatSpell}
-                                    onChange={this.OnCombatSpellSet}
-                                >
-                                    {combatSpells.map((item) => (
-                                        <MenuItem key={item.abbr} value={item.abbr}>{`${item.name} [${item.abbr}]`}</MenuItem>
-                                    ))}
-                                </Select>
-                            </Grid>
+                {combatSpells.length > 0 && (
+                    <Grid container spacing={2}>
+                        <Grid size={{md: 4, xs: 6}}>
+                            <InputLabel shrink>Combat spell</InputLabel>
+                            <Select
+                                size="small"
+                                css={'width: 100%'}
+                                value={unit.combatSpell}
+                                onChange={this.OnCombatSpellSet}
+                            >
+                                {combatSpells.map((item) => (
+                                    <MenuItem
+                                        key={item.abbr}
+                                        value={item.abbr}
+                                    >{`${item.name} [${item.abbr}]`}</MenuItem>
+                                ))}
+                            </Select>
                         </Grid>
-                }
+                    </Grid>
+                )}
                 <FormSection>
-                    <FormControlLabel control={<Switch checked={unit.behind} onChange={this.OnChangeBehind} />} label="Behind" />
+                    <FormControlLabel
+                        control={<Switch checked={unit.behind} onChange={this.OnChangeBehind} />}
+                        label="Behind"
+                    />
                     <Grid container spacing={2}>
                         <Grid size={{md: 4, xs: 6}}>
                             <InputLabel shrink htmlFor="unit-name">
@@ -303,62 +305,65 @@ class MainFormClass extends PureComponent<FormProps, null> {
                             />
                         </Grid>
                     </Grid>
-
                 </FormSection>
                 <ButtonGroup>
-                    {unit.id && <>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            startIcon={<SaveIcon/>}
-                            size="small"
-                            onClick={this.OnSave}
-                        >
-                           Save
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            startIcon={<CancelIcon/>}
-                            size="small"
-                            onClick={this.props.resetForm}
-                        >
-                            Cancel
-                        </Button>
-                    </>}
+                    {unit.id && (
+                        <>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                startIcon={<SaveIcon />}
+                                size="small"
+                                onClick={this.OnSave}
+                            >
+                                Save
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                startIcon={<CancelIcon />}
+                                size="small"
+                                onClick={this.props.resetForm}
+                            >
+                                Cancel
+                            </Button>
+                        </>
+                    )}
 
-                    {!unit.id && <>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            startIcon={<AddIcon/>}
-                            size="small"
-                            onClick={this.OnAddToAttackers}
-                            data-testid="add-to-attackers"
-                        >
-                            Add to Attackers
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            startIcon={<AddIcon/>}
-                            size="small"
-                            onClick={this.OnAddToDefenders}
-                            data-testid="add-to-defenders"
-                        >
-                            Add to Defenders
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            startIcon={<DeleteIcon/>}
-                            size="small"
-                            onClick={this.props.resetForm}
-                            data-testid="reset-form"
-                        >
-                            Reset
-                        </Button>
-                    </>}
+                    {!unit.id && (
+                        <>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                startIcon={<AddIcon />}
+                                size="small"
+                                onClick={this.OnAddToAttackers}
+                                data-testid="add-to-attackers"
+                            >
+                                Add to Attackers
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                startIcon={<AddIcon />}
+                                size="small"
+                                onClick={this.OnAddToDefenders}
+                                data-testid="add-to-defenders"
+                            >
+                                Add to Defenders
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                startIcon={<DeleteIcon />}
+                                size="small"
+                                onClick={this.props.resetForm}
+                                data-testid="reset-form"
+                            >
+                                Reset
+                            </Button>
+                        </>
+                    )}
                 </ButtonGroup>
             </FormPaper>
         );

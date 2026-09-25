@@ -7,7 +7,11 @@ import {WrapperForTests} from '../utils';
 jest.mock('./PageFooter');
 
 it('allows to set unit behind from unit list', () => {
-    render(<WrapperForTests><BattleSimulator/></WrapperForTests>);
+    render(
+        <WrapperForTests>
+            <BattleSimulator />
+        </WrapperForTests>,
+    );
 
     fireEvent.click(screen.getByText('Add to Attackers'));
     const checkbox = screen.getByTestId('set-behind').querySelector('input[type="checkbox"]') as HTMLInputElement;

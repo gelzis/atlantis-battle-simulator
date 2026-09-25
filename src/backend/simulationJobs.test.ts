@@ -10,32 +10,46 @@ import type {ServerSimulationResponse} from '../frontend/BattleSimulator/types';
 
 const battle = {attackers: {units: [] as unknown[]}, defenders: {units: [] as unknown[]}};
 const stats = {min: 0, max: 1, range: 1, occurance: 1, mean: 1, median: 1, mode: 1, percentile: [1], stdDev: 0};
-const result: ServerSimulationResponse = {wins: 1, loses: 0, draws: 0, winRatio: 100, attackerLooses: stats, defenderLooses: stats, spoils: []};
+const result: ServerSimulationResponse = {
+    wins: 1,
+    loses: 0,
+    draws: 0,
+    winRatio: 100,
+    attackerLooses: stats,
+    defenderLooses: stats,
+    spoils: [],
+};
 let jobs: SimulationJobs;
 let complete: (result: ServerSimulationResponse) => void;
 let fail: (error: Error) => void;
 let runner: jest.MockedFunction<EngineRunner>;
 
-beforeEach(async() => {
-    runner = jest.fn<ReturnType<EngineRunner>, Parameters<EngineRunner>>((_battle, _count, signal) => new Promise((resolve, reject) => {
-        complete = resolve;
-        fail = reject;
-        signal.addEventListener('abort', () => reject(new EngineFailure('cancelled', 'Simulation cancelled.')));
-    }));
+beforeEach(async () => {
+    runner = jest.fn<ReturnType<EngineRunner>, Parameters<EngineRunner>>(
+        (_battle, _count, signal) =>
+            new Promise((resolve, reject) => {
+                complete = resolve;
+                fail = reject;
+                signal.addEventListener('abort', () => reject(new EngineFailure('cancelled', 'Simulation cancelled.')));
+            }),
+    );
     jobs = new SimulationJobs(':memory:', runner, {...defaultJobOptions, maxQueued: 1});
     await jobs.initialize();
 });
-afterEach(async() => { jest.restoreAllMocks(); await jobs.close(); });
+afterEach(async () => {
+    jest.restoreAllMocks();
+    await jobs.close();
+});
 
 async function waitForStatus(id: string, status: string): Promise<void> {
     for (let attempt = 0; attempt < 100; attempt++) {
         if ((await jobs.get(id)).status === status) return;
-        await new Promise(resolve => setTimeout(resolve, 5));
+        await new Promise((resolve) => setTimeout(resolve, 5));
     }
     expect((await jobs.get(id)).status).toBe(status);
 }
 
-it('runs one engine at a time, bounds the waiting queue, and retains the result', async() => {
+it('runs one engine at a time, bounds the waiting queue, and retains the result', async () => {
     const first = await jobs.submit(randomUUID(), battle, 50);
     const second = await jobs.submit(randomUUID(), battle, 10);
     expect(first.status).toBe('running');
@@ -51,7 +65,7 @@ it('runs one engine at a time, bounds the waiting queue, and retains the result'
     await expect(jobs.result(second.id)).rejects.toMatchObject({statusCode: 409});
 });
 
-it('deduplicates simultaneous submission retries and rejects changed content for the same ID', async() => {
+it('deduplicates simultaneous submission retries and rejects changed content for the same ID', async () => {
     const id = randomUUID();
     const requests = await Promise.all([jobs.submit(id, battle, 50), jobs.submit(id, battle, 50)]);
     expect(requests[0].id).toBe(requests[1].id);
@@ -59,7 +73,7 @@ it('deduplicates simultaneous submission retries and rejects changed content for
     await expect(jobs.submit(id, battle, 10)).rejects.toMatchObject({statusCode: 409});
 });
 
-it('cancels queued jobs without starting them and releases running jobs after termination', async() => {
+it('cancels queued jobs without starting them and releases running jobs after termination', async () => {
     const first = await jobs.submit(randomUUID(), battle, 50);
     const second = await jobs.submit(randomUUID(), battle, 50);
     expect((await jobs.cancel(second.id)).status).toBe('cancelled');
@@ -69,7 +83,7 @@ it('cancels queued jobs without starting them and releases running jobs after te
     expect((await jobs.submit(randomUUID(), battle, 50)).status).toBe('running');
 });
 
-it('records timeouts and starts the next job after the process stops', async() => {
+it('records timeouts and starts the next job after the process stops', async () => {
     const first = await jobs.submit(randomUUID(), battle, 50);
     const second = await jobs.submit(randomUUID(), battle, 50);
     fail(new EngineFailure('timed_out', 'Execution time limit exceeded.'));
@@ -77,7 +91,7 @@ it('records timeouts and starts the next job after the process stops', async() =
     expect(await jobs.get(first.id)).toMatchObject({status: 'timed_out', error: 'Execution time limit exceeded.'});
 });
 
-it('expires waiting jobs without running them and prunes terminal records after retention', async() => {
+it('expires waiting jobs without running them and prunes terminal records after retention', async () => {
     await jobs.submit(randomUUID(), battle, 50);
     const queued = await jobs.submit(randomUUID(), battle, 50);
     const now = Date.now();
@@ -90,7 +104,7 @@ it('expires waiting jobs without running them and prunes terminal records after 
     expect(await jobs.get(queued.id)).toBeUndefined();
 });
 
-it('persists results and marks interrupted jobs failed across server restarts', async() => {
+it('persists results and marks interrupted jobs failed across server restarts', async () => {
     await jobs.close();
     const directory = await mkdtemp(path.join(tmpdir(), 'atlantis-jobs-'));
     const file = path.join(directory, 'jobs.sqlite');
@@ -105,13 +119,21 @@ it('persists results and marks interrupted jobs failed across server restarts', 
         await jobs.close();
         // Model the durable record left by an unexpected process exit.
         const database = new sqlite3.Database(file);
-        await new Promise<void>((resolve, reject) => database.run("UPDATE simulation_jobs SET status = 'running', finishedAt = NULL WHERE id = ?",
-            [interrupted.id], error => error ? reject(error) : resolve()));
-        await new Promise<void>((resolve, reject) => database.close(error => error ? reject(error) : resolve()));
+        await new Promise<void>((resolve, reject) =>
+            database.run(
+                "UPDATE simulation_jobs SET status = 'running', finishedAt = NULL WHERE id = ?",
+                [interrupted.id],
+                (error) => (error ? reject(error) : resolve()),
+            ),
+        );
+        await new Promise<void>((resolve, reject) => database.close((error) => (error ? reject(error) : resolve())));
         jobs = new SimulationJobs(file, runner);
         await jobs.initialize();
         await expect(jobs.result(finished.id)).resolves.toEqual(result);
-        expect(await jobs.get(interrupted.id)).toMatchObject({status: 'failed', error: expect.stringContaining('restart')});
+        expect(await jobs.get(interrupted.id)).toMatchObject({
+            status: 'failed',
+            error: expect.stringContaining('restart'),
+        });
         expect((await jobs.get(queued.id)).status).toBe('running');
     } finally {
         await jobs.close();

@@ -38,352 +38,375 @@ export const SET_BATTLE_COUNT = 'SET_BATTLE_COUNT';
 export type Side = 'attackers' | 'defenders';
 
 export type Skill = {
-    id: string
-    abbr: string
-    name: string
-    combatSpell: boolean
-    level: number
-}
+    id: string;
+    abbr: string;
+    name: string;
+    combatSpell: boolean;
+    level: number;
+};
 
 export type Item = {
-    id: string
-    abbr: string
-    name: string
-    amount: number
-}
+    id: string;
+    abbr: string;
+    name: string;
+    amount: number;
+};
 
 export type SkillResource = {
-    abbr: string
-    name: string
-    combatSpell?: boolean
-}
+    abbr: string;
+    name: string;
+    combatSpell?: boolean;
+};
 
 export type ItemResource = {
-    abbr: string
-    name: string
-    category: 'man' | 'monster' | 'illusion' | 'weapon' | 'armour' | 'mount' | 'tool'
-}
+    abbr: string;
+    name: string;
+    category: 'man' | 'monster' | 'illusion' | 'weapon' | 'armour' | 'mount' | 'tool';
+};
 
 export type Unit = {
-    id: string
-    name: string
-    skills: Skill[]
-    items: Item[]
-    combatSpell: string
-    behind: boolean
+    id: string;
+    name: string;
+    skills: Skill[];
+    items: Item[];
+    combatSpell: string;
+    behind: boolean;
 };
 
 export type SideStats = {
-    total: number
-    front: number
-    back: number
-}
+    total: number;
+    front: number;
+    back: number;
+};
 
 export type AppState = {
     attackers: {
-        [key: string]: Unit
-    }
+        [key: string]: Unit;
+    };
     defenders: {
-        [key: string]: Unit
-    }
-    attackerStructure: string
-    defenderStructure: string
-    attackerStats: SideStats
-    defenderStats: SideStats
-    unit: Unit
-    loading: boolean
+        [key: string]: Unit;
+    };
+    attackerStructure: string;
+    defenderStructure: string;
+    attackerStats: SideStats;
+    defenderStats: SideStats;
+    unit: Unit;
+    loading: boolean;
     error: {
-        open: boolean
-        text: string
-    }
-    battleCount: number
-    settingsWindowOpen: boolean
-}
+        open: boolean;
+        text: string;
+    };
+    battleCount: number;
+    settingsWindowOpen: boolean;
+};
 
 export interface StatRecord {
-    min: number
-    max: number
-    range: number
-    occurance: number
-    mean: number
-    median: number
-    mode: number
-    percentile: number[]
-    stdDev: number
+    min: number;
+    max: number;
+    range: number;
+    occurance: number;
+    mean: number;
+    median: number;
+    mode: number;
+    percentile: number[];
+    stdDev: number;
 }
 
 export interface ItemStatRecord extends StatRecord {
-    item: string
+    item: string;
 }
 
 export type ServerSimulationResponse = {
-    wins: number
-    loses: number
-    draws: number
-    winRatio: number
-    victoryBattleText? : string
-    lossBattleText? : string
-    drawBattleText? : string
-    attackerLooses: StatRecord
-    defenderLooses: StatRecord
-    spoils: ItemStatRecord[]
-}
+    wins: number;
+    loses: number;
+    draws: number;
+    winRatio: number;
+    victoryBattleText?: string;
+    lossBattleText?: string;
+    drawBattleText?: string;
+    attackerLooses: StatRecord;
+    defenderLooses: StatRecord;
+    spoils: ItemStatRecord[];
+};
 
 export type ExportSkill = {
-    tag: string
-    level: number
-}
+    tag: string;
+    level: number;
+};
 
 export type ExportItem = {
-    tag: string
-    amount: number
-}
+    tag: string;
+    amount: number;
+};
 
 export type ExportFlags = {
-    behind?: boolean
-}
+    behind?: boolean;
+};
 
 export type ExportKnownSkills = {
-    known: ExportSkill[]
-}
+    known: ExportSkill[];
+};
 
 export type ExportCombatSpell = {
-    tag: string
-}
+    tag: string;
+};
 
 export type ExportUnit = {
-    name: string
-    items: ExportItem[]
-    skills?: ExportKnownSkills
-    combat_spell?: ExportCombatSpell
-    flags?: ExportFlags
-}
+    name: string;
+    items: ExportItem[];
+    skills?: ExportKnownSkills;
+    combat_spell?: ExportCombatSpell;
+    flags?: ExportFlags;
+};
 
 export type ExportStructure = {
-    type: string
-    units: ExportUnit[]
-}
+    type: string;
+    units: ExportUnit[];
+};
 
 export type ExportSide = {
-    units?: ExportUnit[]
-    structures?: ExportStructure[]
-}
+    units?: ExportUnit[];
+    structures?: ExportStructure[];
+};
 
 export type ExportJson = {
-    attackers: ExportSide
-    defenders: ExportSide
-}
+    attackers: ExportSide;
+    defenders: ExportSide;
+};
 
 type LegacyFlag = 'behind';
 
 export type LegacyExportSkill = {
-    abbr: string
-    level: number
-}
+    abbr: string;
+    level: number;
+};
 
 export type LegacyExportItem = {
-    abbr: string
-    amount: number
-}
+    abbr: string;
+    amount: number;
+};
 
 export type LegacyExportUnit = {
-    name: string
-    skills: LegacyExportSkill[]
-    items: LegacyExportItem[]
-    combatSpell?: string
-    flags?: LegacyFlag[]
-}
+    name: string;
+    skills: LegacyExportSkill[];
+    items: LegacyExportItem[];
+    combatSpell?: string;
+    flags?: LegacyFlag[];
+};
 
 export type LegacyStructure = {
-    type: string
-}
+    type: string;
+};
 
 export type LegacyExportJson = {
     attackers: {
-        units: LegacyExportUnit[]
-        structure?: LegacyStructure
-    }
+        units: LegacyExportUnit[];
+        structure?: LegacyStructure;
+    };
     defenders: {
-        units: LegacyExportUnit[]
-        structure?: LegacyStructure
-    }
-}
+        units: LegacyExportUnit[];
+        structure?: LegacyStructure;
+    };
+};
 
 export type SaveUnit = {
-    type: typeof SAVE_UNIT
+    type: typeof SAVE_UNIT;
     payload: {
-        side?: Side
-    }
-}
+        side?: Side;
+    };
+};
 
 export type SetLoadingStatus = {
-    type: typeof SET_LOADING_STATUS
+    type: typeof SET_LOADING_STATUS;
     payload: {
-        status: boolean
-    }
-}
+        status: boolean;
+    };
+};
 
 export type AddSkill = {
-    type: typeof ADD_SKILL
-}
+    type: typeof ADD_SKILL;
+};
 
 export type AddItem = {
-    type: typeof ADD_ITEM
-}
+    type: typeof ADD_ITEM;
+};
 
 export type ChangeItemAbbr = {
-    type: typeof CHANGE_ITEM_ABBR
+    type: typeof CHANGE_ITEM_ABBR;
     payload: {
-        id: string
-        abbr: string
-        name: string
-    }
-}
+        id: string;
+        abbr: string;
+        name: string;
+    };
+};
 
 export type ChangeItemAmount = {
-    type: typeof CHANGE_ITEM_AMOUNT
+    type: typeof CHANGE_ITEM_AMOUNT;
     payload: {
-        id: string
-        amount: number
-    }
-}
+        id: string;
+        amount: number;
+    };
+};
 
 export type ChangeSkillAbbr = {
-    type: typeof CHANGE_SKILL_ABBR
+    type: typeof CHANGE_SKILL_ABBR;
     payload: {
-        id: string
-        abbr: string
-        name: string
-        combatSpell: boolean
-    }
-}
+        id: string;
+        abbr: string;
+        name: string;
+        combatSpell: boolean;
+    };
+};
 
 export type ChangeSkillLevel = {
-    type: typeof CHANGE_SKILL_LEVEL
+    type: typeof CHANGE_SKILL_LEVEL;
     payload: {
-        skillId: string
-        level: number
-    }
-}
+        skillId: string;
+        level: number;
+    };
+};
 
 export type SetBehind = {
-    type: typeof SET_BEHIND
+    type: typeof SET_BEHIND;
     payload: {
-        enabled: boolean
-    }
-}
+        enabled: boolean;
+    };
+};
 
 export type SetLine = {
-    type: typeof SET_LINE
+    type: typeof SET_LINE;
     payload: {
-        id: string
-        behind: boolean
-    }
-}
+        id: string;
+        behind: boolean;
+    };
+};
 
 export type ResetForm = {
-    type: typeof RESET_FORM
-}
+    type: typeof RESET_FORM;
+};
 
 export type ResetState = {
-    type: typeof RESET_STATE
-}
+    type: typeof RESET_STATE;
+};
 
 export type ResetSide = {
-    type: typeof RESET_SIDE
+    type: typeof RESET_SIDE;
     payload: {
-        side: Side
-    }
-}
+        side: Side;
+    };
+};
 
 export type SetUnitsName = {
-    type: typeof SET_UNITS_NAME
+    type: typeof SET_UNITS_NAME;
     payload: {
-        name: string
-    }
-}
+        name: string;
+    };
+};
 
 export type EditUnit = {
-    type: typeof EDIT_UNIT
+    type: typeof EDIT_UNIT;
     payload: {
-        id: string
-    }
-}
+        id: string;
+    };
+};
 
 export type DuplicateUnit = {
-    type: typeof DUPLICATE_UNIT
+    type: typeof DUPLICATE_UNIT;
     payload: {
-        id: string
-    }
-}
+        id: string;
+    };
+};
 
 export type DuplicateUnitToOtherSide = {
-    type: typeof DUPLICATE_UNIT_TO_OTHER_SIDE
+    type: typeof DUPLICATE_UNIT_TO_OTHER_SIDE;
     payload: {
-        id: string
-    }
-}
+        id: string;
+    };
+};
 
 export type DeleteUnit = {
-    type: typeof DELETE_UNIT
+    type: typeof DELETE_UNIT;
     payload: {
-        id: string
-    }
-}
+        id: string;
+    };
+};
 
 export type SetCombatSpell = {
-    type: typeof SET_COMBAT_SPELL
+    type: typeof SET_COMBAT_SPELL;
     payload: {
-        abbr: string
-    }
-}
+        abbr: string;
+    };
+};
 
 export type AddUnit = {
-    type: typeof ADD_UNIT
+    type: typeof ADD_UNIT;
     payload: {
-        side: Side
-        unit: Unit
-    }
-}
+        side: Side;
+        unit: Unit;
+    };
+};
 
 export type SetError = {
-    type: typeof SET_ERROR
+    type: typeof SET_ERROR;
     payload: {
-        open: boolean
-        text: string
-    }
-}
+        open: boolean;
+        text: string;
+    };
+};
 
 export type SetAttackersStructure = {
-    type: typeof SET_ATTACKERS_STRUCTURE
+    type: typeof SET_ATTACKERS_STRUCTURE;
     payload: {
-        name: string
-    }
-}
+        name: string;
+    };
+};
 
 export type SetDefendersStructure = {
-    type: typeof SET_DEFENDERS_STRUCTURE
+    type: typeof SET_DEFENDERS_STRUCTURE;
     payload: {
-        name: string
-    }
-}
+        name: string;
+    };
+};
 
 export type OpenSettings = {
-    type: typeof OPEN_SETTINGS
-}
+    type: typeof OPEN_SETTINGS;
+};
 
 export type CloseSettings = {
-    type: typeof CLOSE_SETTINGS
-}
+    type: typeof CLOSE_SETTINGS;
+};
 
 export type SetBattleCount = {
-    type: typeof SET_BATTLE_COUNT
+    type: typeof SET_BATTLE_COUNT;
     payload: {
-        value: number
-    }
-}
+        value: number;
+    };
+};
 
-export type ActionTypes = SaveUnit | AddItem | AddSkill | ChangeItemAbbr | ChangeItemAmount |
-    ChangeSkillAbbr | ChangeSkillLevel | SetBehind | ResetForm | SetUnitsName | EditUnit | DeleteUnit | DuplicateUnit |
-    SetCombatSpell | AddUnit | ResetState | SetLoadingStatus | SetError | ResetSide | SetAttackersStructure | SetDefendersStructure |
-    DuplicateUnitToOtherSide | OpenSettings | CloseSettings | SetBattleCount | SetLine;
+export type ActionTypes =
+    | SaveUnit
+    | AddItem
+    | AddSkill
+    | ChangeItemAbbr
+    | ChangeItemAmount
+    | ChangeSkillAbbr
+    | ChangeSkillLevel
+    | SetBehind
+    | ResetForm
+    | SetUnitsName
+    | EditUnit
+    | DeleteUnit
+    | DuplicateUnit
+    | SetCombatSpell
+    | AddUnit
+    | ResetState
+    | SetLoadingStatus
+    | SetError
+    | ResetSide
+    | SetAttackersStructure
+    | SetDefendersStructure
+    | DuplicateUnitToOtherSide
+    | OpenSettings
+    | CloseSettings
+    | SetBattleCount
+    | SetLine;

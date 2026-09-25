@@ -20,8 +20,10 @@ if (!container) throw new Error('Missing app container');
 createRoot(container).render(
     <Provider store={store}>
         <ThemeProvider theme={theme}>
-            <GlobalStyle/>
-            <LocalPersistence><BattleSimulator/></LocalPersistence>
+            <GlobalStyle />
+            <LocalPersistence>
+                <BattleSimulator />
+            </LocalPersistence>
         </ThemeProvider>
     </Provider>,
 );

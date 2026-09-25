@@ -17,30 +17,33 @@ const SettingsModalDialogContent = styled(DialogContent)`
 `;
 
 type StateProps = {
-    battleCount: number
-}
+    battleCount: number;
+};
 
 const mapStateToProps = (state: AppState): StateProps => ({
     battleCount: state.battleCount,
 });
 
 type SettingsModalProps = {
-    onClose: () => void
+    onClose: () => void;
 };
 
 type DispatchProps = {
-    setBattleCount: typeof setBattleCount
+    setBattleCount: typeof setBattleCount;
 };
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
-    return bindActionCreators({
-        setBattleCount,
-    }, dispatch);
+    return bindActionCreators(
+        {
+            setBattleCount,
+        },
+        dispatch,
+    );
 };
 
 type ClassState = {
-    battleCount: string
-}
+    battleCount: string;
+};
 
 type Props = SettingsModalProps & DispatchProps & StateProps;
 
@@ -80,10 +83,7 @@ class SettingsModalClass extends PureComponent<Props, ClassState> {
                     <Button onClick={onClose} color="primary">
                         Cancel
                     </Button>
-                    <Button
-                        onClick={this._onSave.bind(this)}
-                        color="primary"
-                    >
+                    <Button onClick={this._onSave.bind(this)} color="primary">
                         Save
                     </Button>
                 </DialogActions>

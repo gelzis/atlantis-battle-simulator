@@ -21,9 +21,9 @@ export const ItemListSorted = ItemList.sort((a, b) => {
     }
 });
 
-export const SoldierItems = ItemList
-    .filter(x => x.category === 'man' || x.category === 'monster' || x.category === 'illusion')
-    .map(x => x.abbr);
+export const SoldierItems = ItemList.filter(
+    (x) => x.category === 'man' || x.category === 'monster' || x.category === 'illusion',
+).map((x) => x.abbr);
 
 export const ObjectListSorted = ObjectList.sort();
 
