@@ -36,8 +36,14 @@ success analytics event on refresh. Only the most recent job in a tab is tracked
 Malformed/future session records are preserved and block writes, just like the
 local records. Session-storage failures do not prevent submitting or polling.
 
-Full results are retained in the server job table for a limited time, never in
-this browser record. Refresh recovery does not restore the submitted setup into
+Full results are retained in the server job table until client acknowledgement
+or expiry (one minute after completion by default), never in this browser record.
+The client acknowledges only after parsing and accepting the result into component
+state. Successful acknowledgement deletes the server job and removes its session
+recovery record. Acknowledgement failures retry without refetching the result; a
+late acknowledgement cannot remove a newer job's recovery record. Refreshing after
+acknowledgement loses the displayed result, while pinned baselines remain. The
+recovery record's V1 shape and field meanings are unchanged. Refresh recovery does not restore the submitted setup into
 Redux or overwrite the local draft. Baseline pinning uses the submitted snapshot
 and server completion time. Restoring a baseline also removes the tab's recovery
 record, so a later refresh does not redisplay the previous job. This record does

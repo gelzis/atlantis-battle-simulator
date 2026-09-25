@@ -202,7 +202,8 @@ it('recovers the existing job after refresh without submitting another simulatio
     const recovered = jest
         .fn()
         .mockResolvedValueOnce({ok: true, json: async () => job(id, 'completed')})
-        .mockResolvedValueOnce({ok: true, json: async () => result});
+        .mockResolvedValueOnce({ok: true, json: async () => result})
+        .mockResolvedValueOnce({ok: true});
     global.fetch = recovered;
     render(
         <WrapperForTests>
@@ -213,7 +214,9 @@ it('recovers the existing job after refresh without submitting another simulatio
     expect(recovered.mock.calls.map((call) => call[0])).toEqual([
         `/simulation-jobs/${id}`,
         `/simulation-jobs/${id}/result`,
+        `/simulation-jobs/${id}/acknowledge`,
     ]);
+    await waitFor(() => expect(sessionStorage.getItem('atlantis.simulationJob')).toBeNull());
 });
 
 it('requests cancellation and waits for the terminal job status', async () => {
@@ -280,4 +283,98 @@ it('preserves malformed recovery data and still runs simulations', async () => {
     expect(sessionStorage.getItem('atlantis.simulationJob')).toBe('{broken');
     expect(screen.getByText(/Simulation recovery could not be saved/)).toBeTruthy();
     expect(global.fetch).toHaveBeenCalledTimes(1);
+});
+
+it('retries a failed acknowledgement without downloading again or hiding the accepted result', async () => {
+    jest.useFakeTimers();
+    try {
+        let id: string;
+        global.fetch = jest
+            .fn()
+            .mockImplementationOnce(async (_url, options) => {
+                id = JSON.parse(options.body).requestId;
+                return {ok: true, json: async () => job(id, 'completed')};
+            })
+            .mockResolvedValueOnce({ok: true, json: async () => result})
+            .mockRejectedValueOnce(new Error('Acknowledgement response lost'))
+            .mockResolvedValueOnce({ok: true});
+        renderBattle();
+        await act(async () => fireEvent.click(screen.getByRole('button', {name: 'Run battle'})));
+        expect(screen.getByText('100.00%')).toBeTruthy();
+        expect((screen.getByRole('button', {name: 'Run battle'}) as HTMLButtonElement).disabled).toBe(false);
+        expect(sessionStorage.getItem('atlantis.simulationJob')).not.toBeNull();
+        await act(async () => jest.advanceTimersByTime(2000));
+        expect((global.fetch as jest.Mock).mock.calls.map((call) => call[0])).toEqual([
+            '/simulation-jobs',
+            `/simulation-jobs/${id}/result`,
+            `/simulation-jobs/${id}/acknowledge`,
+            `/simulation-jobs/${id}/acknowledge`,
+        ]);
+        expect(sessionStorage.getItem('atlantis.simulationJob')).toBeNull();
+        expect(screen.getByText('100.00%')).toBeTruthy();
+    } finally {
+        jest.useRealTimers();
+    }
+});
+
+it('acknowledges only after a result download has been successfully parsed and accepted', async () => {
+    jest.useFakeTimers();
+    try {
+        let id: string;
+        global.fetch = jest
+            .fn()
+            .mockImplementationOnce(async (_url, options) => {
+                id = JSON.parse(options.body).requestId;
+                return {ok: true, json: async () => job(id, 'completed')};
+            })
+            .mockResolvedValueOnce({
+                ok: true,
+                json: async () => {
+                    throw new SyntaxError('Truncated response');
+                },
+            })
+            .mockImplementationOnce(async () => ({ok: true, json: async () => job(id, 'completed')}))
+            .mockResolvedValueOnce({ok: true, json: async () => result})
+            .mockResolvedValueOnce({ok: true});
+        renderBattle();
+        await act(async () => fireEvent.click(screen.getByRole('button', {name: 'Run battle'})));
+        expect(global.fetch).toHaveBeenCalledTimes(2);
+        expect(screen.getByRole('status').textContent).toContain('Retrying result download');
+        expect(sessionStorage.getItem('atlantis.simulationJob')).not.toBeNull();
+        await act(async () => jest.advanceTimersByTime(2000));
+        expect(screen.getByText('100.00%')).toBeTruthy();
+        expect((global.fetch as jest.Mock).mock.calls[4][0]).toBe(`/simulation-jobs/${id}/acknowledge`);
+        expect(sessionStorage.getItem('atlantis.simulationJob')).toBeNull();
+    } finally {
+        jest.useRealTimers();
+    }
+});
+
+it('does not clear a newer run when a previous acknowledgement finishes late', async () => {
+    let acknowledge: (response: unknown) => void;
+    let nextId: string;
+    global.fetch = jest
+        .fn()
+        .mockImplementationOnce(async (_url, options) => ({
+            ok: true,
+            json: async () => job(JSON.parse(options.body).requestId, 'completed'),
+        }))
+        .mockResolvedValueOnce({ok: true, json: async () => result})
+        .mockImplementationOnce(
+            () =>
+                new Promise((resolve) => {
+                    acknowledge = resolve;
+                }),
+        )
+        .mockImplementationOnce(async (_url, options) => {
+            nextId = JSON.parse(options.body).requestId;
+            return {ok: true, json: async () => job(nextId)};
+        });
+    renderBattle();
+    await act(async () => fireEvent.click(screen.getByRole('button', {name: 'Run battle'})));
+    expect(screen.getByText('100.00%')).toBeTruthy();
+    await act(async () => fireEvent.click(screen.getByRole('button', {name: 'Run battle'})));
+    await act(async () => acknowledge({ok: true}));
+    expect(JSON.parse(sessionStorage.getItem('atlantis.simulationJob')).data.id).toBe(nextId);
+    expect(screen.getByRole('status').textContent).toContain('Running');
 });

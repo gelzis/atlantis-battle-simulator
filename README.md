@@ -57,7 +57,7 @@ docker run --rm --name atlantis-battle-simulator \
 
 Open http://localhost:4020. This runs the backend and serves the built frontend;
 a separate `npm run dev-server` is unnecessary. The named volume retains shared
-battles and simulation jobs across container replacement; it starts with a new
+battles and pending simulation jobs across container replacement; it starts with a new
 database and does not import existing host data. Run only one backend against it.
 
 In another terminal:
@@ -71,6 +71,11 @@ docker stop atlantis-battle-simulator
 Rebuild the image and recreate the container after changing source code. The
 `.dockerignore` excludes host dependencies, generated bundles, and local SQLite
 files so the image uses its own Linux dependencies and clean build output.
+
+Completed simulation results are deleted after the browser acknowledges receipt.
+Unacknowledged results and other terminal jobs expire after one minute by default
+(`SIMULATION_RETENTION_MS=60000`). Acknowledged results remain visible until refresh
+or another run; explicitly pinned baselines persist separately in browser storage.
 
 ## Formatting and commit hooks
 

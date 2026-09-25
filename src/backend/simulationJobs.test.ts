@@ -73,6 +73,41 @@ it('deduplicates simultaneous submission retries and rejects changed content for
     await expect(jobs.submit(id, battle, 10)).rejects.toMatchObject({statusCode: 409});
 });
 
+it('keeps downloads retryable until acknowledgement, then deletes the job idempotently', async () => {
+    const submitted = await jobs.submit(randomUUID(), battle, 50);
+    complete(result);
+    await waitForStatus(submitted.id, 'completed');
+    await expect(jobs.result(submitted.id)).resolves.toEqual(result);
+    await expect(jobs.result(submitted.id)).resolves.toEqual(result);
+    await jobs.acknowledge(submitted.id);
+    expect(await jobs.get(submitted.id)).toBeUndefined();
+    await expect(jobs.result(submitted.id)).rejects.toMatchObject({statusCode: 404});
+    await expect(jobs.acknowledge(submitted.id)).resolves.toBeUndefined();
+});
+
+it('does not delete queued or running jobs on premature acknowledgement', async () => {
+    const running = await jobs.submit(randomUUID(), battle, 50);
+    const queued = await jobs.submit(randomUUID(), battle, 50);
+    await expect(jobs.acknowledge(running.id)).rejects.toMatchObject({statusCode: 409});
+    await expect(jobs.acknowledge(queued.id)).rejects.toMatchObject({statusCode: 409});
+    expect((await jobs.get(running.id)).status).toBe('running');
+    expect((await jobs.get(queued.id)).status).toBe('queued');
+});
+
+it('expires an unacknowledged result one minute after completion, not submission', async () => {
+    const submitted = await jobs.submit(randomUUID(), battle, 50);
+    const now = Date.now();
+    jest.spyOn(Date, 'now').mockReturnValue(now + 240000);
+    complete(result);
+    await waitForStatus(submitted.id, 'completed');
+    jest.spyOn(Date, 'now').mockReturnValue(now + 299999);
+    await jobs.tick();
+    await expect(jobs.result(submitted.id)).resolves.toEqual(result);
+    jest.spyOn(Date, 'now').mockReturnValue(now + 300000);
+    await jobs.tick();
+    expect(await jobs.get(submitted.id)).toBeUndefined();
+});
+
 it('cancels queued jobs without starting them and releases running jobs after termination', async () => {
     const first = await jobs.submit(randomUUID(), battle, 50);
     const second = await jobs.submit(randomUUID(), battle, 50);

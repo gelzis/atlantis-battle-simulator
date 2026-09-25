@@ -45,6 +45,10 @@ export const simulationRoutes = (jobs: SimulationJobs): Router => {
         res.setHeader('Cache-Control', 'no-store');
         res.json(await jobs.result(req.params.id));
     });
+    router.post('/simulation-jobs/:id/acknowledge', async (req, res) => {
+        await jobs.acknowledge(req.params.id);
+        res.sendStatus(204);
+    });
     router.post('/simulation-jobs/:id/cancel', async (req, res) => {
         res.json(await jobs.cancel(req.params.id));
     });

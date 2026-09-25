@@ -6,17 +6,20 @@ import type {AddressInfo} from 'net';
 import {SimulationJobs} from './simulationJobs';
 import {simulationRoutes} from './simulationRoutes';
 import {EngineFailure} from './engineRunner';
+import type {ServerSimulationResponse} from '../frontend/BattleSimulator/types';
 
 let server: Server;
 let jobs: SimulationJobs;
 let base: string;
+let complete: (value: ServerSimulationResponse) => void;
 const battle = {attackers: {units: [] as unknown[]}, defenders: {units: [] as unknown[]}};
 
 beforeEach(async () => {
     jobs = new SimulationJobs(
         ':memory:',
         (_battle, _count, signal) =>
-            new Promise((_resolve, reject) => {
+            new Promise((resolve, reject) => {
+                complete = resolve;
                 signal.addEventListener('abort', () => reject(new EngineFailure('cancelled', 'Simulation cancelled.')));
             }),
     );
@@ -62,4 +65,30 @@ it('rejects invalid requests and missing IDs', async () => {
     expect((await post('/simulation-jobs', {requestId: '../bad', battle})).status).toBe(400);
     expect((await fetch(`${base}/simulation-jobs/bad`)).status).toBe(404);
     expect((await fetch(`${base}/simulation-jobs/${randomUUID()}`)).status).toBe(404);
+});
+
+it('deletes a completed result only on acknowledgement and accepts repeated acknowledgements', async () => {
+    const id = randomUUID();
+    await post('/simulation-jobs', {requestId: id, battle, battleCount: 50});
+    expect((await post(`/simulation-jobs/${id}/acknowledge`, {})).status).toBe(409);
+    const stats = {min: 0, max: 1, range: 1, occurance: 1, mean: 1, median: 1, mode: 1, percentile: [1], stdDev: 0};
+    const result: ServerSimulationResponse = {
+        wins: 1,
+        loses: 0,
+        draws: 0,
+        winRatio: 100,
+        attackerLooses: stats,
+        defenderLooses: stats,
+        spoils: [],
+    };
+    complete(result);
+    for (let attempt = 0; attempt < 100 && (await jobs.get(id)).status !== 'completed'; attempt++) {
+        await new Promise((resolve) => setTimeout(resolve, 5));
+    }
+    expect(await (await fetch(`${base}/simulation-jobs/${id}/result`)).json()).toEqual(result);
+    expect((await fetch(`${base}/simulation-jobs/${id}/result`)).status).toBe(200);
+    expect((await post(`/simulation-jobs/${id}/acknowledge`, {})).status).toBe(204);
+    expect((await fetch(`${base}/simulation-jobs/${id}`)).status).toBe(404);
+    expect((await fetch(`${base}/simulation-jobs/${id}/result`)).status).toBe(404);
+    expect((await post(`/simulation-jobs/${id}/acknowledge`, {})).status).toBe(204);
 });

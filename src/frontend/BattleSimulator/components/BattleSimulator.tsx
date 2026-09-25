@@ -159,6 +159,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
 
     private mounted = false;
     private pollTimer: ReturnType<typeof setTimeout>;
+    private acknowledgementTimers = new Map<string, ReturnType<typeof setTimeout>>();
     private requests = new AbortController();
     private session: StoredRecord<PendingSimulation>;
     private pending?: PendingSimulation;
@@ -203,6 +204,8 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
     componentWillUnmount(): void {
         this.mounted = false;
         clearTimeout(this.pollTimer);
+        this.acknowledgementTimers.forEach((timer) => clearTimeout(timer));
+        this.acknowledgementTimers.clear();
         this.requests.abort();
         this.props.setLoadingStatus(false);
     }
@@ -291,6 +294,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             const response = await fetch(`/simulation-jobs/${this.pending.id}`, {signal: this.requests.signal});
             if (!this.mounted) return;
             if (response.status === 404) {
+                this.clearJobRecovery(this.pending.id);
                 this.setState({
                     jobMessage: 'This simulation is no longer available. Results are retained for a limited time.',
                     cancelling: false,
@@ -333,17 +337,17 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                 if (!this.mounted) return;
                 const completed = completedRun(this.pending.setup, result);
                 completed.completedAt = new Date(job.finishedAt).toISOString();
-                this.setState({
-                    battleResult: result,
-                    completed,
-                    jobMessage: 'Simulation completed.',
-                    cancelling: false,
-                });
                 if (!this.pending.reported) {
                     posthog.capture('battle_run');
                     this.pending = {...this.pending, reported: true};
                     this.saveSession();
                 }
+                this.setState(
+                    {battleResult: result, completed, jobMessage: 'Simulation completed.', cancelling: false},
+                    () => {
+                        this.acknowledgeResult(job.id);
+                    },
+                );
             } catch (error) {
                 if (this.mounted) {
                     this.setState({jobMessage: 'Simulation completed. Retrying result download…'});
@@ -355,6 +359,41 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             this.setState({jobMessage: job.error || `Simulation ${job.status}.`, cancelling: false});
         }
         this.props.setLoadingStatus(false);
+    }
+
+    private clearJobRecovery(id: string): void {
+        if (this.pending?.id !== id) return;
+        this.pending = undefined;
+        if (this.session.value?.id === id && !this.session.remove()) {
+            this.setState({
+                jobWarning:
+                    'Could not clear simulation recovery in this tab. The delivered result remains available on this page.',
+            });
+        }
+    }
+
+    private async acknowledgeResult(id: string): Promise<void> {
+        if (!this.mounted) return;
+        try {
+            const response = await fetch(`/simulation-jobs/${id}/acknowledge`, {
+                method: 'POST',
+                signal: this.requests.signal,
+            });
+            if (!response.ok) throw new Error('Acknowledgement failed');
+            if (!this.mounted) return;
+            this.acknowledgementTimers.delete(id);
+            // A late acknowledgement must not clear a newer run's recovery record.
+            this.clearJobRecovery(id);
+        } catch (error) {
+            if (this.mounted) {
+                this.acknowledgementTimers.set(
+                    id,
+                    setTimeout(() => {
+                        this.acknowledgeResult(id);
+                    }, 2000),
+                );
+            }
+        }
     }
 
     cancelJob = async (): Promise<void> => {

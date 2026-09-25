@@ -15,7 +15,7 @@ export const defaultJobOptions: JobOptions = {
     executionTimeoutMs: 300000,
     queueTimeoutMs: 600000,
     maxQueued: 20,
-    retentionMs: 86400000,
+    retentionMs: 60000,
 };
 
 export const jobOptionsFromEnv = (): JobOptions => {
@@ -112,6 +112,17 @@ export class SimulationJobs {
         if (!row) throw new JobRequestError(404, 'Simulation job not found or expired.');
         if (row.status !== 'completed') throw new JobRequestError(409, 'Simulation result is not available.');
         return JSON.parse(row.resultJson);
+    }
+
+    acknowledge(id: string): Promise<void> {
+        return this.exclusive(async () => {
+            const job = await this.get(id);
+            // Retrying a lost acknowledgement response is safe after deletion or expiry.
+            if (!job) return;
+            if (job.status !== 'completed')
+                throw new JobRequestError(409, 'Only completed simulation results can be acknowledged.');
+            await this.run("DELETE FROM simulation_jobs WHERE id = ? AND status = 'completed'", [id]);
+        });
     }
 
     submit(id: string, battle: unknown, battleCount: number): Promise<SimulationJob> {
