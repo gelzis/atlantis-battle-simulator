@@ -19,7 +19,6 @@ import LaunchIcon from '@mui/icons-material/Launch';
 import SettingsIcon from '@mui/icons-material/Settings';
 import {bindActionCreators, Dispatch} from 'redux';
 import DeleteIcon from '@mui/icons-material/Delete';
-import posthog from 'posthog-js';
 import {v4 as uuidv4} from 'uuid';
 
 import {StyledPaper, StyledSideHeading, theme} from '../../StyledComponents';
@@ -53,6 +52,7 @@ import {Header} from './Header';
 import {loadBattleIntoStore} from '../battleImport';
 import {BaselineV1, captureDraft, completedRun, restoreDraft, StoredRecord} from '../persistence';
 import {isPendingSimulation, JOB_SESSION_KEY, PendingSimulation} from '../simulationSession';
+import {captureSimulationEvent, captureSimulationOutcome} from '../simulationAnalytics';
 import {isActiveJob, isSimulationJob, isSimulationResult, SimulationJob} from '../../../shared/simulationJobs';
 import {BaselineComparison, PersistenceWarning} from './LocalPersistence';
 
@@ -194,6 +194,11 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
         if (!this.mounted) return;
         if (this.session.value?.path === window.location.pathname) {
             this.pending = this.session.value;
+            captureSimulationEvent('battle_recovery_started', {
+                job_id: this.pending.id,
+                accepted: this.pending.accepted,
+                requested_simulations: this.pending.setup.simulationCount,
+            });
             this.props.setLoadingStatus(true);
             this.setState({jobMessage: 'Reconnecting to simulation…'});
             if (this.pending.accepted) await this.pollJob();
@@ -245,6 +250,14 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
     };
 
     private async submitJob(): Promise<void> {
+        const startedAt = performance.now();
+        const properties = {
+            job_id: this.pending.id,
+            requested_simulations: this.pending.setup.simulationCount,
+        };
+        let httpStatus: number | null = null;
+        let failureReason = 'network';
+        captureSimulationEvent('battle_submission_started', properties);
         try {
             const response = await fetch('/simulation-jobs', {
                 method: 'POST',
@@ -256,22 +269,36 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                     battleCount: this.pending.setup.simulationCount,
                 }),
             });
+            httpStatus = response.status;
             if (!response.ok) {
+                failureReason = response.status === 429 ? 'queue_full' : 'http_error';
                 throw new Error(
                     response.status === 429
                         ? 'The simulation queue is full. Please try again later.'
                         : 'Failed to launch battle. Check your units and try again.',
                 );
             }
+            failureReason = 'invalid_response';
             const job: unknown = await response.json();
             if (!isSimulationJob(job) || job.id !== this.pending.id)
                 throw new Error('Invalid simulation response. Please try again.');
             if (!this.mounted) return;
+            captureSimulationEvent('battle_submission_accepted', {
+                ...properties,
+                status: job.status,
+                submission_ms: Math.max(0, performance.now() - startedAt),
+            });
             this.pending = {...this.pending, accepted: true};
             this.saveSession();
             await this.acceptJob(job);
         } catch (error) {
             if (!this.mounted) return;
+            captureSimulationEvent('battle_submission_failed', {
+                ...properties,
+                reason: failureReason,
+                http_status: httpStatus,
+                submission_ms: Math.max(0, performance.now() - startedAt),
+            });
             const message = error instanceof Error ? error.message : 'Could not submit the simulation.';
             this.setState({
                 jobMessage: 'Submission could not be confirmed. Try again to reconnect using the same submission.',
@@ -338,7 +365,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                 const completed = completedRun(this.pending.setup, result);
                 completed.completedAt = new Date(job.finishedAt).toISOString();
                 if (!this.pending.reported) {
-                    posthog.capture('battle_run');
+                    captureSimulationOutcome(job, this.pending.setup.simulationCount, result);
                     this.pending = {...this.pending, reported: true};
                     this.saveSession();
                 }
@@ -356,6 +383,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
                 return;
             }
         } else {
+            captureSimulationOutcome(job, this.pending.setup.simulationCount);
             this.setState({jobMessage: job.error || `Simulation ${job.status}.`, cancelling: false});
         }
         this.props.setLoadingStatus(false);
@@ -398,6 +426,8 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
 
     cancelJob = async (): Promise<void> => {
         if (!this.pending || this.state.cancelling) return;
+        const properties = {job_id: this.pending.id, status: this.state.job?.status ?? 'unknown'};
+        captureSimulationEvent('battle_cancel_requested', properties);
         this.setState({cancelling: true});
         try {
             const response = await fetch(`/simulation-jobs/${this.pending.id}/cancel`, {
@@ -407,6 +437,7 @@ export class BattleSimulatorClass extends PureComponent<BattleSimulatorProps, Ba
             if (!response.ok) throw new Error('Cancellation failed');
         } catch (error) {
             if (this.mounted) {
+                captureSimulationEvent('battle_cancel_failed', properties);
                 this.setState({cancelling: false});
                 this.props.setError(true, 'Could not cancel the simulation. Please try again.');
             }
