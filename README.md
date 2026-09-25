@@ -35,3 +35,38 @@ Linting can be done with
 ```
 npm run lint
 ```
+
+## Run with Docker (compatible engine runtime)
+
+The Dockerfile uses Ubuntu 24.04, which satisfies the bundled engine's glibc
+requirement. On Windows, start Docker Desktop and enable Settings > Resources >
+WSL Integration for your distribution. Confirm that `docker version` shows both
+client and server information from your WSL terminal.
+
+Stop any local backend using port 4020, then run from the repository root:
+
+```bash
+docker build -t atlantis-battle-simulator .
+docker run --rm --name atlantis-battle-simulator \
+  -p 127.0.0.1:4020:4020 \
+  --mount type=volume,src=atlantis-data,dst=/usr/src/app/data \
+  -e SIMULATION_TIMEOUT_MS=300000 \
+  atlantis-battle-simulator
+```
+
+Open http://localhost:4020. This runs the backend and serves the built frontend;
+a separate `npm run dev-server` is unnecessary. The named volume retains shared
+battles and simulation jobs across container replacement; it starts with a new
+database and does not import existing host data. Run only one backend against it.
+
+In another terminal:
+
+```bash
+docker logs -f atlantis-battle-simulator
+docker exec atlantis-battle-simulator ldd --version
+docker stop atlantis-battle-simulator
+```
+
+Rebuild the image and recreate the container after changing source code. The
+`.dockerignore` excludes host dependencies, generated bundles, and local SQLite
+files so the image uses its own Linux dependencies and clean build output.

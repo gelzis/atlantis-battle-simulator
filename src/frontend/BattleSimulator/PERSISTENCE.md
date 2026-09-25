@@ -26,3 +26,19 @@ conflict check; failure preserves the in-memory baseline and surfaces a warning.
 Autosave waits 300 ms after edits and flushes on pagehide or hidden visibility.
 Opening a shared battle neither restores nor overwrites the local draft. Explicitly
 restoring a baseline returns to the homepage and enables autosave after confirmation.
+
+Simulation recovery uses a separate sessionStorage key, `atlantis.simulationJob`,
+with a V1 envelope and `{id, path, setup, accepted, reported}` data. `setup` uses
+DraftV1; `path` prevents a local job from being displayed on an unrelated shared
+page. `accepted` distinguishes an unconfirmed submission (safe to retry with its
+UUID) from a job that should only be polled. `reported` avoids re-emitting the
+success analytics event on refresh. Only the most recent job in a tab is tracked.
+Malformed/future session records are preserved and block writes, just like the
+local records. Session-storage failures do not prevent submitting or polling.
+
+Full results are retained in the server job table for a limited time, never in
+this browser record. Refresh recovery does not restore the submitted setup into
+Redux or overwrite the local draft. Baseline pinning uses the submitted snapshot
+and server completion time. Restoring a baseline also removes the tab's recovery
+record, so a later refresh does not redisplay the previous job. This record does
+not change the released draft/baseline V1 contracts or shared battle JSON.

@@ -6,7 +6,8 @@ import {BattleSimulator} from './BattleSimulator';
 import {createAppStore} from '../store';
 import {changeItemAmount, saveUnit, setUnitsName} from '../actions/formActions';
 import {editUnit} from '../actions/simulatorActions';
-import {STORAGE_KEYS} from '../persistence';
+import {captureDraft, STORAGE_KEYS} from '../persistence';
+import {JOB_SESSION_KEY} from '../simulationSession';
 import draftFixture from '../__fixtures__/draft-v1.json';
 import baselineFixture from '../__fixtures__/baseline-v1.json';
 
@@ -15,6 +16,7 @@ jest.mock('posthog-js', () => ({capture: jest.fn()}));
 const originalFetch = global.fetch;
 beforeEach(() => {
     localStorage.clear();
+    sessionStorage.clear();
     window.history.replaceState({}, '', '/');
 });
 afterEach(() => { global.fetch = originalFetch; });
@@ -100,11 +102,40 @@ it('pins the setup submitted to the engine even when the army is edited during t
         store.dispatch(saveUnit());
     });
     const stats = {min: 0, max: 1, range: 1, occurance: 1, mean: 1, median: 1, mode: 1, percentile: [1], stdDev: 0};
-    await act(async() => finish({ok: true, json: async() => ({wins: 1, loses: 0, draws: 0, winRatio: 100, attackerLooses: stats, defenderLooses: stats, spoils: [] as unknown[]})}));
+    const requestId = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body).requestId;
+    (global.fetch as jest.Mock).mockResolvedValue({ok: true, json: async() => ({wins: 1, loses: 0, draws: 0, winRatio: 100, attackerLooses: stats, defenderLooses: stats, spoils: [] as unknown[]})});
+    await act(async() => finish({ok: true, json: async() => ({id: requestId, status: 'completed', createdAt: Date.now(), startedAt: Date.now(), finishedAt: Date.now(), executionTimeoutMs: 300000, error: null as string | null})}));
     fireEvent.click(await screen.findByRole('button', {name: 'Compare battle results with baseline'}));
     fireEvent.click(await screen.findByRole('button', {name: 'Pin as baseline'}));
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEYS.baseline));
     expect(saved.data.setup.attackers[0].items[0].amount).toBe(1);
     expect(store.getState().attackers[id].items[0].amount).toBe(9);
     expect(saved.data.result.winRate).toBe(100);
+});
+
+it('pins the original submitted setup after refresh without replacing the newer local draft', async() => {
+    const id = '00000000-0000-4000-8000-000000000001';
+    const original = draftFixture.data;
+    const updated = {...original, editor: {...original.editor, name: 'Edited while running'}};
+    localStorage.setItem(STORAGE_KEYS.draft, JSON.stringify({...draftFixture, data: updated}));
+    sessionStorage.setItem(JOB_SESSION_KEY, JSON.stringify({
+        schemaVersion: 1,
+        savedAt: new Date().toISOString(),
+        data: {
+            id, path: '/', setup: original, accepted: true, reported: false,
+        },
+    }));
+    const stats = {min: 0, max: 1, range: 1, occurance: 1, mean: 1, median: 1, mode: 1, percentile: [1], stdDev: 0};
+    const finishedAt = Date.now() - 10000;
+    global.fetch = jest.fn()
+        .mockResolvedValueOnce({ok: true, json: async() => ({id, status: 'completed', createdAt: finishedAt - 5000, startedAt: finishedAt - 4000, finishedAt, executionTimeoutMs: 300000, error: null as string | null})})
+        .mockResolvedValueOnce({ok: true, json: async() => ({wins: 1, loses: 0, draws: 0, winRatio: 100, attackerLooses: stats, defenderLooses: stats, spoils: [] as unknown[]})});
+    const store = createAppStore();
+    render(<Provider store={store}><LocalPersistence><BattleSimulator/></LocalPersistence></Provider>);
+    fireEvent.click(await screen.findByRole('button', {name: 'Compare battle results with baseline'}));
+    fireEvent.click(screen.getByRole('button', {name: 'Pin as baseline'}));
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEYS.baseline));
+    expect(saved.data.setup).toEqual(original);
+    expect(saved.data.completedAt).toBe(new Date(finishedAt).toISOString());
+    expect(captureDraft(store.getState())).toEqual(updated);
 });
